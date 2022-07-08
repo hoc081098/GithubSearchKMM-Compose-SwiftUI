@@ -1,4 +1,4 @@
-package com.hoc081988.github_search_kmm.domain
+package com.hoc081988.github_search_kmm.domain.model
 
 import kotlin.jvm.JvmInline
 

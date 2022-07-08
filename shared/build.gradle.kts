@@ -24,6 +24,11 @@ kotlin {
 
   sourceSets {
     val commonMain by getting {
+      dependencies {
+        api(deps.coroutines.core)
+        api(deps.arrow.core)
+        implementation(deps.flowExt)
+      }
     }
     val commonTest by getting {
       dependencies {
