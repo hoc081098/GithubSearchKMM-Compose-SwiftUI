@@ -14,6 +14,7 @@ buildscript {
   }
   dependencies {
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}")
+    classpath(kotlin("serialization", version = versions.kotlin))
     classpath("com.android.tools.build:gradle:${versions.agp}")
     classpath("com.diffplug.spotless:spotless-plugin-gradle:${versions.spotless}")
     classpath("com.github.ben-manes:gradle-versions-plugin:${versions.gradleVersions}")

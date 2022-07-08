@@ -64,6 +64,23 @@ object deps {
     const val test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version"
   }
 
+  object serialization {
+    private const val version = "1.3.3"
+    const val json = "org.jetbrains.kotlinx:kotlinx-serialization-json:$version"
+    const val core = "org.jetbrains.kotlinx:kotlinx-serialization-core:$version"
+  }
+
+  object ktor {
+    private const val version = "2.0.3"
+    const val core = "io.ktor:ktor-client-core:$version"
+    const val json = "io.ktor:ktor-client-json:$version"
+    const val logging = "io.ktor:ktor-client-logging:$version"
+    const val okHttp = "io.ktor:ktor-client-okhttp:$version"
+    const val ios = "io.ktor:ktor-client-ios:$version"
+    const val serialization = "io.ktor:ktor-client-serialization:$version"
+    const val mock = "io.ktor:ktor-client-mock:$version"
+  }
+
   object koin {
     private const val version = "3.2.0"
 

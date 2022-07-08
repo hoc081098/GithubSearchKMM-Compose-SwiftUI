@@ -3,6 +3,7 @@ package com.hoc081988.github_search_kmm.domain.model
 import kotlin.jvm.JvmInline
 
 data class RepoItem(
+  val id: Int,
   val fullName: String,
   val language: String?,
   val starCount: Int,
@@ -17,6 +18,7 @@ data class RepoItem(
 value class Color(val value: String)
 
 data class Owner(
+  val id: Int,
   val username: String,
   val avatar: String
 )

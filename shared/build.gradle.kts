@@ -2,6 +2,7 @@ plugins {
   kotlin("multiplatform")
   kotlin("native.cocoapods")
   id("com.android.library")
+  id("kotlinx-serialization")
 }
 
 version = "1.0"
@@ -28,14 +29,27 @@ kotlin {
         api(deps.coroutines.core)
         api(deps.arrow.core)
         implementation(deps.flowExt)
+
+        implementation(deps.serialization.core)
+        implementation(deps.serialization.json)
+
+        implementation(deps.ktor.core)
+        implementation(deps.ktor.json)
+        implementation(deps.ktor.logging)
+        implementation(deps.ktor.serialization)
       }
     }
     val commonTest by getting {
       dependencies {
         implementation(kotlin("test"))
+        implementation(deps.ktor.mock)
       }
     }
-    val androidMain by getting
+    val androidMain by getting {
+      dependencies {
+        implementation(deps.ktor.okHttp)
+      }
+    }
     val androidTest by getting
     val iosX64Main by getting
     val iosArm64Main by getting
@@ -45,6 +59,11 @@ kotlin {
       iosX64Main.dependsOn(this)
       iosArm64Main.dependsOn(this)
       iosSimulatorArm64Main.dependsOn(this)
+
+      dependencies {
+        implementation(deps.ktor.ios)
+        implementation(deps.ktor.core)
+      }
     }
     val iosX64Test by getting
     val iosArm64Test by getting
@@ -59,10 +78,11 @@ kotlin {
 }
 
 android {
-  compileSdk = 32
+  compileSdk = appConfig.compileSdkVersion
   sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+
   defaultConfig {
-    minSdk = 23
-    targetSdk = 32
+    minSdk = appConfig.minSdkVersion
+    targetSdk = appConfig.targetSdkVersion
   }
 }
