@@ -1,5 +1,6 @@
 package com.hoc081988.github_search_kmm.data
 
+import com.hoc081988.github_search_kmm.AppCoroutineDispatchers
 import com.hoc081988.github_search_kmm.data.remote.GithubLanguageColorApi
 import com.hoc081988.github_search_kmm.data.remote.RepoItemApi
 import com.hoc081988.github_search_kmm.data.remote.response.RepoItemsSearchResponse
@@ -14,11 +15,13 @@ internal open class RepoItemRepositoryImpl(
   private val repoItemApi: RepoItemApi,
   private val githubLanguageColorApi: GithubLanguageColorApi,
   private val errorMapper: AppErrorMapper,
+  private val appCoroutineDispatchers: AppCoroutineDispatchers,
 ) : RepoItemRepository {
   override suspend fun searchRepoItems(
     term: String,
     page: Int
   ) = parZipEither(
+    ctx = appCoroutineDispatchers.io,
     fa = {
       githubLanguageColorApi
         .getColors()

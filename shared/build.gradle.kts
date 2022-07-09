@@ -57,6 +57,7 @@ kotlin {
         implementation(deps.ktor.mock)
       }
     }
+
     val androidMain by getting {
       dependencies {
         implementation(deps.ktor.okHttp)
@@ -65,6 +66,7 @@ kotlin {
       }
     }
     val androidTest by getting
+
     val iosX64Main by getting
     val iosArm64Main by getting
     val iosSimulatorArm64Main by getting
@@ -75,7 +77,8 @@ kotlin {
       iosSimulatorArm64Main.dependsOn(this)
 
       dependencies {
-        implementation(deps.ktor.ios)
+        implementation(deps.koin.core)
+        implementation(deps.ktor.darwin)
         implementation(deps.ktor.core)
       }
     }

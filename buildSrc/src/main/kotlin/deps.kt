@@ -10,7 +10,7 @@ import org.gradle.plugin.use.PluginDependencySpec
 object versions {
   const val spotless = "6.7.2"
   const val ktlint = "0.45.2"
-  const val kotlin = "1.6.21"
+  const val kotlin = "1.7.10"
   const val agp = "7.2.1"
   const val gradleVersions = "0.42.0"
 }
@@ -77,7 +77,7 @@ object deps {
     const val clientJson = "io.ktor:ktor-client-json:$version"
     const val logging = "io.ktor:ktor-client-logging:$version"
     const val okHttp = "io.ktor:ktor-client-okhttp:$version"
-    const val ios = "io.ktor:ktor-client-ios:$version"
+    const val darwin = "io.ktor:ktor-client-darwin:$version"
     const val serialization = "io.ktor:ktor-client-serialization:$version"
     const val mock = "io.ktor:ktor-client-mock:$version"
     const val negotiation = "io.ktor:ktor-client-content-negotiation:$version"
@@ -88,7 +88,6 @@ object deps {
     private const val version = "3.2.0"
 
     const val core = "io.insert-koin:koin-core:$version"
-    const val android = "io.insert-koin:koin-android:$version"
     const val testJunit4 = "io.insert-koin:koin-test-junit4:$version"
     const val test = "io.insert-koin:koin-test:$version"
   }

@@ -1,0 +1,11 @@
+package com.hoc081988.github_search_kmm
+
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+
+internal class IosAppCoroutineDispatchers : AppCoroutineDispatchers {
+  override val main: CoroutineDispatcher get() = Dispatchers.Main
+  override val io: CoroutineDispatcher get() = Dispatchers.Default
+  override val default: CoroutineDispatcher get() = Dispatchers.Default
+  override val unconfined: CoroutineDispatcher get() = Dispatchers.Unconfined
+}

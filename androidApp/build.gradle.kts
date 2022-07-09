@@ -41,7 +41,7 @@ dependencies {
   implementation(deps.androidx.material)
 
   implementation(deps.coroutines.core)
-  implementation(deps.koin.android)
+  implementation(deps.coroutines.android)
 
   implementation(deps.coil)
   implementation(deps.napier)
