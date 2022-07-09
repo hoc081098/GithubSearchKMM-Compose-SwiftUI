@@ -15,7 +15,7 @@ object versions {
 }
 
 object appConfig {
-  const val applicationId = "com.hoc081988.github_search_kmm"
+  const val applicationId = "com.hoc081988.github_search_kmm.android"
 
   const val compileSdkVersion = 32
   const val buildToolsVersion = "32.0.0"
@@ -131,16 +131,7 @@ inline val PDsS.kotlin: PDS get() = id("kotlin")
 inline val PDsS.kotlinKapt: PDS get() = id("kotlin-kapt")
 inline val PDsS.kotlinParcelize: PDS get() = id("kotlin-parcelize")
 
-inline val DependencyHandler.domain get() = project(":domain")
-inline val DependencyHandler.core get() = project(":core")
-inline val DependencyHandler.coreUi get() = project(":core-ui")
-inline val DependencyHandler.data get() = project(":data")
-inline val DependencyHandler.featureMain get() = project(":feature-main")
-inline val DependencyHandler.featureAdd get() = project(":feature-add")
-inline val DependencyHandler.featureSearch get() = project(":feature-search")
-inline val DependencyHandler.mviBase get() = project(":mvi-base")
-inline val DependencyHandler.mviTesting get() = project(":mvi-testing")
-inline val DependencyHandler.testUtils get() = project(":test-utils")
+inline val DependencyHandler.shared get() = project(":shared")
 
 fun DependencyHandler.addUnitTest(testImplementation: Boolean = true) {
   val configName = if (testImplementation) "testImplementation" else "implementation"

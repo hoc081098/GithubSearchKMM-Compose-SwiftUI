@@ -1,16 +1,18 @@
 plugins {
-  id("com.android.application")
-  kotlin("android")
+  androidApplication
+  kotlinAndroid
+  kotlinKapt
+  kotlinParcelize
 }
 
 android {
-  compileSdk = 32
+  compileSdk = appConfig.compileSdkVersion
   defaultConfig {
-    applicationId = "com.hoc081988.github_search_kmm.android"
-    minSdk = 23
-    targetSdk = 32
-    versionCode = 1
-    versionName = "1.0"
+    applicationId = appConfig.applicationId
+    minSdk = appConfig.minSdkVersion
+    targetSdk = appConfig.targetSdkVersion
+    versionCode = appConfig.versionCode
+    versionName = appConfig.versionName
   }
   buildTypes {
     getByName("release") {
@@ -21,7 +23,8 @@ android {
 
 dependencies {
   implementation(project(":shared"))
-  implementation("com.google.android.material:material:1.4.0")
-  implementation("androidx.appcompat:appcompat:1.3.1")
-  implementation("androidx.constraintlayout:constraintlayout:2.1.0")
+
+  implementation(deps.androidx.material)
+  implementation(deps.androidx.appCompat)
+  implementation(deps.androidx.constraintLayout)
 }
