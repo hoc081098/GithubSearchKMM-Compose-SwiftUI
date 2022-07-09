@@ -1,4 +1,4 @@
-package com.hoc081988.github_search_kmm.com.hoc081988.github_search_kmm.domain
+package com.hoc081988.github_search_kmm.domain
 
 import com.hoc081988.github_search_kmm.domain.repository.RepoItemRepository
 import com.hoc081988.github_search_kmm.domain.usecase.SearchRepoItemsUseCase

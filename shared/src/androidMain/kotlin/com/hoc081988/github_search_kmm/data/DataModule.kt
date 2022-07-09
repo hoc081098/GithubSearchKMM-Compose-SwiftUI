@@ -1,7 +1,6 @@
-package com.hoc081988.github_search_kmm.com.hoc081988.github_search_kmm.data
+package com.hoc081988.github_search_kmm.data
 
-import com.hoc081988.github_search_kmm.com.hoc081988.github_search_kmm.data.remote.DaggerKtorRepoItemApi
-import com.hoc081988.github_search_kmm.data.AppErrorMapper
+import com.hoc081988.github_search_kmm.data.remote.DaggerKtorRepoItemApi
 import com.hoc081988.github_search_kmm.data.remote.GithubLanguageColorApi
 import com.hoc081988.github_search_kmm.data.remote.RepoItemApi
 import com.hoc081988.github_search_kmm.data.remote.createHttpClient
