@@ -1,3 +1,5 @@
+import org.gradle.api.JavaVersion.VERSION_11
+
 plugins {
   kotlin("multiplatform")
   kotlin("native.cocoapods")
@@ -27,8 +29,10 @@ kotlin {
     val commonMain by getting {
       dependencies {
         api(deps.coroutines.core)
-        api(deps.arrow.core)
         implementation(deps.flowExt)
+
+        api(deps.arrow.core)
+        implementation(deps.arrow.fx)
 
         implementation(deps.serialization.core)
         implementation(deps.serialization.json)
@@ -37,6 +41,8 @@ kotlin {
         implementation(deps.ktor.json)
         implementation(deps.ktor.logging)
         implementation(deps.ktor.serialization)
+
+        implementation(deps.napier)
       }
     }
     val commonTest by getting {
@@ -84,5 +90,16 @@ android {
   defaultConfig {
     minSdk = appConfig.minSdkVersion
     targetSdk = appConfig.targetSdkVersion
+  }
+
+  compileOptions {
+    // Flag to enable support for the new language APIs
+
+    // For AGP 4.1+
+    isCoreLibraryDesugaringEnabled = true
+
+    // Sets Java compatibility to Java 8
+    sourceCompatibility = VERSION_11
+    targetCompatibility = VERSION_11
   }
 }

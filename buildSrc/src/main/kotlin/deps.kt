@@ -98,7 +98,11 @@ object deps {
   object arrow {
     private const val version = "1.1.2"
     const val core = "io.arrow-kt:arrow-core:$version"
+    const val fx = "io.arrow-kt:arrow-fx-coroutines:$version"
   }
+
+  const val desugarJdkLibs = "com.android.tools:desugar_jdk_libs:1.1.5"
+  const val napier = "io.github.aakira:napier:2.6.1"
 
   object test {
     const val junit = "junit:junit:4.13.2"

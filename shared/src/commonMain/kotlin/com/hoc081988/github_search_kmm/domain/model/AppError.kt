@@ -10,10 +10,9 @@ sealed class AppError : RuntimeException {
     class NetworkException(cause: Throwable?) : ApiException(cause)
 
     class ServerException(
-      val message: String?,
       val statusCode: Int,
       cause: Throwable?,
-    )
+    ) : ApiException(cause)
 
     class TimeoutException(cause: Throwable?) : ApiException(cause)
 

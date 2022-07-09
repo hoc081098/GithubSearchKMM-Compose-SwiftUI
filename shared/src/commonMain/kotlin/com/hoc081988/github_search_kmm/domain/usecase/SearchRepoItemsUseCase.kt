@@ -5,7 +5,7 @@ import com.hoc081988.github_search_kmm.domain.model.AppError
 import com.hoc081988.github_search_kmm.domain.model.RepoItem
 import com.hoc081988.github_search_kmm.domain.repository.RepoItemRepository
 
-class SearchRepoItemsUseCase(
+internal open class SearchRepoItemsUseCase(
   private val repoItemRepository: RepoItemRepository,
 ) {
   suspend operator fun invoke(
