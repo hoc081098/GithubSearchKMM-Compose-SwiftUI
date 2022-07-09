@@ -8,6 +8,8 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.http.ContentType
+import io.ktor.serialization.kotlinx.KotlinxSerializationConverter
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.datetime.Instant
 import kotlinx.serialization.KSerializer
@@ -26,16 +28,19 @@ fun <T : HttpClientEngineConfig> createHttpClient(
   engine(block)
 
   install(ContentNegotiation) {
-    json(
-      Json {
-        serializersModule = SerializersModule {
-          contextual(Instant::class, InstantSerializer)
-        }
-        ignoreUnknownKeys = true
-        coerceInputValues = true
-        prettyPrint = true
-        isLenient = true
+    val json = Json {
+      serializersModule = SerializersModule {
+        contextual(Instant::class, InstantSerializer)
       }
+      ignoreUnknownKeys = true
+      coerceInputValues = true
+      prettyPrint = true
+      isLenient = true
+    }
+    json(json)
+    register(
+      ContentType.Text.Plain,
+      KotlinxSerializationConverter(json)
     )
   }
 
@@ -58,4 +63,3 @@ internal object InstantSerializer : KSerializer<Instant> {
   override fun serialize(encoder: Encoder, value: Instant) = encoder.encodeString(value.toString())
   override fun deserialize(decoder: Decoder): Instant = Instant.parse(decoder.decodeString())
 }
-

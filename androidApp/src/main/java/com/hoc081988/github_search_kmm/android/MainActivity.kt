@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.hoc081098.flowext.interval
 import com.hoc081988.github_search_kmm.Greeting
 import com.hoc081988.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.aakira.napier.Napier
 import javax.inject.Inject
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 fun greet(): String {
   return Greeting().greeting()
@@ -27,13 +29,18 @@ class MainActivity : AppCompatActivity() {
     val tv: TextView = findViewById(R.id.text_view)
     tv.text = greet()
 
-    lifecycleScope.launch {
-      searchRepoItemsUseCase(
-        term = "kmm",
-        page = 1
-      ).let {
-        Napier.d("searchRepoItemsUseCase: $it")
+    interval(
+      0,
+      5000
+    )
+      .onEach {
+        searchRepoItemsUseCase(
+          term = "kmm",
+          page = 1
+        ).let {
+          Napier.d("searchRepoItemsUseCase: $it")
+        }
       }
-    }
+      .launchIn(lifecycleScope)
   }
 }

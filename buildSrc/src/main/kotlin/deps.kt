@@ -105,6 +105,8 @@ object deps {
   const val viewBindingDelegate = "com.github.hoc081098:ViewBindingDelegate:1.3.1"
   const val flowExt = "io.github.hoc081098:FlowExt:0.4.0-SNAPSHOT"
 
+  const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.18.2"
+
   object arrow {
     private const val version = "1.1.2"
     const val core = "io.arrow-kt:arrow-core:$version"

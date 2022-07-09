@@ -24,7 +24,7 @@ internal open class KtorRepoItemApi(
           parameters.append("q", term)
           parameters.append("page", page.toString())
         }
-        .toString()
+        .build()
     ).body<RepoItemsSearchResponse>()
   }
 }

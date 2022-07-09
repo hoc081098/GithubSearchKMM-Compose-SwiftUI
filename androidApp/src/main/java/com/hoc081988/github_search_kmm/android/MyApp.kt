@@ -12,4 +12,3 @@ class MyApp : Application() {
     Napier.base(DebugAntilog())
   }
 }
-

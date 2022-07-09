@@ -1,6 +1,5 @@
 package com.hoc081988.github_search_kmm.com.hoc081988.github_search_kmm.data
 
-import com.hoc081988.github_search_kmm.com.hoc081988.github_search_kmm.data.remote.DaggerKtorGithubLanguageColorApi
 import com.hoc081988.github_search_kmm.com.hoc081988.github_search_kmm.data.remote.DaggerKtorRepoItemApi
 import com.hoc081988.github_search_kmm.data.AppErrorMapper
 import com.hoc081988.github_search_kmm.data.remote.GithubLanguageColorApi
@@ -41,7 +40,7 @@ internal interface DataModule {
 
   @Binds
   @Singleton
-  fun githubLanguageColorApi(impl: DaggerKtorGithubLanguageColorApi): GithubLanguageColorApi
+  fun githubLanguageColorApi(impl: DaggerCacheGithubLanguageColorApiDecorator): GithubLanguageColorApi
 
   @Binds
   @Singleton

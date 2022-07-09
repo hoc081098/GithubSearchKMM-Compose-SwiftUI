@@ -17,11 +17,15 @@ internal open class KtorGithubLanguageColorApi(
     .catch {
       httpClient
         .get(url)
-        .body<Map<String, String>>()
+        .body<Map<String, Map<String, String?>>>()
     }
     .flatMap { map ->
       map
-        .toList()
+        .mapNotNull { (k, v) ->
+          v["color"]?.let {
+            k to it
+          }
+        }
         .traverse { (k, v) ->
           Color
             .parse(v)

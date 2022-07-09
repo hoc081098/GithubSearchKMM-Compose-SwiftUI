@@ -48,6 +48,7 @@ kotlin {
 
         implementation(deps.napier)
         api(deps.dateTime)
+        api(deps.atomicfu)
       }
     }
     val commonTest by getting {
