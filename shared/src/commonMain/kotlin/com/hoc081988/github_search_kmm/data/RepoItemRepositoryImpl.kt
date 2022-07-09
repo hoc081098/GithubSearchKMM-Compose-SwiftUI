@@ -62,7 +62,8 @@ private fun RepoItemsSearchResponse.toRepoItemsList(colors: Map<String, Color>):
       description = item.description,
       languageColor = item.language?.let { colors[it] },
       htmlUrl = item.htmlUrl,
-      owner = item.owner.toOwner()
+      owner = item.owner.toOwner(),
+      updatedAt = item.updatedAt,
     )
   } ?: emptyList()
 

@@ -3,6 +3,11 @@ plugins {
   kotlinAndroid
   kotlinKapt
   kotlinParcelize
+  daggerHiltAndroid
+}
+
+hilt {
+  enableAggregatingTask = true
 }
 
 android {
@@ -24,7 +29,26 @@ android {
 dependencies {
   implementation(project(":shared"))
 
-  implementation(deps.androidx.material)
   implementation(deps.androidx.appCompat)
+  implementation(deps.androidx.coreKtx)
+
+  implementation(deps.lifecycle.viewModelKtx)
+  implementation(deps.lifecycle.runtimeKtx)
+
+  implementation(deps.androidx.recyclerView)
   implementation(deps.androidx.constraintLayout)
+  implementation(deps.androidx.swipeRefreshLayout)
+  implementation(deps.androidx.material)
+
+  implementation(deps.coroutines.core)
+  implementation(deps.koin.android)
+
+  implementation(deps.coil)
+  implementation(deps.napier)
+
+  implementation(deps.viewBindingDelegate)
+  implementation(deps.flowExt)
+
+  implementation(deps.dagger.hiltAndroid)
+  kapt(deps.dagger.hiltAndroidCompiler)
 }

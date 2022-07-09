@@ -1,13 +1,15 @@
 import org.gradle.api.JavaVersion.VERSION_11
 
 plugins {
-  kotlin("multiplatform")
-  kotlin("native.cocoapods")
-  id("com.android.library")
-  id("kotlinx-serialization")
+  kotlinMultiplatform
+  kotlinNativeCocoapods
+  androidLib
+  kotlinxSerialization
+  kotlinKapt
+  daggerHiltAndroid
 }
 
-version = "1.0"
+version = appConfig.versionName
 
 kotlin {
   android()
@@ -38,11 +40,14 @@ kotlin {
         implementation(deps.serialization.json)
 
         implementation(deps.ktor.core)
-        implementation(deps.ktor.json)
+        implementation(deps.ktor.clientJson)
+        implementation(deps.ktor.serializationKotlinXJson)
+        implementation(deps.ktor.negotiation)
         implementation(deps.ktor.logging)
         implementation(deps.ktor.serialization)
 
         implementation(deps.napier)
+        api(deps.dateTime)
       }
     }
     val commonTest by getting {
@@ -54,6 +59,8 @@ kotlin {
     val androidMain by getting {
       dependencies {
         implementation(deps.ktor.okHttp)
+
+        implementation(deps.dagger.hiltAndroid)
       }
     }
     val androidTest by getting
@@ -102,4 +109,17 @@ android {
     sourceCompatibility = VERSION_11
     targetCompatibility = VERSION_11
   }
+
+  dependencies {
+    coreLibraryDesugaring(deps.desugarJdkLibs)
+    "kapt"(deps.dagger.hiltAndroidCompiler)
+  }
+}
+
+hilt {
+  enableAggregatingTask = true
+}
+
+kapt {
+  correctErrorTypes = true
 }

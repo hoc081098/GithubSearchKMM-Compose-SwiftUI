@@ -2,6 +2,7 @@
 
 import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.DependencyHandler
+import org.gradle.kotlin.dsl.kotlin
 import org.gradle.kotlin.dsl.project
 import org.gradle.plugin.use.PluginDependenciesSpec
 import org.gradle.plugin.use.PluginDependencySpec
@@ -9,7 +10,7 @@ import org.gradle.plugin.use.PluginDependencySpec
 object versions {
   const val spotless = "6.7.2"
   const val ktlint = "0.45.2"
-  const val kotlin = "1.7.0"
+  const val kotlin = "1.6.21"
   const val agp = "7.2.1"
   const val gradleVersions = "0.42.0"
 }
@@ -73,12 +74,14 @@ object deps {
   object ktor {
     private const val version = "2.0.3"
     const val core = "io.ktor:ktor-client-core:$version"
-    const val json = "io.ktor:ktor-client-json:$version"
+    const val clientJson = "io.ktor:ktor-client-json:$version"
     const val logging = "io.ktor:ktor-client-logging:$version"
     const val okHttp = "io.ktor:ktor-client-okhttp:$version"
     const val ios = "io.ktor:ktor-client-ios:$version"
     const val serialization = "io.ktor:ktor-client-serialization:$version"
     const val mock = "io.ktor:ktor-client-mock:$version"
+    const val negotiation = "io.ktor:ktor-client-content-negotiation:$version"
+    const val serializationKotlinXJson = "io.ktor:ktor-serialization-kotlinx-json:$version"
   }
 
   object koin {
@@ -90,10 +93,17 @@ object deps {
     const val test = "io.insert-koin:koin-test:$version"
   }
 
+  object dagger {
+    const val version = "2.42"
+    const val hiltAndroid = "com.google.dagger:hilt-android:$version"
+    const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:$version"
+  }
+
+  const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
+
   const val coil = "io.coil-kt:coil:2.0.0-rc03"
   const val viewBindingDelegate = "com.github.hoc081098:ViewBindingDelegate:1.3.1"
   const val flowExt = "io.github.hoc081098:FlowExt:0.4.0-SNAPSHOT"
-  const val timber = "com.jakewharton.timber:timber:5.0.1"
 
   object arrow {
     private const val version = "1.1.2"
@@ -130,6 +140,10 @@ inline val PDsS.kotlinAndroid: PDS get() = id("kotlin-android")
 inline val PDsS.kotlin: PDS get() = id("kotlin")
 inline val PDsS.kotlinKapt: PDS get() = id("kotlin-kapt")
 inline val PDsS.kotlinParcelize: PDS get() = id("kotlin-parcelize")
+inline val PDsS.kotlinxSerialization: PDS get() = id("kotlinx-serialization")
+inline val PDsS.kotlinMultiplatform: PDS get() = kotlin("multiplatform")
+inline val PDsS.kotlinNativeCocoapods: PDS get() = kotlin("native.cocoapods")
+inline val PDsS.daggerHiltAndroid: PDS get() = id("dagger.hilt.android.plugin")
 
 inline val DependencyHandler.shared get() = project(":shared")
 

@@ -1,5 +1,6 @@
 package com.hoc081988.github_search_kmm.data.remote.response
 
+import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -17,7 +18,7 @@ data class RepoItemsSearchResponse(
     @SerialName("owner") val owner: Owner,
     @SerialName("html_url") val htmlUrl: String, // https://github.com/DroidsOnRoids/MPParallaxView
     @SerialName("description") val description: String?, // Apple TV Parallax effect in Swift.
-    @SerialName("updated_at") val updatedAt: String, // 2022-06-30T12:02:54Z
+    @SerialName("updated_at") val updatedAt: Instant, // 2022-06-30T12:02:54Z
     @SerialName("stargazers_count") val stargazersCount: Int, // 1737
     @SerialName("language") val language: String?, // Swift
   ) {

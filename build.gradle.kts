@@ -16,8 +16,10 @@ buildscript {
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}")
     classpath(kotlin("serialization", version = versions.kotlin))
     classpath("com.android.tools.build:gradle:${versions.agp}")
+    classpath("com.google.dagger:hilt-android-gradle-plugin:${deps.dagger.version}")
     classpath("com.diffplug.spotless:spotless-plugin-gradle:${versions.spotless}")
     classpath("com.github.ben-manes:gradle-versions-plugin:${versions.gradleVersions}")
+    classpath("com.squareup:javapoet:1.13.0")
   }
 }
 

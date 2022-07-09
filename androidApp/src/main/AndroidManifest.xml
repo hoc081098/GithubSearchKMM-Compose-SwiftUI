@@ -3,6 +3,7 @@
     package="com.hoc081988.github_search_kmm.android">
 
     <application
+        android:name=".MyApp"
         android:allowBackup="false"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -15,4 +16,4 @@
             </intent-filter>
         </activity>
     </application>
-</manifest> 
+</manifest>

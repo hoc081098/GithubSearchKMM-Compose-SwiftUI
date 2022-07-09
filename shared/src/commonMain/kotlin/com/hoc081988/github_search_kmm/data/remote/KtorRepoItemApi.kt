@@ -6,11 +6,12 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.http.URLBuilder
+import io.ktor.http.Url
 import io.ktor.http.path
 
 internal open class KtorRepoItemApi(
   private val httpClient: HttpClient,
-  private val baseUrl: String,
+  private val baseUrl: Url,
 ) : RepoItemApi {
   override suspend fun searchRepoItems(
     term: String,

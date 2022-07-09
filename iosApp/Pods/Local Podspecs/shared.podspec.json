@@ -1,6 +1,6 @@
 {
   "name": "shared",
-  "version": "1.0",
+  "version": "0.0.1-SNAPSHOT",
   "homepage": "Link to the Shared Module homepage",
   "source": {
     "http": ""

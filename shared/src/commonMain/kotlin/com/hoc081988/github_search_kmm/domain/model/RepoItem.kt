@@ -1,6 +1,7 @@
 package com.hoc081988.github_search_kmm.domain.model
 
 import arrow.core.Either
+import kotlinx.datetime.Instant
 
 data class RepoItem(
   val id: Int,
@@ -12,6 +13,7 @@ data class RepoItem(
   val languageColor: Color?,
   val htmlUrl: String,
   val owner: Owner,
+  val updatedAt: Instant,
 )
 
 class Color constructor(
