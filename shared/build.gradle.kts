@@ -123,4 +123,3 @@ android {
 hilt {
   enableAggregatingTask = true
 }
-
