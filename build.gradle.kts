@@ -36,6 +36,17 @@ allprojects {
     maven(url = "https://jitpack.io")
     maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots/")
   }
+
+  // TODO: Workaround for https://github.com/google/dagger/issues/3448, https://github.com/google/dagger/issues/3459
+  configurations.all {
+    resolutionStrategy.eachDependency {
+      if (requested.module.group == "org.jetbrains.kotlin"
+        && requested.module.name.startsWith("kotlin-stdlib")
+      ) {
+        useVersion(versions.kotlin)
+      }
+    }
+  }
 }
 
 subprojects {
@@ -131,3 +142,4 @@ subprojects {
 tasks.register("clean", Delete::class) {
   delete(rootProject.buildDir)
 }
+

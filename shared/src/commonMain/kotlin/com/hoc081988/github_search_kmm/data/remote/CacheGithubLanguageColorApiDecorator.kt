@@ -1,5 +1,6 @@
 package com.hoc081988.github_search_kmm.data.remote
 
+import arrow.core.Either
 import arrow.core.right
 import com.hoc081988.github_search_kmm.domain.model.Color
 import io.github.aakira.napier.Napier
@@ -13,15 +14,22 @@ internal open class CacheGithubLanguageColorApiDecorator(
   private val mutex = Mutex()
   private val cache = atomic<Map<String, Color>?>(null)
 
-  override suspend fun getColors() = mutex.withLock {
+  override suspend fun getColors(): Either<Throwable, Map<String, Color>> {
     cache.value?.let {
-      Napier.d(message = "Hit cache...", tag = "CacheGithubLanguageColorApiDecorator")
+      Napier.d(message = "Hit cache 1...", tag = "CacheGithubLanguageColorApiDecorator")
       return it.right()
     }
 
-    Napier.d(message = "Call $decoratee.getColors", tag = "CacheGithubLanguageColorApiDecorator")
-    decoratee
-      .getColors()
-      .tap { cache.value = it }
+    return mutex.withLock {
+      cache.value?.let {
+        Napier.d(message = "Hit cache 2...", tag = "CacheGithubLanguageColorApiDecorator")
+        return it.right()
+      }
+
+      Napier.d(message = "Call $decoratee.getColors", tag = "CacheGithubLanguageColorApiDecorator")
+      decoratee
+        .getColors()
+        .tap { cache.value = it }
+    }
   }
 }
