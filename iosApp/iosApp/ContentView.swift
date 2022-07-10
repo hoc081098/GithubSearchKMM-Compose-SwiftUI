@@ -3,7 +3,7 @@ import shared
 
 struct ContentView: View {
   let greet = Greeting().greeting()
-  let searchRepoItemsUseCase = KoinHelper.shared.searchRepoItemsUseCase()
+  let searchRepoItemsUseCase = DIContainer.shared.get(for: SearchRepoItemsUseCase.self)
 
   var body: some View {
     Text(greet)

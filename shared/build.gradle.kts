@@ -31,7 +31,7 @@ kotlin {
     val commonMain by getting {
       dependencies {
         api(deps.coroutines.core)
-        implementation(deps.flowExt)
+//        implementation(deps.flowExt)
 
         api(deps.arrow.core)
         implementation(deps.arrow.fx)

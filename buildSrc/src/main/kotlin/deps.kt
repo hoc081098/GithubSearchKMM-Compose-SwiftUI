@@ -98,13 +98,13 @@ object deps {
     const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:$version"
   }
 
-  const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
+  const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.3.2"
 
   const val coil = "io.coil-kt:coil:2.0.0-rc03"
   const val viewBindingDelegate = "com.github.hoc081098:ViewBindingDelegate:1.3.1"
   const val flowExt = "io.github.hoc081098:FlowExt:0.4.0-SNAPSHOT"
 
-  const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.18.2"
+  const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.17.3"
 
   object arrow {
     private const val version = "1.1.2"
