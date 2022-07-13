@@ -13,6 +13,7 @@ import Combine
 private let emptyOnComplete = { }
 private let defaultOnError = { (error: KotlinThrowable) in
   debugPrint("subscribeNonNullFlow: unhandle error = \(error)")
+  fatalError("subscribeNonNullFlow: unhandle error = \(error)")
 }
 
 extension Kotlinx_coroutines_coreFlow {
