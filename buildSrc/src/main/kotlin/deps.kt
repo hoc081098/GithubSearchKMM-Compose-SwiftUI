@@ -105,6 +105,7 @@ object deps {
   const val flowExt = "io.github.hoc081098:FlowExt:0.4.0-SNAPSHOT"
 
   const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.17.3"
+  const val immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
 
   object arrow {
     private const val version = "1.1.2"
@@ -148,6 +149,7 @@ inline val PDsS.kotlinNativeCocoapods: PDS get() = kotlin("native.cocoapods")
 inline val PDsS.daggerHiltAndroid: PDS get() = id("dagger.hilt.android.plugin")
 
 inline val DependencyHandler.shared get() = project(":shared")
+inline val DependencyHandler.flowRedux get() = project(":flowredux")
 
 fun DependencyHandler.addUnitTest(testImplementation: Boolean = true) {
   val configName = if (testImplementation) "testImplementation" else "implementation"

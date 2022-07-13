@@ -28,17 +28,30 @@ kotlin {
   }
 
   sourceSets {
+    all {
+      languageSettings.run {
+        optIn("kotlinx.coroutines.FlowPreview")
+        optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
+      }
+    }
+
     val commonMain by getting {
       dependencies {
+        implementation(project(":flowredux"))
+
+        // Flow, Coroutines
         api(deps.coroutines.core)
         implementation(deps.flowExt)
 
+        // Arrow-kt
         api(deps.arrow.core)
         implementation(deps.arrow.fx)
 
+        // Serialization
         implementation(deps.serialization.core)
         implementation(deps.serialization.json)
 
+        // Ktor
         implementation(deps.ktor.core)
         implementation(deps.ktor.clientJson)
         implementation(deps.ktor.serializationKotlinXJson)
@@ -46,9 +59,13 @@ kotlin {
         implementation(deps.ktor.logging)
         implementation(deps.ktor.serialization)
 
+        // Logger
         implementation(deps.napier)
+
+        // Kotlinx libs
         api(deps.dateTime)
         api(deps.atomicfu)
+        api(deps.immutableCollections)
       }
     }
     val commonTest by getting {

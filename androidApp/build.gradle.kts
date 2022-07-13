@@ -27,7 +27,7 @@ android {
 }
 
 dependencies {
-  implementation(project(":shared"))
+  implementation(shared)
 
   implementation(deps.androidx.appCompat)
   implementation(deps.androidx.coreKtx)

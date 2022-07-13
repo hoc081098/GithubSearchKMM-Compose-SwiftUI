@@ -35,7 +35,8 @@ internal class DefaultFlowReduxStore<Action, State>(
         add(
           sideEffect(
             loopbacks[index].consumeAsFlow(),
-            getState
+            getState,
+            coroutineScope,
           )
         )
       }

@@ -19,7 +19,6 @@ actual abstract class ViewModel actual constructor() {
    */
   protected actual fun onCleared() {}
 
-
   /**
    * Closes the [viewModelScope] and cancels all its coroutines.
    *

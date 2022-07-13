@@ -125,7 +125,7 @@ class FlowReduxStoreTest {
     val store = scope.createFlowReduxStore<String, String>(
       initialState = "",
       sideEffects = listOf(
-        SideEffect { actions, _ ->
+        SideEffect { actions, _, _ ->
           actions.flatMapConcat {
             sideEffect1Actions += it
             emptyFlow()
@@ -176,13 +176,13 @@ class FlowReduxStoreTest {
     val store = scope.createFlowReduxStore<String, String>(
       initialState = "",
       sideEffects = listOf(
-        SideEffect { actions, _ ->
+        SideEffect { actions, _, _ ->
           actions.flatMapConcat {
             sideEffect1Actions += it
             emptyFlow()
           }
         },
-        SideEffect { actions, _ ->
+        SideEffect { actions, _, _ ->
           actions.flatMapConcat {
             sideEffect2Actions += it
             emptyFlow()
@@ -237,7 +237,7 @@ class FlowReduxStoreTest {
     val store = scope.createFlowReduxStore<Int, String>(
       initialState = "",
       sideEffects = listOf(
-        SideEffect { actions, _ ->
+        SideEffect { actions, _, _ ->
           actions.flatMapConcat {
             sideEffect1Actions += it
 
@@ -248,7 +248,7 @@ class FlowReduxStoreTest {
             }
           }
         },
-        SideEffect { actions, _ ->
+        SideEffect { actions, _, _ ->
           actions.flatMapConcat {
             sideEffect2Actions += it
 
@@ -319,7 +319,7 @@ class FlowReduxStoreTest {
     val store = scope.createFlowReduxStore<Int, String>(
       initialState = "",
       sideEffects = listOf(
-        SideEffect { actions, _ ->
+        SideEffect { actions, _, _ ->
           actions
             .buffer(Channel.UNLIMITED)
             .flatMapConcat {
@@ -332,7 +332,7 @@ class FlowReduxStoreTest {
               }
             }
         },
-        SideEffect { actions, _ ->
+        SideEffect { actions, _, _ ->
           actions
             .buffer(Channel.UNLIMITED)
             .flatMapConcat {
@@ -416,7 +416,7 @@ class FlowReduxStoreTest {
     val store = scope.createFlowReduxStore<Int, String>(
       initialState = "",
       sideEffects = listOf(
-        SideEffect { actions, _ ->
+        SideEffect { actions, _, _ ->
           actions
             .buffer(Channel.UNLIMITED)
             .map {
@@ -427,7 +427,7 @@ class FlowReduxStoreTest {
               error("Should not reach here!")
             }
         },
-        SideEffect { actions, _ ->
+        SideEffect { actions, _, _ ->
           actions
             .buffer(Channel.UNLIMITED)
             .map {

@@ -1,5 +1,6 @@
 package com.hoc081098.flowredux
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -11,5 +12,9 @@ import kotlinx.coroutines.flow.Flow
  * @param state [GetState] to get the latest state of the state machine
  */
 public fun interface SideEffect<S, A> {
-  public operator fun invoke(actions: Flow<A>, getState: GetState<S>): Flow<A>
+  public operator fun invoke(
+    actions: Flow<A>,
+    getState: GetState<S>,
+    coroutineScope: CoroutineScope
+  ): Flow<A>
 }
