@@ -5,6 +5,8 @@ import app.cash.turbine.test
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -19,6 +21,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
@@ -404,11 +407,36 @@ class FlowReduxStoreTest {
   fun `canceling the flow of input actions also cancels all side effects`() = runTest {
     val scope = createScope()
 
-    scope.createFlowReduxStore<Int, String>(
+    var sideEffect1Started = false
+    var sideEffect2Started = false
+
+    var sideEffect1Ended = false
+    var sideEffect2Ended = false
+
+    val store = scope.createFlowReduxStore<Int, String>(
       initialState = "",
       sideEffects = listOf(
-        SideEffect { actions, getState ->
+        SideEffect { actions, _ ->
           actions
+            .buffer(Channel.UNLIMITED)
+            .map {
+              sideEffect1Started = true
+              delay(2_000)
+              sideEffect1Ended = true
+
+              error("Should not reach here!")
+            }
+        },
+        SideEffect { actions, _ ->
+          actions
+            .buffer(Channel.UNLIMITED)
+            .map {
+              sideEffect2Started = true
+              delay(2_000)
+              sideEffect2Ended = true
+
+              error("Should not reach here!")
+            }
         }
       ),
       reducer = { state, action ->
@@ -416,7 +444,23 @@ class FlowReduxStoreTest {
       }
     )
 
+    store.stateFlow
+      .onSubscription {
+        store.dispatch(1)
+      }
+      .take(2)
+      .testWithTestCoroutineScheduler {
+        assertEquals("", awaitItem())
+        assertEquals("1", awaitItem())
+        awaitComplete()
+      }
+
+    delay(200)
     scope.cancel()
+
+    assertTrue { sideEffect1Started && sideEffect2Started }
+    assertFalse { sideEffect1Ended }
+    assertFalse { sideEffect2Ended }
   }
 }
 
