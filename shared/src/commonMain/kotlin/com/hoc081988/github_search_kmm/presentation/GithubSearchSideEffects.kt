@@ -8,7 +8,7 @@ import com.hoc081988.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
 import com.hoc081988.github_search_kmm.eitherLCEFlow
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.SharingStarted.Companion.Eagerly
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -38,7 +38,7 @@ internal class GithubSearchSideEffects(
    * [GithubSearchAction.Search]s to [SideEffectAction.TextChanged]s
    */
   private inline fun textChanged() =
-    SideEffect<GithubSearchState, GithubSearchAction> { actions, getState, _ ->
+    SideEffect<GithubSearchState, GithubSearchAction> { actions, _, _ ->
       actions
         .filterIsInstance<GithubSearchAction.Search>()
         .map { it.term }
@@ -54,7 +54,7 @@ internal class GithubSearchSideEffects(
    * [SideEffectAction.TextChanged]s to [SideEffectAction.SearchLCE]s
    */
   private inline fun search() =
-    SideEffect<GithubSearchState, GithubSearchAction> { actions, getState, _ ->
+    SideEffect<GithubSearchState, GithubSearchAction> { actions, _, _ ->
       actions
         .filterIsInstance<SideEffectAction.TextChanged>()
         .flatMapLatest { action ->
@@ -72,14 +72,9 @@ internal class GithubSearchSideEffects(
    */
   private inline fun nextPage() =
     SideEffect<GithubSearchState, GithubSearchAction> { actions, getState, scope ->
-      val textChangedActionSharedFlow = actions
-        .filterIsInstance<SideEffectAction.TextChanged>()
-        .shareIn(
-          scope = scope,
-          started = SharingStarted.Eagerly,
-        )
+      val actionSharedFlow = actions.shareIn(scope, Eagerly)
 
-      actions
+      actionSharedFlow
         .filterIsInstance<GithubSearchAction.LoadNextPage>()
         .flatMapFirst {
           flowFromSuspend { getState() }
@@ -90,7 +85,10 @@ internal class GithubSearchSideEffects(
                 nextPage = it.page + 1u
               )
             }
-            .takeUntil(textChangedActionSharedFlow)
+            .takeUntil(
+              actionSharedFlow
+                .filterIsInstance<SideEffectAction.TextChanged>()
+            )
         }
     }
 
@@ -100,15 +98,10 @@ internal class GithubSearchSideEffects(
    * [GithubSearchAction.Retry]s to [SideEffectAction.SearchLCE]s
    */
   private fun retry() =
-    SideEffect<GithubSearchState, GithubSearchAction> { actions, getState, coroutineScope ->
-      val textChangedActionSharedFlow = actions
-        .filterIsInstance<SideEffectAction.TextChanged>()
-        .shareIn(
-          scope = coroutineScope,
-          started = SharingStarted.Eagerly,
-        )
+    SideEffect<GithubSearchState, GithubSearchAction> { actions, getState, scope ->
+      val actionSharedFlow = actions.shareIn(scope, Eagerly)
 
-      actions
+      actionSharedFlow
         .filterIsInstance<GithubSearchAction.Retry>()
         .flatMapFirst {
           flowFromSuspend { getState() }
@@ -119,7 +112,10 @@ internal class GithubSearchSideEffects(
                 nextPage = it.page + 1u,
               )
             }
-            .takeUntil(textChangedActionSharedFlow)
+            .takeUntil(
+              actionSharedFlow
+                .filterIsInstance<SideEffectAction.TextChanged>()
+            )
         }
     }
 
