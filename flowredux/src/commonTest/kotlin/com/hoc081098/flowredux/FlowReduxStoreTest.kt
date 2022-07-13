@@ -10,13 +10,16 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
@@ -301,6 +304,118 @@ class FlowReduxStoreTest {
       L[1, 6, 7, 2, 6, 7],
       sideEffect2Actions
     )
+    scope.cancel()
+  }
+
+  @Test
+  fun `store with 2 simple side effects no delay`() = runTest {
+    val scope = createScope()
+    val sideEffect1Actions = mutableListOf<Int>()
+    val sideEffect2Actions = mutableListOf<Int>()
+
+    val store = scope.createFlowReduxStore<Int, String>(
+      initialState = "",
+      sideEffects = listOf(
+        SideEffect { actions, _ ->
+          actions
+            .buffer(Channel.UNLIMITED)
+            .flatMapConcat {
+              sideEffect1Actions += it
+
+              if (it < 6) {
+                flowOf(6)
+              } else {
+                emptyFlow()
+              }
+            }
+        },
+        SideEffect { actions, _ ->
+          actions
+            .buffer(Channel.UNLIMITED)
+            .flatMapConcat {
+              sideEffect2Actions += it
+
+              if (it < 6) {
+                flowOf(7)
+              } else {
+                emptyFlow()
+              }
+            }
+        }
+      ),
+      reducer = { state, action ->
+        state + action
+      }
+    )
+    val allActions = mutableListOf<Int>()
+    scope.launch(start = CoroutineStart.UNDISPATCHED) {
+      store.actionSharedFlow.toList(allActions)
+    }
+
+    store.stateFlow
+      .onSubscription {
+        store.dispatch(1)
+        store.dispatch(2)
+      }
+      .take(7)
+      .testWithTestCoroutineScheduler {
+        // Initial State emission
+        assertEquals("", awaitItem())
+
+        // emission of 1
+        assertEquals("1", awaitItem())
+
+        // emission of 2
+        assertEquals("12", awaitItem())
+
+        // side effect 1 responses to 1
+        assertEquals("126", awaitItem())
+
+        // side effect 2 responses to 2
+        assertEquals("1267", awaitItem())
+
+        // side effect 2 responses to 1
+        assertEquals("12676", awaitItem())
+
+        // side effect 2 responses to 2
+        assertEquals("126767", awaitItem())
+
+        awaitComplete()
+      }
+    advanceUntilIdle()
+    runCurrent()
+
+    assertContentEquals(
+      L[1, 2, 6, 7, 6, 7],
+      allActions
+    )
+    assertContentEquals(
+      L[1, 2, 6, 7, 6, 7],
+      sideEffect1Actions
+    )
+    assertContentEquals(
+      L[1, 2, 6, 7, 6, 7],
+      sideEffect2Actions
+    )
+    scope.cancel()
+  }
+
+  @Test
+  fun `canceling the flow of input actions also cancels all side effects`() = runTest {
+    val scope = createScope()
+
+    scope.createFlowReduxStore<Int, String>(
+      initialState = "",
+      sideEffects = listOf(
+        SideEffect { actions, getState ->
+          actions
+        }
+      ),
+      reducer = { state, action ->
+        state + action
+      }
+    )
+
     scope.cancel()
   }
 }

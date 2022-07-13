@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.update
 
 internal class DefaultFlowReduxStore<Action, State>(
   override val coroutineScope: CoroutineScope,
@@ -47,7 +46,7 @@ internal class DefaultFlowReduxStore<Action, State>(
       .onEach { action ->
         println("DefaultFlowReduxStore: Received action=$action, ${_actionSharedFlow.subscriptionCount.value}")
 
-        _stateFlow.update { reducer(it, action) }
+        _stateFlow.value = reducer(_stateFlow.value, action)
 
         loopbacks.sendAll(action)
         check(_actionSharedFlow.tryEmit(action)) { "Cannot send $action" }
