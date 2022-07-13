@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
   kotlinMultiplatform
+  id("org.jetbrains.kotlinx.kover")
 }
 
 kotlin {
