@@ -45,14 +45,10 @@ internal class DefaultFlowReduxStore<Action, State>(
 
     actionFlow
       .onEach { action ->
-        println("DefaultFlowReduxStore: Received action=$action, ${_actionSharedFlow.subscriptionCount.value}")
-
         _stateFlow.value = reducer(_stateFlow.value, action)
 
         loopbacks.sendAll(action)
         check(_actionSharedFlow.tryEmit(action)) { "Cannot send $action" }
-
-        println("DefaultFlowReduxStore: Handled action=$action, ${_actionSharedFlow.subscriptionCount.value}")
       }
       .launchIn(coroutineScope)
   }

@@ -1,8 +1,8 @@
 package com.hoc081988.github_search_kmm.presentation
 
-import com.hoc081988.github_search_kmm.EitherLCE
 import com.hoc081988.github_search_kmm.domain.model.AppError
 import com.hoc081988.github_search_kmm.domain.model.RepoItem
+import com.hoc081988.github_search_kmm.utils.EitherLCE
 import kotlinx.collections.immutable.persistentListOf
 
 sealed interface GithubSearchAction {

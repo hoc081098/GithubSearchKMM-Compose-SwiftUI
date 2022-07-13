@@ -2,27 +2,6 @@ import SwiftUI
 import shared
 import Combine
 
-extension Kotlinx_coroutines_coreFlow {
-  @discardableResult
-  func subscribeNonNullFlow<T: AnyObject>(
-    scope: Kotlinx_coroutines_coreCoroutineScope,
-    onValue: @escaping (T) -> Void,
-    onError: ((KotlinThrowable) -> Void)? = nil,
-    onComplete: (() -> Void)? = nil
-  ) -> Closeable {
-    NonNullFlowWrapper<T>(flow: self)
-      .subscribe(scope: scope) {
-      onValue($0)
-
-    } onError: { error in
-      onError?(error)
-    } onComplete: {
-      onComplete?()
-    }
-  }
-}
-
-
 @MainActor
 class IOSGithubSearchViewModel: ObservableObject {
   private let vm: GithubSearchViewModel
@@ -37,8 +16,14 @@ class IOSGithubSearchViewModel: ObservableObject {
     self.state = vm.stateFlow.value as! GithubSearchState
     vm.stateFlow.subscribeNonNullFlow(
       scope: vm.viewModelScope,
-      onValue: { self.state = $0 }
-    )
+      onValue: { [weak self] in self?.state = $0 }) { error in
+        print("Error", error)
+      }
+    
+    DispatchQueue.main.asyncAfter(deadline: .now()+5) {
+      vm.clear()
+      print("Clear...")
+    }
   }
 
   @discardableResult
@@ -63,8 +48,8 @@ struct ContentView: View {
   var body: some View {
     Text("Hello \(greet) \(self.vm.state)")
       .onAppear {
-      self.vm.dispatch(action: GithubSearchActionSearch(term: "kmm"))
-    }
+        self.vm.dispatch(action: GithubSearchActionSearch(term: "kmm"))
+      }
   }
 }
 

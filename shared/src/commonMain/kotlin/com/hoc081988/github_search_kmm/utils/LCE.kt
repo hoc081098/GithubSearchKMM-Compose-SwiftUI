@@ -1,4 +1,4 @@
-package com.hoc081988.github_search_kmm
+package com.hoc081988.github_search_kmm.utils
 
 import arrow.core.Either
 import com.hoc081098.flowext.flowFromSuspend

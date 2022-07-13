@@ -8,7 +8,7 @@ import com.hoc081988.github_search_kmm.domain.model.Color
 import com.hoc081988.github_search_kmm.domain.model.Owner
 import com.hoc081988.github_search_kmm.domain.model.RepoItem
 import com.hoc081988.github_search_kmm.domain.repository.RepoItemRepository
-import com.hoc081988.github_search_kmm.parZipEither
+import com.hoc081988.github_search_kmm.utils.parZipEither
 import io.github.aakira.napier.Napier
 
 internal open class RepoItemRepositoryImpl(

@@ -5,7 +5,8 @@ import com.hoc081098.flowext.flowFromSuspend
 import com.hoc081098.flowext.takeUntil
 import com.hoc081098.flowredux.SideEffect
 import com.hoc081988.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
-import com.hoc081988.github_search_kmm.eitherLCEFlow
+import com.hoc081988.github_search_kmm.utils.eitherLCEFlow
+import kotlin.jvm.JvmInline
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted.Companion.Eagerly
@@ -18,8 +19,9 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 
+@JvmInline
 @Suppress("NOTHING_TO_INLINE")
-internal class GithubSearchSideEffects(
+internal value class GithubSearchSideEffects(
   private val searchRepoItemsUseCase: SearchRepoItemsUseCase,
 ) {
   inline val sideEffects
@@ -30,7 +32,7 @@ internal class GithubSearchSideEffects(
       search(),
       // [LoadNextPage]s -> [SearchLCE]s
       nextPage(),
-      // Retry -> [SearchLCE]s
+      // [Retry] -> [SearchLCE]s
       retry(),
     )
 
