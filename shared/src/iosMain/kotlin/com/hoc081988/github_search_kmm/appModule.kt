@@ -8,4 +8,8 @@ val appModule = module {
   singleOf(::IosAppCoroutineDispatchers) {
     bind<AppCoroutineDispatchers>()
   }
+
+  singleOf(::MainScopeProvider) {
+    bind<ScopeProvider>()
+  }
 }

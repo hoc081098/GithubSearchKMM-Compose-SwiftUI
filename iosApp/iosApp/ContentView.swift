@@ -7,23 +7,21 @@ class IOSGithubSearchViewModel: ObservableObject {
   private let vm: GithubSearchViewModel
 
   @Published var state: GithubSearchState
+  let eventPublisher: AnyPublisher<GithubSearchSingleEvent, Never>
 
-  init(
-    vm: GithubSearchViewModel
-  ) {
+  init(vm: GithubSearchViewModel) {
     self.vm = vm
 
+    
+    self.eventPublisher = vm.eventFlow.asNonNullPublisher()
+      .assertNoFailure()
+      .eraseToAnyPublisher()
+    
     self.state = vm.stateFlow.value as! GithubSearchState
     vm.stateFlow.subscribeNonNullFlow(
       scope: vm.viewModelScope,
-      onValue: { [weak self] in self?.state = $0 }) { error in
-        print("Error", error)
-      }
-    
-    DispatchQueue.main.asyncAfter(deadline: .now()+5) {
-      vm.clear()
-      print("Clear...")
-    }
+      onValue: { [weak self] in self?.state = $0 }
+    )
   }
 
   @discardableResult
@@ -49,6 +47,9 @@ struct ContentView: View {
     Text("Hello \(greet) \(self.vm.state)")
       .onAppear {
         self.vm.dispatch(action: GithubSearchActionSearch(term: "kmm"))
+      }
+      .onReceive(self.vm.eventPublisher) { event in
+        print("Event --- \(event)")
       }
   }
 }
