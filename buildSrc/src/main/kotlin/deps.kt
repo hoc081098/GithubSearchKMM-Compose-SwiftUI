@@ -129,6 +129,7 @@ object deps {
 
     const val mockk = "io.mockk:mockk:1.12.4"
     const val kotlinJUnit = "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}"
+    const val turbine = "app.cash.turbine:turbine:0.8.0"
   }
 }
 
