@@ -21,6 +21,7 @@ buildscript {
     classpath("com.diffplug.spotless:spotless-plugin-gradle:${versions.spotless}")
     classpath("com.github.ben-manes:gradle-versions-plugin:${versions.gradleVersions}")
     classpath("com.squareup:javapoet:1.13.0")
+    classpath("dev.icerock.moko:kswift-gradle-plugin:0.5.0")
   }
 }
 

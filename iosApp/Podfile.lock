@@ -1,16 +1,22 @@
 PODS:
   - shared (0.0.1-SNAPSHOT)
+  - sharedSwift (0.0.1-SNAPSHOT):
+    - shared
 
 DEPENDENCIES:
   - shared (from `../shared`)
+  - sharedSwift (from `../shared`)
 
 EXTERNAL SOURCES:
   shared:
     :path: "../shared"
+  sharedSwift:
+    :path: "../shared"
 
 SPEC CHECKSUMS:
   shared: 342bee73b27f9475b0c75acfb2a877c4ed7c6ba5
+  sharedSwift: 425c160d4477be917c8a46a28c3f5d45e0c6ba0c
 
-PODFILE CHECKSUM: f282da88f39e69507b0a255187c8a6b644477756
+PODFILE CHECKSUM: becb04c93e1f93ab0cf6cc7f18a83ff2cc3d7002
 
 COCOAPODS: 1.11.2

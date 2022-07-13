@@ -1,4 +1,6 @@
 import org.gradle.api.JavaVersion.VERSION_11
+import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
+import org.jetbrains.kotlin.gradle.tasks.KotlinNativeLink
 
 plugins {
   kotlinMultiplatform
@@ -7,6 +9,7 @@ plugins {
   kotlinxSerialization
   kotlinKapt
   daggerHiltAndroid
+  id("dev.icerock.moko.kswift")
 }
 
 version = appConfig.versionName
@@ -66,6 +69,8 @@ kotlin {
         api(deps.dateTime)
         api(deps.atomicfu)
         api(deps.immutableCollections)
+
+        implementation("dev.icerock.moko:kswift-runtime:0.5.0")
       }
     }
     val commonTest by getting {
@@ -141,3 +146,17 @@ android {
 hilt {
   enableAggregatingTask = true
 }
+
+kswift {
+  install(dev.icerock.moko.kswift.plugin.feature.SealedToSwiftEnumFeature)
+}
+
+tasks.withType<KotlinNativeLink>()
+  .matching { it.binary is Framework }
+  .configureEach {
+    doLast {
+      val swiftDirectory = File(destinationDir, "${binary.baseName}Swift")
+      val xcodeSwiftDirectory = File(buildDir, "generated/swift")
+      swiftDirectory.copyRecursively(xcodeSwiftDirectory, overwrite = true)
+    }
+  }

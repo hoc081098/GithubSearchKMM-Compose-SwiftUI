@@ -1,20 +1,21 @@
 import SwiftUI
 import shared
 import Combine
+import sharedSwift
 
 @MainActor
 class IOSGithubSearchViewModel: ObservableObject {
   private let vm: GithubSearchViewModel
 
   @Published var state: GithubSearchState
-  let eventPublisher: AnyPublisher<GithubSearchSingleEvent, Never>
+  let eventPublisher: AnyPublisher<GithubSearchSingleEventKs, Never>
 
   init(vm: GithubSearchViewModel) {
     self.vm = vm
-
     
     self.eventPublisher = vm.eventFlow.asNonNullPublisher()
       .assertNoFailure()
+      .map(GithubSearchSingleEventKs.init)
       .eraseToAnyPublisher()
     
     self.state = vm.stateFlow.value as! GithubSearchState
@@ -49,7 +50,21 @@ struct ContentView: View {
         self.vm.dispatch(action: GithubSearchActionSearch(term: "kmm"))
       }
       .onReceive(self.vm.eventPublisher) { event in
-        print("Event --- \(event)")
+        switch event {
+        case let .searchFailure(e):
+          switch AppErrorKs(e.appError) {
+          case let .apiException(a):
+            print(a.message)
+            ()
+          case let .localStorageException(a):
+            print(a.message)
+            ()
+          case let .unknownException(e):
+            print(e.cause?.message)
+            ()
+          }
+          ()
+        }
       }
   }
 }
