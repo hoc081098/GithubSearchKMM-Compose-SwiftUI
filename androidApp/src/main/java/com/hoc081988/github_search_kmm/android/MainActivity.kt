@@ -2,16 +2,11 @@ package com.hoc081988.github_search_kmm.android
 
 import android.os.Bundle
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.hoc081098.flowext.interval
 import com.hoc081988.github_search_kmm.Greeting
-import com.hoc081988.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
+import com.hoc081988.github_search_kmm.presentation.DaggerGithubSearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.aakira.napier.Napier
-import javax.inject.Inject
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 fun greet(): String {
   return Greeting().greeting()
@@ -19,8 +14,7 @@ fun greet(): String {
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-  @Inject
-  lateinit var searchRepoItemsUseCase: SearchRepoItemsUseCase
+  private val vm by viewModels<DaggerGithubSearchViewModel>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -29,18 +23,6 @@ class MainActivity : AppCompatActivity() {
     val tv: TextView = findViewById(R.id.text_view)
     tv.text = greet()
 
-    interval(
-      0,
-      5000
-    )
-      .onEach {
-        searchRepoItemsUseCase(
-          term = "kmm",
-          page = 1
-        ).let {
-          Napier.d("searchRepoItemsUseCase: $it")
-        }
-      }
-      .launchIn(lifecycleScope)
+    vm.toString()
   }
 }

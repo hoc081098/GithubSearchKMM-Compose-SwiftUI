@@ -2,6 +2,7 @@ package com.hoc081988.github_search_kmm
 
 import com.hoc081988.github_search_kmm.data.dataModule
 import com.hoc081988.github_search_kmm.domain.domainModule
+import com.hoc081988.github_search_kmm.presentation.presentationModule
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import kotlinx.cinterop.ObjCClass
@@ -24,6 +25,7 @@ object DIContainer : KoinComponent {
         dataModule,
         domainModule,
         appModule,
+        presentationModule,
       )
     }
   }

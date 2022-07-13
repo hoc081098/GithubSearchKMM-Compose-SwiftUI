@@ -31,7 +31,7 @@ kotlin {
     val commonMain by getting {
       dependencies {
         api(deps.coroutines.core)
-//        implementation(deps.flowExt)
+        implementation(deps.flowExt)
 
         api(deps.arrow.core)
         implementation(deps.arrow.fx)
@@ -62,6 +62,7 @@ kotlin {
       dependencies {
         implementation(deps.ktor.okHttp)
 
+        implementation(deps.lifecycle.viewModelKtx)
         implementation(deps.dagger.hiltAndroid)
       }
     }
