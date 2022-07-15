@@ -1,5 +1,6 @@
 package com.hoc081988.github_search_kmm.data
 
+import com.hoc081988.github_search_kmm.data.remote.CacheGithubLanguageColorApiDecorator
 import com.hoc081988.github_search_kmm.data.remote.GithubLanguageColorApi
 import com.hoc081988.github_search_kmm.data.remote.KtorGithubLanguageColorApi
 import com.hoc081988.github_search_kmm.data.remote.KtorRepoItemApi
@@ -33,11 +34,17 @@ val dataModule = module {
     Url("https://api.github.com")
   }
 
-  single<GithubLanguageColorApi> {
+  single {
     KtorGithubLanguageColorApi(
       url = get(GithubLanguageColorApiUrl),
       httpClient = get(),
       appCoroutineDispatchers = get()
+    )
+  }
+
+  single<GithubLanguageColorApi> {
+    CacheGithubLanguageColorApiDecorator(
+      decoratee = get<KtorGithubLanguageColorApi>()
     )
   }
 
