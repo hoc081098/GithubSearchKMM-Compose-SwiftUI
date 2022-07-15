@@ -29,6 +29,7 @@ internal sealed interface SideEffectAction : GithubSearchAction {
   data class SearchLCE(
     val lce: EitherLCE<AppError, List<RepoItem>>,
     val term: String,
+    val loadFirstPage: Boolean,
   ) : SideEffectAction {
     override fun reduce(state: GithubSearchState) = when (lce) {
       is EitherLCE.ContentOrError -> {
@@ -59,7 +60,7 @@ internal sealed interface SideEffectAction : GithubSearchAction {
         )
       }
       EitherLCE.Loading -> {
-        if (state.isFirstPage) {
+        if (loadFirstPage) {
           state.copy(
             term = term,
             isLoading = true,

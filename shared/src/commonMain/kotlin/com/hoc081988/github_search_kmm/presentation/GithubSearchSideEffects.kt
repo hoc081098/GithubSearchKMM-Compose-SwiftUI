@@ -133,7 +133,8 @@ internal value class GithubSearchSideEffects(
     }.map {
       SideEffectAction.SearchLCE(
         lce = it,
-        term = term
+        term = term,
+        loadFirstPage = nextPage == 1u,
       )
     }
 }

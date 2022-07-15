@@ -42,28 +42,67 @@ struct ContentView: View {
   @ObservedObject var vm = IOSGithubSearchViewModel(
     vm: DIContainer.shared.get(for: GithubSearchViewModel.self)
   )
+  
+  @State private var term: String = ""
 
   var body: some View {
     let state = self.vm.state
 
     return NavigationView {
-      ZStack(alignment: .center) {
-        if state.isFirstPage {
-          if state.isLoading {
-            ProgressView("Loading...")
+      VStack {
+        TextField("Search...", text: $term)
+          .onChange(of: term) {
+            self.vm.dispatch(action: GithubSearchActionSearch(term: $0))
           }
-          else if let error = state.error {
-            ErrorMessageAndButton(
-              error: error,
-              onRetry: {
-                self.vm.dispatch(action: GithubSearchActionRetry.shared)
-              }
+          .padding()
+        
+        ZStack(alignment: .center) {
+          
+          if state.isFirstPage {
+            if state.isLoading {
+              ProgressView("Loading...")
+            }
+            else if let error = state.error {
+              ErrorMessageAndButton(
+                error: error,
+                onRetry: {
+                  self.vm.dispatch(action: GithubSearchActionRetry.shared)
+                }
+              )
+            }
+            else if state.items.isEmpty {
+              EmptySearch(
+                hasTerm: !state.term
+                  .trimmingCharacters(in: .whitespacesAndNewlines)
+                  .isEmpty
+              )
+            }
+            else {
+              GithubRepoItemsList(
+                items: state.items,
+                isLoading: false,
+                error: nil,
+                endOfListReached: {
+                  self.vm.dispatch(action: GithubSearchActionLoadNextPage.shared)
+                },
+                onRetry: {
+                  self.vm.dispatch(action: GithubSearchActionRetry.shared)
+                }
+              )
+            }
+          }
+          else if state.items.isEmpty {
+            EmptySearch(
+              hasTerm: !state.term
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .isEmpty
             )
           } else {
             GithubRepoItemsList(
               items: state.items,
-              isLoading: false,
-              error: nil,
+
+              isLoading: state.isLoading,
+              error: state.error,
               endOfListReached: {
                 self.vm.dispatch(action: GithubSearchActionLoadNextPage.shared)
               },
@@ -73,31 +112,9 @@ struct ContentView: View {
             )
           }
         }
-        else if state.items.isEmpty {
-          EmptySearch(
-            hasTerm: state.term
-              .trimmingCharacters(in: .whitespacesAndNewlines)
-              .isEmpty
-          )
-        } else {
-          GithubRepoItemsList(
-            items: state.items,
-
-            isLoading: state.isLoading,
-            error: state.error,
-            endOfListReached: {
-              self.vm.dispatch(action: GithubSearchActionLoadNextPage.shared)
-            },
-            onRetry: {
-              self.vm.dispatch(action: GithubSearchActionRetry.shared)
-            }
-          )
-        }
-      }
-        .navigationTitle("Github search KMM")
-        .onAppear {
-        self.vm.dispatch(action: GithubSearchActionSearch(term: "kmm"))
-      }
+        .frame(maxHeight: .infinity)
+        
+      }.navigationTitle("Github search KMM")
     }
   }
 }
