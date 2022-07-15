@@ -9,7 +9,7 @@ import com.hoc081988.github_search_kmm.utils.eitherLCEFlow
 import kotlin.jvm.JvmInline
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted.Companion.Eagerly
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -74,7 +74,7 @@ internal value class GithubSearchSideEffects(
    */
   private inline fun nextPage() =
     SideEffect<GithubSearchState, GithubSearchAction> { actions, getState, scope ->
-      val actionSharedFlow = actions.shareIn(scope, Eagerly)
+      val actionSharedFlow = actions.shareIn(scope, WhileSubscribed())
 
       actionSharedFlow
         .filterIsInstance<GithubSearchAction.LoadNextPage>()
@@ -99,9 +99,9 @@ internal value class GithubSearchSideEffects(
    *
    * [GithubSearchAction.Retry]s to [SideEffectAction.SearchLCE]s
    */
-  private fun retry() =
+  private inline fun retry() =
     SideEffect<GithubSearchState, GithubSearchAction> { actions, getState, scope ->
-      val actionSharedFlow = actions.shareIn(scope, Eagerly)
+      val actionSharedFlow = actions.shareIn(scope, WhileSubscribed())
 
       actionSharedFlow
         .filterIsInstance<GithubSearchAction.Retry>()
