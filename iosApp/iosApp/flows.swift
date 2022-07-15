@@ -70,8 +70,10 @@ private class NonNullFlowSubscription<T: AnyObject, S: Subscriber>: Subscription
     self.subscriber = subscriber
 
     let scope = DIContainer.shared
-      .get(for: ScopeProvider.self)
-      .scope()
+      .get(
+        for: AppCoroutineScope.self,
+        qualifier: AppModuleKt.MainAppCoroutineScope
+      )
 
     self.closable = flow.subscribeNonNullFlow(
       scope: scope,
