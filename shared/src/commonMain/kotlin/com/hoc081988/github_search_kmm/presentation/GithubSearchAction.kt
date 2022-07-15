@@ -2,6 +2,7 @@ package com.hoc081988.github_search_kmm.presentation
 
 import com.hoc081988.github_search_kmm.domain.model.AppError
 import com.hoc081988.github_search_kmm.domain.model.RepoItem
+import com.hoc081988.github_search_kmm.presentation.GithubSearchState.Companion.FIRST_PAGE
 import com.hoc081988.github_search_kmm.utils.EitherLCE
 import kotlinx.collections.immutable.persistentListOf
 
@@ -29,7 +30,7 @@ internal sealed interface SideEffectAction : GithubSearchAction {
   data class SearchLCE(
     val lce: EitherLCE<AppError, List<RepoItem>>,
     val term: String,
-    val loadFirstPage: Boolean,
+    val nextPage: UInt,
   ) : SideEffectAction {
     override fun reduce(state: GithubSearchState) = when (lce) {
       is EitherLCE.ContentOrError -> {
@@ -55,18 +56,20 @@ internal sealed interface SideEffectAction : GithubSearchAction {
                 1u
               },
               items = state.items.addAll(filtered),
+              hasReachedMax = filtered.isEmpty(),
             )
           }
         )
       }
       EitherLCE.Loading -> {
-        if (loadFirstPage) {
+        if (nextPage == FIRST_PAGE + 1u) {
           state.copy(
             term = term,
             isLoading = true,
             error = null,
-            page = GithubSearchState.FIRST_PAGE,
+            page = FIRST_PAGE,
             items = persistentListOf(),
+            hasReachedMax = false,
           )
         } else {
           state.copy(

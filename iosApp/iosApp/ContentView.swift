@@ -42,7 +42,7 @@ struct ContentView: View {
   @ObservedObject var vm = IOSGithubSearchViewModel(
     vm: DIContainer.shared.get(for: GithubSearchViewModel.self)
   )
-  
+
   @State private var term: String = ""
 
   var body: some View {
@@ -52,12 +52,12 @@ struct ContentView: View {
       VStack {
         TextField("Search...", text: $term)
           .onChange(of: term) {
-            self.vm.dispatch(action: GithubSearchActionSearch(term: $0))
-          }
+          self.vm.dispatch(action: GithubSearchActionSearch(term: $0))
+        }
           .padding()
-        
+
         ZStack(alignment: .center) {
-          
+
           if state.isFirstPage {
             if state.isLoading {
               ProgressView("Loading...")
@@ -82,6 +82,7 @@ struct ContentView: View {
                 items: state.items,
                 isLoading: false,
                 error: nil,
+                hasReachedMax: state.hasReachedMax,
                 endOfListReached: {
                   self.vm.dispatch(action: GithubSearchActionLoadNextPage.shared)
                 },
@@ -103,6 +104,7 @@ struct ContentView: View {
 
               isLoading: state.isLoading,
               error: state.error,
+              hasReachedMax: state.hasReachedMax,
               endOfListReached: {
                 self.vm.dispatch(action: GithubSearchActionLoadNextPage.shared)
               },
@@ -112,11 +114,12 @@ struct ContentView: View {
             )
           }
         }
-        .frame(maxHeight: .infinity)
-        
+          .frame(maxHeight: .infinity)
+
       }
         .navigationTitle("Github search KMM")
-    }.navigationViewStyle(.stack)
+    }
+      .navigationViewStyle(.stack)
   }
 }
 
@@ -162,6 +165,7 @@ struct GithubRepoItemsList: View {
   let items: [RepoItem]
   let isLoading: Bool
   let error: AppError?
+  let hasReachedMax: Bool
 
   let endOfListReached: () -> Void
   let onRetry: () -> Void
@@ -172,20 +176,22 @@ struct GithubRepoItemsList: View {
         Text(item.name)
       }
 
-      if isLoading {
-        HStack(alignment: .center) {
-          ProgressView("Loading...")
-        }.frame(maxWidth: .infinity)
-      } else if let error = error {
-        ErrorMessageAndButton(
-          error: error,
-          onRetry: onRetry,
-          font: .subheadline
-        )
-      } else if !items.isEmpty {
-        Rectangle()
-          .size(width: 0, height: 0)
-          .onAppear(perform: endOfListReached)
+      if !hasReachedMax {
+        if isLoading {
+          HStack(alignment: .center) {
+            ProgressView("Loading...")
+          }.frame(maxWidth: .infinity)
+        } else if let error = error {
+          ErrorMessageAndButton(
+            error: error,
+            onRetry: onRetry,
+            font: .subheadline
+          )
+        } else if !items.isEmpty {
+          Rectangle()
+            .size(width: 0, height: 0)
+            .onAppear(perform: endOfListReached)
+        }
       }
     }
   }

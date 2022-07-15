@@ -11,6 +11,7 @@ data class GithubSearchState(
   val items: PersistentList<RepoItem>,
   val isLoading: Boolean,
   val error: AppError?,
+  val hasReachedMax: Boolean
 ) {
   inline val isFirstPage: Boolean get() = page == FIRST_PAGE
 
@@ -20,6 +21,7 @@ data class GithubSearchState(
       items.isNotEmpty() &&
       term.isNotEmpty() &&
       !isFirstPage
+      && !hasReachedMax
 
   inline val canRetry: Boolean get() = !isLoading && error !== null
 
@@ -31,7 +33,8 @@ data class GithubSearchState(
       term = "",
       items = persistentListOf(),
       isLoading = false,
-      error = null
+      error = null,
+      hasReachedMax = false,
     )
   }
 }

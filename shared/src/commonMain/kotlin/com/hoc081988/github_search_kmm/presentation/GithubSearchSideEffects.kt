@@ -5,6 +5,7 @@ import com.hoc081098.flowext.flowFromSuspend
 import com.hoc081098.flowext.takeUntil
 import com.hoc081098.flowredux.SideEffect
 import com.hoc081988.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
+import com.hoc081988.github_search_kmm.presentation.GithubSearchState.Companion.FIRST_PAGE
 import com.hoc081988.github_search_kmm.utils.eitherLCEFlow
 import kotlin.jvm.JvmInline
 import kotlin.time.Duration.Companion.milliseconds
@@ -134,7 +135,7 @@ internal value class GithubSearchSideEffects(
       SideEffectAction.SearchLCE(
         lce = it,
         term = term,
-        loadFirstPage = nextPage == 1u,
+        nextPage = nextPage,
       )
     }
 }
