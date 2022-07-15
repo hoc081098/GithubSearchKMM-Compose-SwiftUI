@@ -20,8 +20,8 @@ data class GithubSearchState(
       error === null &&
       items.isNotEmpty() &&
       term.isNotEmpty() &&
-      !isFirstPage
-      && !hasReachedMax
+      !isFirstPage &&
+      !hasReachedMax
 
   inline val canRetry: Boolean get() = !isLoading && error !== null
 
