@@ -114,8 +114,9 @@ struct ContentView: View {
         }
         .frame(maxHeight: .infinity)
         
-      }.navigationTitle("Github search KMM")
-    }
+      }
+        .navigationTitle("Github search KMM")
+    }.navigationViewStyle(.stack)
   }
 }
 
