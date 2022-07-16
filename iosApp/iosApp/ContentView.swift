@@ -47,56 +47,35 @@ struct ContentView: View {
 
   var body: some View {
     let state = self.vm.state
+    let hasTerm = !state.term
+      .trimmingCharacters(in: .whitespacesAndNewlines)
+      .isEmpty
 
     return NavigationView {
       VStack {
         TextField("Search...", text: $term)
-          .onChange(of: term) {
-          self.vm.dispatch(action: GithubSearchActionSearch(term: $0))
-        }
+          .onChange(of: term) { self.vm.dispatch(action: GithubSearchActionSearch(term: $0)) }
           .padding()
 
         ZStack(alignment: .center) {
-
           if state.isFirstPage {
-            if state.isLoading {
-              ProgressView("Loading...")
-            }
-            else if let error = state.error {
-              ErrorMessageAndButton(
-                error: error,
-                onRetry: {
-                  self.vm.dispatch(action: GithubSearchActionRetry.shared)
-                }
-              )
-            }
-            else if state.items.isEmpty {
-              EmptySearch(
-                hasTerm: !state.term
-                  .trimmingCharacters(in: .whitespacesAndNewlines)
-                  .isEmpty
-              )
-            }
-            else {
-              GithubRepoItemsList(
-                items: state.items,
-                isLoading: false,
-                error: nil,
-                hasReachedMax: state.hasReachedMax,
-                endOfListReached: {
-                  self.vm.dispatch(action: GithubSearchActionLoadNextPage.shared)
-                },
-                onRetry: {
-                  self.vm.dispatch(action: GithubSearchActionRetry.shared)
-                }
-              )
-            }
+            GithubRepoItemsFirstPage(
+              isLoading: state.isLoading,
+              error: state.error,
+              items: state.items,
+              hasTerm: hasTerm,
+              hasReachedMax: state.hasReachedMax,
+              endOfListReached: {
+                self.vm.dispatch(action: GithubSearchActionLoadNextPage.shared)
+              },
+              onRetry: {
+                self.vm.dispatch(action: GithubSearchActionRetry.shared)
+              }
+            )
           }
           else if state.items.isEmpty {
-            EmptySearch(
-              hasTerm: !state.term
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-                .isEmpty
+            GithubEmptySearch(
+              hasTerm: hasTerm
             )
           } else {
             GithubRepoItemsList(
@@ -113,87 +92,11 @@ struct ContentView: View {
               }
             )
           }
-        }
-          .frame(maxHeight: .infinity)
+        }.frame(maxHeight: .infinity)
 
-      }
-        .navigationTitle("Github search KMM")
-    }
-      .navigationViewStyle(.stack)
-  }
-}
+      }.navigationTitle("Github search KMM")
 
-struct EmptySearch: View {
-  let hasTerm: Bool
-
-  var body: some View {
-    if hasTerm {
-      Text("Empty results")
-        .font(.title3)
-        .multilineTextAlignment(.center)
-        .padding(10)
-    } else {
-      Text("Search github repositories...")
-        .font(.title3)
-        .multilineTextAlignment(.center)
-        .padding(10)
-    }
-  }
-}
-
-struct ErrorMessageAndButton: View {
-  let error: AppError
-  let onRetry: () -> Void
-  var font: Font? = nil
-
-  var body: some View {
-    VStack(alignment: .center) {
-      Text(error.readableMessage)
-        .font(font ?? .title3)
-        .multilineTextAlignment(.center)
-        .padding(10)
-
-      Button("Retry", action: onRetry)
-        .buttonStyle(PlainButtonStyle.plain)
-
-      Spacer().frame(height: 10)
-    }.frame(maxWidth: .infinity)
-  }
-}
-
-struct GithubRepoItemsList: View {
-  let items: [RepoItem]
-  let isLoading: Bool
-  let error: AppError?
-  let hasReachedMax: Bool
-
-  let endOfListReached: () -> Void
-  let onRetry: () -> Void
-
-  var body: some View {
-    List {
-      ForEach(items) { item in
-        Text(item.name)
-      }
-
-      if !hasReachedMax {
-        if isLoading {
-          HStack(alignment: .center) {
-            ProgressView("Loading...")
-          }.frame(maxWidth: .infinity)
-        } else if let error = error {
-          ErrorMessageAndButton(
-            error: error,
-            onRetry: onRetry,
-            font: .subheadline
-          )
-        } else if !items.isEmpty {
-          Rectangle()
-            .size(width: 0, height: 0)
-            .onAppear(perform: endOfListReached)
-        }
-      }
-    }
+    }.navigationViewStyle(.stack)
   }
 }
 
