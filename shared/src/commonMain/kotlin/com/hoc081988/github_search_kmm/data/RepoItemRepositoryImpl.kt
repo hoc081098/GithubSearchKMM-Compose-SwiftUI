@@ -62,7 +62,7 @@ private fun RepoItemsSearchResponse.toRepoItemsList(colors: Map<String, Color>):
       language = item.language,
       starCount = item.stargazersCount,
       name = item.name,
-      description = item.description,
+      repoDescription = item.description,
       languageColor = item.language?.let { colors[it] },
       htmlUrl = item.htmlUrl,
       owner = item.owner.toOwner(),

@@ -55,7 +55,7 @@ struct RepoItemRow: View {
 
         Spacer().frame(height: 10)
 
-        Text("item.description")
+        Text(item.repoDescription ?? "")
           .font(.subheadline)
           .lineLimit(2)
           .truncationMode(.tail)

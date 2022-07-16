@@ -9,7 +9,7 @@ data class RepoItem(
   val language: String?,
   val starCount: Int,
   val name: String,
-  val description: String?,
+  val repoDescription: String?,
   val languageColor: Color?,
   val htmlUrl: String,
   val owner: Owner,
