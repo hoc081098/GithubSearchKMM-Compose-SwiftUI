@@ -22,9 +22,10 @@ struct GithubRepoItemsList: View {
   var body: some View {
     List {
       ForEach(items) { item in
-        Text(item.name)
+        RepoItemRow(
+          item: item
+        ).listRowInsets(.init())
       }
-
 
       if isLoading {
         HStack(alignment: .center) {
@@ -41,7 +42,6 @@ struct GithubRepoItemsList: View {
           .size(width: 0, height: 0)
           .onAppear(perform: endOfListReached)
       }
-    }
+    }.listStyle(.plain)
   }
 }
-

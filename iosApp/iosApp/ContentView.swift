@@ -66,8 +66,10 @@ struct ContentView: View {
           }.foregroundColor(.secondary)
         }.padding()
 
-        Text("Search results for '\(state.term)'")
-          .font(.subheadline)
+        if hasTerm {
+          Text("Search results for '\(state.term)'")
+            .font(.subheadline)
+        }
 
         ZStack(alignment: .center) {
           if state.isFirstPage {
@@ -109,6 +111,12 @@ struct ContentView: View {
       }.navigationTitle("Github search KMM")
 
     }.navigationViewStyle(.stack)
+      .onReceive(self.vm.eventPublisher) { event in
+      switch event {
+      case .searchFailure(let e):
+        print(e.appError)
+      }
+    }
   }
 }
 

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,6 +17,9 @@
 		3579B093288323B900BD3B25 /* GithubRepoItemsFirstPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3579B092288323B900BD3B25 /* GithubRepoItemsFirstPage.swift */; };
 		3579B095288323DA00BD3B25 /* ErrorMessageAndButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3579B094288323DA00BD3B25 /* ErrorMessageAndButton.swift */; };
 		3579B097288323F800BD3B25 /* GithubEmptySearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3579B096288323F800BD3B25 /* GithubEmptySearch.swift */; };
+		3579B0992883380100BD3B25 /* UIColor+init.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3579B0982883380100BD3B25 /* UIColor+init.swift */; };
+		3579B09B2883381700BD3B25 /* Once.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3579B09A2883381700BD3B25 /* Once.swift */; };
+		3579B09D2883385600BD3B25 /* RepoItemRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3579B09C2883385600BD3B25 /* RepoItemRow.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 		AE7F89A4C525AA2FB6D723D0 /* Pods_iosApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 968C2293ED2018714D78970A /* Pods_iosApp.framework */; };
 /* End PBXBuildFile section */
@@ -32,6 +35,9 @@
 		3579B092288323B900BD3B25 /* GithubRepoItemsFirstPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubRepoItemsFirstPage.swift; sourceTree = "<group>"; };
 		3579B094288323DA00BD3B25 /* ErrorMessageAndButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorMessageAndButton.swift; sourceTree = "<group>"; };
 		3579B096288323F800BD3B25 /* GithubEmptySearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubEmptySearch.swift; sourceTree = "<group>"; };
+		3579B0982883380100BD3B25 /* UIColor+init.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+init.swift"; sourceTree = "<group>"; };
+		3579B09A2883381700BD3B25 /* Once.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Once.swift; sourceTree = "<group>"; };
+		3579B09C2883385600BD3B25 /* RepoItemRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoItemRow.swift; sourceTree = "<group>"; };
 		411E508FDF81CE847230ABCE /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.release.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -101,6 +107,9 @@
 				3579B092288323B900BD3B25 /* GithubRepoItemsFirstPage.swift */,
 				3579B094288323DA00BD3B25 /* ErrorMessageAndButton.swift */,
 				3579B096288323F800BD3B25 /* GithubEmptySearch.swift */,
+				3579B0982883380100BD3B25 /* UIColor+init.swift */,
+				3579B09A2883381700BD3B25 /* Once.swift */,
+				3579B09C2883385600BD3B25 /* RepoItemRow.swift */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -125,6 +134,7 @@
 				7555FF77242A565900829871 /* Sources */,
 				7555FF79242A565900829871 /* Resources */,
 				5D3421A4E100B0E014769ECE /* Frameworks */,
+				3B604A2C92EF6CF0DCAACD02 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -181,6 +191,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		3B604A2C92EF6CF0DCAACD02 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		FB098F62D9F4EE0EB824CB47 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -212,13 +239,16 @@
 			files = (
 				3579B093288323B900BD3B25 /* GithubRepoItemsFirstPage.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
+				3579B09B2883381700BD3B25 /* Once.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
 				3573720928813C930061F94C /* DIContainer+get.swift in Sources */,
+				3579B09D2883385600BD3B25 /* RepoItemRow.swift in Sources */,
 				3579B097288323F800BD3B25 /* GithubEmptySearch.swift in Sources */,
 				3579B095288323DA00BD3B25 /* ErrorMessageAndButton.swift in Sources */,
 				3579B0912883238D00BD3B25 /* GithubRepoItemsList.swift in Sources */,
 				35737205287F4AE00061F94C /* kotlinxCoroutinesFlowExtensions.swift in Sources */,
 				3573720728813C6B0061F94C /* AppError+readableErrorMessage.swift in Sources */,
+				3579B0992883380100BD3B25 /* UIColor+init.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

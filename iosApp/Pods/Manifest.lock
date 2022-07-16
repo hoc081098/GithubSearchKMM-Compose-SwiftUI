@@ -1,11 +1,17 @@
 PODS:
+  - Kingfisher (7.3.0)
   - shared (0.0.1-SNAPSHOT)
   - sharedSwift (0.0.1-SNAPSHOT):
     - shared
 
 DEPENDENCIES:
+  - Kingfisher (~> 7.0)
   - shared (from `../shared`)
   - sharedSwift (from `../shared`)
+
+SPEC REPOS:
+  trunk:
+    - Kingfisher
 
 EXTERNAL SOURCES:
   shared:
@@ -14,9 +20,10 @@ EXTERNAL SOURCES:
     :path: "../shared"
 
 SPEC CHECKSUMS:
+  Kingfisher: cdb1189a9223b1bc028816bd47c8b8101a58831c
   shared: 342bee73b27f9475b0c75acfb2a877c4ed7c6ba5
   sharedSwift: 425c160d4477be917c8a46a28c3f5d45e0c6ba0c
 
-PODFILE CHECKSUM: becb04c93e1f93ab0cf6cc7f18a83ff2cc3d7002
+PODFILE CHECKSUM: c07cc20e8a11ac19aff302f27befc22ba2f6292a
 
 COCOAPODS: 1.11.2
