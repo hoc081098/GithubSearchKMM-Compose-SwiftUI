@@ -23,8 +23,8 @@ struct RepoItemRow: View {
   
   private let languageColorOnce = Once<RepoItemRow, SwiftUI.Color?> { this in
     if
-      let hexInt = this.item.languageColor?.value,
-      let uiColor = UIColor.init(int: hexInt) {
+      let hex = this.item.languageColor?.hexStringWithoutPrefix,
+      let uiColor = UIColor.init(hexString: hex) {
       return .init(uiColor)
     } else {
       return nil
@@ -37,9 +37,7 @@ struct RepoItemRow: View {
       KFAnimatedImage(url)
         .configure { view in view.framePreloadCount = 3 }
         .cacheOriginalImage()
-        .onFailure { e in
-        print("err: url=\(url), e=\(e)")
-      }
+        .onFailure { e in print("err: url=\(url), e=\(e)") }
         .placeholder { p in ProgressView(p) }
         .fade(duration: 1)
         .forceTransition()
@@ -63,10 +61,26 @@ struct RepoItemRow: View {
           .truncationMode(.tail)
 
         Spacer().frame(height: 10)
-
-        Text(item.language ?? "Unknown language")
-          .font(.subheadline)
-          .foregroundColor(languageColor)
+        
+        HStack {
+          if let languageColor = self.languageColor {
+            Circle()
+              .fill(languageColor)
+              .frame(width: 16, height: 16)
+            
+            Spacer().frame(width: 8)
+          }
+          
+          Text(item.language ?? "Unknown language")
+            .font(.subheadline)
+            .foregroundColor(languageColor)
+          
+          Spacer().frame(width: 24)
+          
+          Image(systemName: "star.fill")
+            .foregroundColor(.yellow)
+          Text("\(item.starCount)")
+        }
 
         Spacer().frame(height: 10)
       }.padding([.bottom, .trailing, .top])
