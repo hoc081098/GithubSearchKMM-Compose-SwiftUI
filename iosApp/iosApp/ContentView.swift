@@ -53,9 +53,18 @@ struct ContentView: View {
 
     return NavigationView {
       VStack {
-        TextField("Search...", text: $term)
-          .onChange(of: term) { self.vm.dispatch(action: GithubSearchActionSearch(term: $0)) }
-          .padding()
+        HStack {
+          Image(systemName: "magnifyingglass")
+
+          TextField("Search...", text: $term)
+            .onChange(of: term) { self.vm.dispatch(action: GithubSearchActionSearch(term: $0)) }
+            .font(.title2)
+
+          Button(action: { term = "" }) {
+            Image(systemName: "xmark.circle.fill")
+              .opacity(term == "" ? 0 : 1)
+          }.foregroundColor(.secondary)
+        }.padding()
 
         ZStack(alignment: .center) {
           if state.isFirstPage {
