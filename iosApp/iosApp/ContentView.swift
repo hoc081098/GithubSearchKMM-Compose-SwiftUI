@@ -66,6 +66,9 @@ struct ContentView: View {
           }.foregroundColor(.secondary)
         }.padding()
 
+        Text("Search results for '\(state.term)'")
+          .font(.subheadline)
+
         ZStack(alignment: .center) {
           if state.isFirstPage {
             GithubRepoItemsFirstPage(
