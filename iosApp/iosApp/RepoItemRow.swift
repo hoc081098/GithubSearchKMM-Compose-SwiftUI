@@ -15,20 +15,22 @@ import UIKit
 struct RepoItemRow: View {
   let item: RepoItem
 
-  let urlOnce = Once<RepoItemRow, URL> { this in
+  private let urlOnce = Once<RepoItemRow, URL> { this in
     URL(string: this.item.owner.avatar)!
   }
-  var url: URL { self.urlOnce.once(self) }
+  private var url: URL { self.urlOnce.once(self) }
 
-  var languageColor: SwiftUI.Color? {
+  
+  private let languageColorOnce = Once<RepoItemRow, SwiftUI.Color?> { this in
     if
-      let hexInt = self.item.languageColor?.value,
+      let hexInt = this.item.languageColor?.value,
       let uiColor = UIColor.init(int: hexInt) {
       return .init(uiColor)
     } else {
       return nil
     }
   }
+  private var languageColor: SwiftUI.Color? { self.languageColorOnce.once(self) }
 
   var body: some View {
     HStack {
