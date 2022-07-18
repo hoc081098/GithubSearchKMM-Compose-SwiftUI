@@ -34,9 +34,9 @@ fun Throwable.asNSError(): NSError {
  */
 val NSError.isKotlinThrowable: Boolean
   get() {
-    return domain == "KotlinException"
-      && code == 0.convert<NSInteger>()
-      && userInfo["KotlinException"] is Throwable
+    return domain == "KotlinException" &&
+      code == 0.convert<NSInteger>() &&
+      userInfo["KotlinException"] is Throwable
   }
 
 /**
