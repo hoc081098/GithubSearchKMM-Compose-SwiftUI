@@ -24,21 +24,53 @@ android {
       isMinifyEnabled = false
     }
   }
+
+  compileOptions {
+    // Flag to enable support for the new language APIs
+    // For AGP 4.1+
+    isCoreLibraryDesugaringEnabled = true
+
+    // Sets Java compatibility to Java 11
+    sourceCompatibility = org.gradle.api.JavaVersion.VERSION_11
+    targetCompatibility = org.gradle.api.JavaVersion.VERSION_11
+  }
+
+  buildFeatures {
+    // Enables Jetpack Compose for this module
+    compose = true
+  }
+
+  composeOptions {
+    kotlinCompilerExtensionVersion = deps.compose.androidxComposeCompilerVersion
+  }
+
+  kotlinOptions {
+    freeCompilerArgs = freeCompilerArgs + buildComposeMetricsParameters() + listOf(
+      "-opt-in=kotlin.RequiresOptIn",
+      // Enable experimental coroutines APIs, including Flow
+      "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+      "-opt-in=kotlinx.coroutines.FlowPreview",
+      "-opt-in=kotlin.Experimental",
+      // Enable experimental kotlinx serialization APIs
+      "-opt-in=kotlinx.serialization.ExperimentalSerializationApi"
+    )
+  }
 }
 
 dependencies {
   implementation(shared)
 
+  coreLibraryDesugaring(deps.desugarJdkLibs)
+
   implementation(deps.androidx.appCompat)
   implementation(deps.androidx.coreKtx)
+  implementation(deps.androidx.activityCompose)
+  implementation(deps.androidx.material)
+  implementation(deps.androidx.hiltNavigationCompose)
 
   implementation(deps.lifecycle.viewModelKtx)
   implementation(deps.lifecycle.runtimeKtx)
-
-  implementation(deps.androidx.recyclerView)
-  implementation(deps.androidx.constraintLayout)
-  implementation(deps.androidx.swipeRefreshLayout)
-  implementation(deps.androidx.material)
+  implementation(deps.lifecycle.runtimeCompose)
 
   implementation(deps.coroutines.core)
   implementation(deps.coroutines.android)
@@ -51,4 +83,38 @@ dependencies {
 
   implementation(deps.dagger.hiltAndroid)
   kapt(deps.dagger.hiltAndroidCompiler)
+
+  // Compose
+  implementation(deps.compose.foundation)
+  implementation(deps.compose.foundationLayout)
+  implementation(deps.compose.materialIconsExtended)
+  implementation(deps.compose.material3)
+  debugImplementation(deps.compose.uiTooling)
+  implementation(deps.compose.uiToolingPreview)
+  implementation(deps.compose.uiUtil)
+  implementation(deps.compose.runtime)
+}
+
+fun Project.buildComposeMetricsParameters(): List<String> {
+  val metricParameters = mutableListOf<String>()
+  val enableMetricsProvider = project.providers.gradleProperty("enableComposeCompilerMetrics")
+  val enableMetrics = (enableMetricsProvider.orNull == "true")
+  if (enableMetrics) {
+    val metricsFolder = File(project.buildDir, "compose-metrics")
+    metricParameters.add("-P")
+    metricParameters.add(
+      "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=" + metricsFolder.absolutePath
+    )
+  }
+
+  val enableReportsProvider = project.providers.gradleProperty("enableComposeCompilerReports")
+  val enableReports = (enableReportsProvider.orNull == "true")
+  if (enableReports) {
+    val reportsFolder = File(project.buildDir, "compose-reports")
+    metricParameters.add("-P")
+    metricParameters.add(
+      "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" + reportsFolder.absolutePath
+    )
+  }
+  return metricParameters.toList()
 }

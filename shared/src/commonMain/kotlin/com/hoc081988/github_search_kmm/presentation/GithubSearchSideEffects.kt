@@ -43,9 +43,9 @@ internal value class GithubSearchSideEffects(
     SideEffect<GithubSearchState, GithubSearchAction> { actions, _, _ ->
       actions
         .filterIsInstance<GithubSearchAction.Search>()
-        .map { it.term }
+        .map { it.term.trim() }
         .debounce(600.milliseconds)
-        .filter { it.isNotEmpty() }
+        .filter { it.isNotBlank() }
         .distinctUntilChanged()
         .map { SideEffectAction.TextChanged(term = it) }
     }

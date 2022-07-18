@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Github search KMM</string>
+    <string name="retry">Retry</string>
+    <string name="network_error_message">A network error has occurred. Please try again.</string>
+    <string name="server_error_message">A server error has occurred. Please try again.</string>
+    <string name="timeout_error_message">A network timeout error has occurred. Please try again.</string>
+    <string name="unknown_error_message">An unknown error has occurred. Please try again.</string>
+    <string name="database_error_message">A database error has occurred. Please try again.</string>
+    <string name="file_error_message">A file system error has occurred. Please try again.</string>
+</resources>

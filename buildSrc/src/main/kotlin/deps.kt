@@ -35,17 +35,17 @@ object deps {
   object androidx {
     const val appCompat = "androidx.appcompat:appcompat:1.4.1"
     const val coreKtx = "androidx.core:core-ktx:1.7.0"
-    const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.1.3"
-    const val recyclerView = "androidx.recyclerview:recyclerview:1.2.1"
-    const val swipeRefreshLayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01"
     const val material = "com.google.android.material:material:1.6.0"
+    const val activityCompose = "androidx.activity:activity-compose:1.4.0"
+    const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:1.0.0"
   }
 
   object lifecycle {
-    private const val version = "2.4.0"
+    private const val version = "2.6.0-alpha01"
 
     const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version" // viewModelScope
     const val runtimeKtx = "androidx.lifecycle:lifecycle-runtime-ktx:$version" // lifecycleScope
+    const val runtimeCompose = "androidx.lifecycle:lifecycle-runtime-compose:$version" // lifecycleScope
     const val commonJava8 = "androidx.lifecycle:lifecycle-common-java8:$version"
   }
 
@@ -54,7 +54,7 @@ object deps {
     const val converterMoshi = "com.squareup.retrofit2:converter-moshi:2.9.0"
     const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2"
     const val moshiKotlin = "com.squareup.moshi:moshi-kotlin:1.12.0"
-    const val leakCanary = "com.squareup.leakcanary:leakcanary-android:2.7"
+    const val leakCanary = "com.squareup.leakcanary:leakcanary-android:2.9.1"
   }
 
   object coroutines {
@@ -82,6 +82,25 @@ object deps {
     const val mock = "io.ktor:ktor-client-mock:$version"
     const val negotiation = "io.ktor:ktor-client-content-negotiation:$version"
     const val serializationKotlinXJson = "io.ktor:ktor-serialization-kotlinx-json:$version"
+  }
+
+  object compose {
+    const val androidxComposeCompilerVersion = "1.2.0-rc02"
+    private const val version = "1.2.0-rc02"
+    private const val androidxComposeMaterial3Version = "1.0.0-alpha13"
+
+    const val foundation = "androidx.compose.foundation:foundation:$version"
+    const val foundationLayout = "androidx.compose.foundation:foundation-layout:$version"
+
+    const val materialIconsExtended = "androidx.compose.material:material-icons-extended:$version"
+    const val material3 = "androidx.compose.material3:material3:$androidxComposeMaterial3Version"
+    const val material3WindowSizeClass = "androidx.compose.material3:material3-window-size-class:$androidxComposeMaterial3Version"
+
+    const val runtime = "androidx.compose.runtime:runtime:$version"
+
+    const val uiTooling = "androidx.compose.ui:ui-tooling:$version"
+    const val uiToolingPreview = "androidx.compose.ui:ui-tooling-preview:$version"
+    const val uiUtil = "androidx.compose.ui:ui-util:$version"
   }
 
   object koin {

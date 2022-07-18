@@ -1,7 +1,7 @@
 package com.hoc081988.github_search_kmm.android
 
 import android.os.Bundle
-import android.widget.TextView
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.hoc081988.github_search_kmm.Greeting
@@ -14,15 +14,11 @@ fun greet(): String {
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-  private val vm by viewModels<DaggerGithubSearchViewModel>()
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
 
-    val tv: TextView = findViewById(R.id.text_view)
-    tv.text = greet()
-
-    vm.toString()
+    setContent {
+      GithubSearchKmmApp()
+    }
   }
 }
