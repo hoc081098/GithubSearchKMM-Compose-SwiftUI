@@ -22,9 +22,11 @@ struct GithubRepoItemsList: View {
   var body: some View {
     List {
       ForEach(items) { item in
-        RepoItemRow(
-          item: item
-        ).listRowInsets(.init())
+        NavigationLink(destination: LazyView(DemoDetail())) {
+          GithubRepoItemRow(
+            item: item
+          ).listRowInsets(.init())
+        }
       }
 
       if isLoading {
@@ -43,5 +45,16 @@ struct GithubRepoItemsList: View {
           .onAppear(perform: endOfListReached)
       }
     }.listStyle(.plain)
+  }
+}
+
+struct DemoDetail: View {
+  @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+
+  var body: some View {
+    Button(
+      "Here is Detail View. Tap to go back.",
+      action: { self.presentationMode.wrappedValue.dismiss() }
+    )
   }
 }

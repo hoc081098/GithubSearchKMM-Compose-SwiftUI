@@ -27,6 +27,8 @@ kotlin {
     podfile = project.file("../iosApp/Podfile")
     framework {
       baseName = "shared"
+      export(deps.coroutines.core)
+      export(deps.napier)
     }
   }
 
@@ -63,7 +65,7 @@ kotlin {
         implementation(deps.ktor.serialization)
 
         // Logger
-        implementation(deps.napier)
+        api(deps.napier)
 
         // Kotlinx libs
         api(deps.dateTime)

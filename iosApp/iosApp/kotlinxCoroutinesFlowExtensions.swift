@@ -12,8 +12,14 @@ import Combine
 
 private let emptyOnComplete = { }
 private let defaultOnError = { (error: KotlinThrowable) in
-  debugPrint("subscribeNonNullFlow: unhandle error = \(error)")
-  fatalError("subscribeNonNullFlow: unhandle error = \(error)")
+  Napier.e(error: error.asError(), "Unhandled error")
+  fatalError("Unhandled error = \(error)")
+}
+
+extension Kotlinx_coroutines_coreStateFlow {
+  func typedValue<T>(_ type: T.Type = T.self) -> T {
+    value as! T
+  }
 }
 
 extension Kotlinx_coroutines_coreFlow {
@@ -81,7 +87,7 @@ private class NonNullFlowSubscription<T: AnyObject, S: Subscriber>: Subscription
         _ = subscriber.receive($0)
       },
       onError: {
-        subscriber.receive(completion: .failure($0.asNSError()))
+        subscriber.receive(completion: .failure($0.asError()))
       },
       onComplete: {
         subscriber.receive(completion: .finished)

@@ -3,45 +3,10 @@ import shared
 import Combine
 import sharedSwift
 
-@MainActor
-class IOSGithubSearchViewModel: ObservableObject {
-  private let vm: GithubSearchViewModel
-
-  @Published var state: GithubSearchState
-  let eventPublisher: AnyPublisher<GithubSearchSingleEventKs, Never>
-
-  init(vm: GithubSearchViewModel) {
-    self.vm = vm
-
-    self.eventPublisher = vm.eventFlow.asNonNullPublisher()
-      .assertNoFailure()
-      .map(GithubSearchSingleEventKs.init)
-      .eraseToAnyPublisher()
-
-    self.state = vm.stateFlow.value as! GithubSearchState
-    vm.stateFlow.subscribeNonNullFlow(
-      scope: vm.viewModelScope,
-      onValue: { [weak self] in self?.state = $0 }
-    )
-  }
-
-  @discardableResult
-  func dispatch(action: GithubSearchAction) -> Bool {
-    self.vm.dispatch(action: action)
-  }
-
-  deinit {
-    vm.clear()
-  }
-}
-
-
 struct ContentView: View {
   let greet = Greeting().greeting()
 
-  @ObservedObject var vm = IOSGithubSearchViewModel(
-    vm: DIContainer.shared.get(for: GithubSearchViewModel.self)
-  )
+  @ObservedObject var vm = IOSGithubSearchViewModel(vm: DIContainer.shared.get())
 
   @State private var term: String = ""
 
@@ -114,7 +79,7 @@ struct ContentView: View {
       .onReceive(self.vm.eventPublisher) { event in
       switch event {
       case .searchFailure(let e):
-        print(e.appError)
+        Napier.e(error: e.appError.asError(), "searchFailure")
       }
     }
   }

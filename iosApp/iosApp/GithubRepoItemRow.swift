@@ -1,5 +1,5 @@
 //
-//  RepoItemRow.swift
+//  GithubRepoItemRow.swift
 //  iosApp
 //
 //  Created by Hoc Nguyen T. on 7/17/22.
@@ -12,19 +12,19 @@ import shared
 import Kingfisher
 import UIKit
 
-struct RepoItemRow: View {
+struct GithubRepoItemRow: View {
   let item: RepoItem
 
-  private let urlOnce = Once<RepoItemRow, URL> { this in
-    URL(string: this.item.owner.avatar)!
+  private let urlOnce = Once<GithubRepoItemRow, URL?> { this in
+    URL(string: this.item.owner.avatar)
   }
-  private var url: URL { self.urlOnce.once(self) }
+  private var url: URL? { self.urlOnce.once(self) }
 
-  
-  private let languageColorOnce = Once<RepoItemRow, SwiftUI.Color?> { this in
+  private let languageColorOnce = Once<GithubRepoItemRow, SwiftUI.Color?> { this in
     if
       let hex = this.item.languageColor?.hexStringWithoutPrefix,
       let uiColor = UIColor.init(hexString: hex) {
+      Napier.d("languageColorOnce: ", uiColor)
       return .init(uiColor)
     } else {
       return nil
@@ -37,7 +37,7 @@ struct RepoItemRow: View {
       KFAnimatedImage(url)
         .configure { view in view.framePreloadCount = 3 }
         .cacheOriginalImage()
-        .onFailure { e in print("err: url=\(url), e=\(e)") }
+        .onFailure { e in Napier.e(error: e, "err: url=\(String(describing: url)), e=\(e)") }
         .placeholder { p in ProgressView(p) }
         .fade(duration: 1)
         .forceTransition()
@@ -48,7 +48,7 @@ struct RepoItemRow: View {
         .frame(width: 92, height: 92)
 
       VStack(alignment: .leading) {
-        Text(item.name)
+        Text("\(item.owner.username)/\(item.name)")
           .font(.headline)
           .lineLimit(2)
           .truncationMode(.tail)
