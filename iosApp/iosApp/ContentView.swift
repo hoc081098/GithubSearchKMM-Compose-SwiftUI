@@ -4,8 +4,6 @@ import Combine
 import sharedSwift
 
 struct ContentView: View {
-  let greet = Greeting().greeting()
-
   @ObservedObject var vm = IOSGithubSearchViewModel(vm: DIContainer.shared.get())
 
   @State private var term: String = ""
