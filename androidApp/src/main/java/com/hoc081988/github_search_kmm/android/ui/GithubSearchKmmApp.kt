@@ -1,4 +1,4 @@
-package com.hoc081988.github_search_kmm.android
+package com.hoc081988.github_search_kmm.android.ui
 
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -12,8 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.hoc081988.github_search_kmm.android.ui.AppBackground
-import com.hoc081988.github_search_kmm.android.ui.AppTheme
+import com.hoc081988.github_search_kmm.android.R
+import com.hoc081988.github_search_kmm.android.core_ui.AppBackground
+import com.hoc081988.github_search_kmm.android.core_ui.AppTheme
 
 @OptIn(
   ExperimentalMaterial3Api::class,

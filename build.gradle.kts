@@ -78,7 +78,8 @@ subprojects {
           "experimental:package-name",
           "experimental:trailing-comma",
           "experimental:type-parameter-list-spacing",
-          "filename"
+          "filename",
+          "annotation"
         ].joinToString(separator = ","),
       ]
 

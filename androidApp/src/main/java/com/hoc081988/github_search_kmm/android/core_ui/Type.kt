@@ -1,4 +1,4 @@
-package com.hoc081988.github_search_kmm.android.ui
+package com.hoc081988.github_search_kmm.android.core_ui
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

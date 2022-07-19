@@ -1,4 +1,4 @@
-package com.hoc081988.github_search_kmm.android.ui
+package com.hoc081988.github_search_kmm.android.core_ui
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.LocalAbsoluteTonalElevation

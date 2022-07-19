@@ -1,4 +1,4 @@
-package com.hoc081988.github_search_kmm.android.ui
+package com.hoc081988.github_search_kmm.android.core_ui
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -155,7 +155,7 @@ fun AppTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
   dynamicColor: Boolean = false,
   androidTheme: Boolean = false,
-  content: @Composable() () -> Unit,
+  content: @Composable () -> Unit,
 ) {
   val colorScheme = when {
     dynamicColor -> {
