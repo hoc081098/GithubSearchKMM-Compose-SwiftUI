@@ -4,7 +4,7 @@ import arrow.core.Either
 import arrow.core.flatMap
 import arrow.core.traverse
 import com.hoc081988.github_search_kmm.AppCoroutineDispatchers
-import com.hoc081988.github_search_kmm.domain.model.Color
+import com.hoc081988.github_search_kmm.domain.model.ArgbColor
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -31,7 +31,7 @@ internal open class KtorGithubLanguageColorApi(
             }
           }
           .traverse { (k, v) ->
-            Color
+            ArgbColor
               .parse(v)
               .mapLeft { IllegalStateException(it) }
               .map { k to it }

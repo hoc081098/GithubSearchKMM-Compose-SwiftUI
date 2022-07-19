@@ -4,7 +4,7 @@ import com.hoc081988.github_search_kmm.AppCoroutineDispatchers
 import com.hoc081988.github_search_kmm.data.remote.GithubLanguageColorApi
 import com.hoc081988.github_search_kmm.data.remote.RepoItemApi
 import com.hoc081988.github_search_kmm.data.remote.response.RepoItemsSearchResponse
-import com.hoc081988.github_search_kmm.domain.model.Color
+import com.hoc081988.github_search_kmm.domain.model.ArgbColor
 import com.hoc081988.github_search_kmm.domain.model.Owner
 import com.hoc081988.github_search_kmm.domain.model.RepoItem
 import com.hoc081988.github_search_kmm.domain.repository.RepoItemRepository
@@ -54,7 +54,7 @@ internal open class RepoItemRepositoryImpl(
   }
 }
 
-private fun RepoItemsSearchResponse.toRepoItemsList(colors: Map<String, Color>): List<RepoItem> =
+private fun RepoItemsSearchResponse.toRepoItemsList(colors: Map<String, ArgbColor>): List<RepoItem> =
   items?.map { item ->
     RepoItem(
       id = item.id,

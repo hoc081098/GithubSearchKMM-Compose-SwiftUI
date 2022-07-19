@@ -75,10 +75,7 @@ dependencies {
   implementation(deps.coroutines.core)
   implementation(deps.coroutines.android)
 
-  implementation(deps.coil)
-  implementation(deps.napier)
-
-  implementation(deps.viewBindingDelegate)
+  implementation(deps.coilCompose)
   implementation(deps.flowExt)
 
   implementation(deps.dagger.hiltAndroid)
