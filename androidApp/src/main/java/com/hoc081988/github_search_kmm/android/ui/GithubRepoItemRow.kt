@@ -34,12 +34,14 @@ import coil.request.ImageRequest
 import com.hoc081988.github_search_kmm.android.R
 import com.hoc081988.github_search_kmm.android.core_ui.fromArgbColor
 import com.hoc081988.github_search_kmm.domain.model.RepoItem
+import java.text.DecimalFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GithubRepoItemRow(
   modifier: Modifier = Modifier,
-  item: RepoItem
+  item: RepoItem,
+  decimalFormat: DecimalFormat,
 ) {
   Card(
     modifier = modifier,
@@ -125,7 +127,7 @@ fun GithubRepoItemRow(
           )
 
           Text(
-            text = item.starCount.toString(),
+            text = decimalFormat.format(item.starCount),
             style = MaterialTheme.typography.bodyMedium
           )
         }

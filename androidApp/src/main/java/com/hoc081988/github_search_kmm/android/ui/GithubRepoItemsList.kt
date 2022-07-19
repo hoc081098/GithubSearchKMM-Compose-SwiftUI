@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
@@ -22,6 +23,7 @@ import com.hoc081988.github_search_kmm.android.getReadableMessage
 import com.hoc081988.github_search_kmm.domain.model.AppError
 import com.hoc081988.github_search_kmm.domain.model.RepoItem
 import io.github.aakira.napier.Napier
+import java.text.DecimalFormat
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.flow.filter
@@ -42,7 +44,7 @@ internal fun GithubRepoItemsList(
   LaunchedEffect(lazyListState) {
     snapshotFlow { lazyListState.layoutInfo }
       .throttleTime(
-        duration = 200.milliseconds,
+        duration = 300.milliseconds,
         ThrottleConfiguration.LEADING_AND_TRAILING
       )
       .filter {
@@ -64,6 +66,8 @@ internal fun GithubRepoItemsList(
       }
   }
 
+  val decimalFormat = remember { DecimalFormat("#,###") }
+
   LazyColumn(
     modifier = Modifier
       .padding(horizontal = 16.dp),
@@ -77,7 +81,8 @@ internal fun GithubRepoItemsList(
       GithubRepoItemRow(
         modifier = Modifier
           .fillParentMaxWidth(),
-        item = item
+        item = item,
+        decimalFormat = decimalFormat,
       )
     }
 

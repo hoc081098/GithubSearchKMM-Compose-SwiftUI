@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -11,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -45,6 +47,20 @@ fun GithubRepoItemsSearchScreen(
       },
       initialTerm = state.term,
     )
+
+    if (state.term.isNotBlank()) {
+      Text(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(
+            start = 16.dp,
+            bottom = 16.dp,
+            end = 16.dp
+          ),
+        text = "Search results for '${state.term}'",
+        style = MaterialTheme.typography.bodySmall
+      )
+    }
 
     GithubRepoItemsSearchContent(
       modifier = Modifier.weight(1f),
