@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    name: Prepare for Build and default scheme using any available iPhone simulator
+    name: Build and default scheme using any available iPhone simulator
     runs-on: macos-12
 
     steps:
@@ -75,5 +75,6 @@ jobs:
         with:
           project: iosApp/iosApp.xcodeproj
           scheme: iosApp
-          action: Build
+          action: build
+          sdk: iphonesimulator
           destination: platform=iOS Simulator,name=iphone-12-pro
