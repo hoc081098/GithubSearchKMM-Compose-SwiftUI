@@ -66,6 +66,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pods-
 
+      - name: Gen KSwift
+        run: ./gradlew kSwiftsharedPodspec
+
       - name: Install CocoaPod
         run: pod install
         working-directory: iosApp
