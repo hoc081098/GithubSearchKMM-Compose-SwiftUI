@@ -27,6 +27,7 @@ jobs:
           open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app
 
 
+
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
@@ -65,7 +66,7 @@ jobs:
       run:
         working-directory: ./iosApp
     runs-on: macos-12
-
+    steps:
       - name: Cache Pods
         uses: actions/cache@v3.0.5
         with:
