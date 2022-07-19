@@ -1,7 +1,6 @@
 package com.hoc081988.github_search_kmm.data
 
 import com.hoc081988.github_search_kmm.domain.model.AppError
-import io.github.aakira.napier.Napier
 import java.io.IOException
 import java.net.SocketException
 import java.net.SocketTimeoutException
@@ -21,4 +20,3 @@ internal actual class PlatformAppErrorMapper @Inject constructor() : (Throwable)
     }
   }
 }
-
