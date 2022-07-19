@@ -22,8 +22,8 @@ struct GithubRepoItemRow: View {
 
   private let languageColorOnce = Once<GithubRepoItemRow, SwiftUI.Color?> { this in
     if
-      let hex = this.item.languageColor?.hexStringWithoutPrefix,
-      let uiColor = UIColor.init(hexString: hex) {
+      let argbColor = this.item.languageColor,
+      let uiColor = UIColor.init(argbColor: argbColor) {
       Napier.d("languageColorOnce: ", uiColor)
       return .init(uiColor)
     } else {
@@ -48,7 +48,7 @@ struct GithubRepoItemRow: View {
         .frame(width: 92, height: 92)
 
       VStack(alignment: .leading) {
-        Text("\(item.owner.username)/\(item.name)")
+        Text(item.fullName)
           .font(.headline)
           .lineLimit(2)
           .truncationMode(.tail)
