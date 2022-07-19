@@ -103,8 +103,6 @@ class ArgbColor private constructor(
       }.mapLeft { "Cannot convert $hex to Color" }
     }
   }
-
-
 }
 
 data class Owner(

@@ -90,7 +90,12 @@ internal fun GithubRepoItemsSearchContent(
   }
 
   GithubRepoItemsList(
-    items = state.items
+    items = state.items,
+    isLoading = state.isLoading,
+    error = state.error,
+    hasReachedMax = state.hasReachedMax,
+    onRetry = { dispatch(GithubSearchAction.Retry) },
+    onLoadNextPage = { dispatch(GithubSearchAction.LoadNextPage) }
   )
 }
 
