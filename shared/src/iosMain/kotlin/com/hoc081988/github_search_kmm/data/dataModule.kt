@@ -56,6 +56,8 @@ val dataModule = module {
     bind<AppErrorMapper>()
   }
 
+  singleOf(::PlatformAppErrorMapper)
+
   single {
     createHttpClient(
       engineFactory = Darwin
