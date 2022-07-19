@@ -76,4 +76,4 @@ jobs:
           project: iosApp/iosApp.xcodeproj
           scheme: iosApp
           action: Build
-          destination: name=iphone-12-pro
+          destination: platform=iOS Simulator,name=iphone-12-pro
