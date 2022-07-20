@@ -43,7 +43,7 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(project(":flowredux"))
-        implementation(project(":multiplatform-viewmodel"))
+        api(project(":multiplatform-viewmodel"))
 
         // Flow, Coroutines
         api(deps.coroutines.core)
@@ -86,8 +86,6 @@ kotlin {
     val androidMain by getting {
       dependencies {
         implementation(deps.ktor.okHttp)
-
-        implementation(deps.lifecycle.viewModelKtx)
         implementation(deps.dagger.hiltAndroid)
       }
     }
