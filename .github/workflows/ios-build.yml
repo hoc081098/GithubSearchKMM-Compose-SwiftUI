@@ -92,4 +92,4 @@ jobs:
           sdk: iphonesimulator
           destination: platform=iOS Simulator,name=iphone-12-pro
           configuration: Debug
-          build-settings: ONLY_ACTIVE_ARCH=NO CODE_SIGNING_REQUIRED=NO
+          build-settings: CODE_SIGNING_REQUIRED=NO
