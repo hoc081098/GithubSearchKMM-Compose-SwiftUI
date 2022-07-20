@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    name: Build and default scheme using any available iPhone simulator
+    name: Build default scheme using any available iPhone simulator
     runs-on: macos-12
 
     steps:
@@ -71,7 +71,7 @@ jobs:
       - name: Cache Pods
         uses: actions/cache@v3.0.5
         with:
-          path: Pods
+          path: iosApp/Pods
           key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
@@ -92,3 +92,4 @@ jobs:
           sdk: iphonesimulator
           destination: platform=iOS Simulator,name=iphone-12-pro
           configuration: Debug
+          build-settings: ONLY_ACTIVE_ARCH=NO CODE_SIGNING_REQUIRED=NO
