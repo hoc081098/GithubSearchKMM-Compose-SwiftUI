@@ -1,7 +1,7 @@
 PODS:
   - Kingfisher (7.3.0)
   - shared (0.0.1-SNAPSHOT)
-  - sharedSwift (0.0.1-SNAPSHOT):
+  - sharedSwift (1.0):
     - shared
 
 DEPENDENCIES:
@@ -22,7 +22,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Kingfisher: cdb1189a9223b1bc028816bd47c8b8101a58831c
   shared: 342bee73b27f9475b0c75acfb2a877c4ed7c6ba5
-  sharedSwift: 425c160d4477be917c8a46a28c3f5d45e0c6ba0c
+  sharedSwift: 069e6019f6963d18ae01d1d772429c854db2fe1e
 
 PODFILE CHECKSUM: c07cc20e8a11ac19aff302f27befc22ba2f6292a
 
