@@ -32,6 +32,7 @@ actual abstract class ViewModel actual constructor() {
    * When using it on iOS you'll want to make sure that you call [clear] on your ViewModel
    * on deinit to properly cancel the CoroutineScope
    */
+  @Suppress("unused") // Called by platform code
   fun clear() {
     if (cleared.compareAndSet(expect = false, update = true)) {
       viewModelScope.cancel()
