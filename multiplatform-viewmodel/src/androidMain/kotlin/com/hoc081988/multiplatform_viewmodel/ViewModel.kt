@@ -1,4 +1,4 @@
-package com.hoc081988.github_search_kmm
+package com.hoc081988.multiplatform_viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope as androidXViewModelScope

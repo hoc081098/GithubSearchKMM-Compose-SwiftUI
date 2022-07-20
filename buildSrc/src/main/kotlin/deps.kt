@@ -168,6 +168,7 @@ inline val PDsS.daggerHiltAndroid: PDS get() = id("dagger.hilt.android.plugin")
 
 inline val DependencyHandler.shared get() = project(":shared")
 inline val DependencyHandler.flowRedux get() = project(":flowredux")
+inline val DependencyHandler.multiplatformViewModel get() = project(":multiplatform-viewmodel")
 
 fun DependencyHandler.addUnitTest(testImplementation: Boolean = true) {
   val configName = if (testImplementation) "testImplementation" else "implementation"

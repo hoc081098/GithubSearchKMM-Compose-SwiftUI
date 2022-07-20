@@ -1,16 +1,23 @@
-package com.hoc081988.github_search_kmm
+package com.hoc081988.multiplatform_viewmodel
 
 import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 
+@Suppress("NOTHING_TO_INLINE")
+private inline val viewModelScopeDispatcher: CoroutineDispatcher
+  get() = runCatching { Dispatchers.Main.immediate }
+    .recoverCatching { Dispatchers.Main }
+    .getOrDefault(Dispatchers.Default)
+
 actual abstract class ViewModel actual constructor() {
   private val cleared = atomic(false)
 
   protected actual val viewModelScope: CoroutineScope =
-    CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    CoroutineScope(SupervisorJob() + viewModelScopeDispatcher)
 
   /**
    * This method will be called when this ViewModel is no longer used and will be destroyed.

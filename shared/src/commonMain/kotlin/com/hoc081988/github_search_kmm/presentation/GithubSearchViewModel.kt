@@ -1,8 +1,8 @@
 package com.hoc081988.github_search_kmm.presentation
 
 import com.hoc081098.flowredux.createFlowReduxStore
-import com.hoc081988.github_search_kmm.ViewModel
 import com.hoc081988.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
+import com.hoc081988.multiplatform_viewmodel.ViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
