@@ -71,7 +71,7 @@ jobs:
       - name: Cache Pods
         uses: actions/cache@v3.0.5
         with:
-          path: iosApp/Pods
+          path: ${{ github.workspace }}/iosApp/Pods
           key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
@@ -79,7 +79,7 @@ jobs:
       - name: Gen KSwift
         run: ./gradlew kSwiftsharedPodspec
 
-      - name: Install CocoaPod
+      - name: Install Pod
         run: pod install
         working-directory: iosApp
 
