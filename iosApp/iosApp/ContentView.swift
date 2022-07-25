@@ -73,11 +73,14 @@ struct ContentView: View {
 
       }.navigationTitle("Github search KMM")
 
-    }.navigationViewStyle(.stack)
+    }
+      .navigationViewStyle(.stack)
       .onReceive(self.vm.eventPublisher) { event in
       switch event {
       case .searchFailure(let e):
         Napier.e(error: e.appError.asError(), "searchFailure")
+      case .reachedMaxItems:
+        Napier.d("Loaded all items!")
       }
     }
   }
@@ -88,5 +91,11 @@ extension RepoItem: Identifiable { }
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
     ContentView()
+  }
+}
+
+extension View {
+  var uiView: UIView {
+    UIHostingController(rootView: self).view
   }
 }
