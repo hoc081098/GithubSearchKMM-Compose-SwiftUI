@@ -8,4 +8,5 @@
     <string name="unknown_error_message">An unknown error has occurred. Please try again.</string>
     <string name="database_error_message">A database error has occurred. Please try again.</string>
     <string name="file_error_message">A file system error has occurred. Please try again.</string>
+    <string name="loaded_all_items">Loaded all items!</string>
 </resources>

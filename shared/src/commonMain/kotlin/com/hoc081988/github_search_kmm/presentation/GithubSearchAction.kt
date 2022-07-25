@@ -93,7 +93,11 @@ internal fun GithubSearchAction.toGithubSearchSingleEventOrNull(): GithubSearchS
       when (lce) {
         is EitherLCE.ContentOrError -> {
           lce.either.fold(
-            ifRight = { null },
+            ifRight = { items ->
+              items
+                .takeIf { it.isEmpty() }
+                ?.let { GithubSearchSingleEvent.ReachedMaxItems }
+            },
             ifLeft = GithubSearchSingleEvent::SearchFailure
           )
         }
