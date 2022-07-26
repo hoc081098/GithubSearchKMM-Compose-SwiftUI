@@ -1,6 +1,7 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
 import com.diffplug.gradle.spotless.SpotlessPlugin
 import com.github.benmanes.gradle.versions.VersionsPlugin
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import java.util.EnumSet
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
@@ -54,6 +55,25 @@ allprojects {
 subprojects {
   apply<SpotlessPlugin>()
   apply<VersionsPlugin>()
+
+  fun isNonStable(version: String): Boolean {
+    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { version.toUpperCase().contains(it) }
+    val regex = "^[0-9,.v-]+(-r)?$".toRegex()
+    val isStable = stableKeyword || regex.matches(version)
+    return !isStable
+  }
+
+  fun isStable(version: String) = !isNonStable(version)
+
+  tasks.withType<DependencyUpdatesTask> {
+    rejectVersionIf {
+      if (isStable(currentVersion)) {
+        isNonStable(candidate.version)
+      } else {
+        false
+      }
+    }
+  }
 
   configure<SpotlessExtension> {
     val editorConfigKeys: Set<String> = hashSetOf(
