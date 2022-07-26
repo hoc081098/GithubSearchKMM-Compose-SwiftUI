@@ -38,7 +38,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Run Tests
-        run: ./gradlew koverMergedHtmlReport
+        run: ./gradlew koverMergedXmlReport
 
       - name: Upload Test Report
         uses: codecov/codecov-action@v3.1.0
