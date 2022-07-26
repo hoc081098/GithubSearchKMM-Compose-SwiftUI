@@ -23,6 +23,7 @@
 		3579B09F28846FBE00BD3B25 /* Napier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3579B09E28846FBE00BD3B25 /* Napier.swift */; };
 		3579B0A12885BA4D00BD3B25 /* IOSGithubSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3579B0A02885BA4D00BD3B25 /* IOSGithubSearchViewModel.swift */; };
 		3579B0A32885BD4E00BD3B25 /* LazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3579B0A22885BD4E00BD3B25 /* LazyView.swift */; };
+		35B1166E288EA34900FFC3C3 /* Color+init.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B1166D288EA34900FFC3C3 /* Color+init.swift */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 		AE7F89A4C525AA2FB6D723D0 /* Pods_iosApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 968C2293ED2018714D78970A /* Pods_iosApp.framework */; };
 /* End PBXBuildFile section */
@@ -44,6 +45,7 @@
 		3579B09E28846FBE00BD3B25 /* Napier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Napier.swift; sourceTree = "<group>"; };
 		3579B0A02885BA4D00BD3B25 /* IOSGithubSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSGithubSearchViewModel.swift; sourceTree = "<group>"; };
 		3579B0A22885BD4E00BD3B25 /* LazyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyView.swift; sourceTree = "<group>"; };
+		35B1166D288EA34900FFC3C3 /* Color+init.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+init.swift"; sourceTree = "<group>"; };
 		411E508FDF81CE847230ABCE /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.release.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				3579B09E28846FBE00BD3B25 /* Napier.swift */,
 				3579B0A02885BA4D00BD3B25 /* IOSGithubSearchViewModel.swift */,
 				3579B0A22885BD4E00BD3B25 /* LazyView.swift */,
+				35B1166D288EA34900FFC3C3 /* Color+init.swift */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -255,6 +258,7 @@
 				3579B09D2883385600BD3B25 /* GithubRepoItemRow.swift in Sources */,
 				3579B097288323F800BD3B25 /* GithubEmptySearch.swift in Sources */,
 				3579B0A12885BA4D00BD3B25 /* IOSGithubSearchViewModel.swift in Sources */,
+				35B1166E288EA34900FFC3C3 /* Color+init.swift in Sources */,
 				3579B095288323DA00BD3B25 /* ErrorMessageAndButton.swift in Sources */,
 				3579B0912883238D00BD3B25 /* GithubRepoItemsList.swift in Sources */,
 				35737205287F4AE00061F94C /* kotlinxCoroutinesFlowExtensions.swift in Sources */,

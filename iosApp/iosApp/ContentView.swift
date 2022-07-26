@@ -8,6 +8,9 @@ struct ContentView: View {
 
   @State private var term: String = ""
 
+  @State private var showingAlert = false
+  @State private var event: GithubSearchSingleEventKs?
+
   var body: some View {
     let state = self.vm.state
     let hasTerm = !state.term
@@ -76,14 +79,37 @@ struct ContentView: View {
     }
       .navigationViewStyle(.stack)
       .onReceive(self.vm.eventPublisher) { event in
-      switch event {
-      case .searchFailure(let e):
-        Napier.e(error: e.appError.asError(), "searchFailure")
-      case .reachedMaxItems:
-        Napier.d("Loaded all items!")
+        self.event = event
+        self.showingAlert = true
       }
+      .alert(isPresented: $showingAlert, content: eventAlert)
+  }
+
+  private func eventAlert() -> Alert {
+    switch self.event {
+    case .reachedMaxItems:
+      return Alert(
+        title: Text("Reached max items"),
+        message: Text("Loaded all items!"),
+        dismissButton: .default(Text("OK"))
+      )
+    case .searchFailure(let e):
+      return Alert(
+        title: Text("Error"),
+        message: Text(e.appError.readableMessage),
+        dismissButton: .default(Text("OK"))
+      )
+    case nil:
+      Napier.e("\(self).event is nil")
+
+      return Alert(
+        title: Text("Error"),
+        message: Text("Unexpected error occurred!"),
+        dismissButton: .default(Text("OK"))
+      )
     }
   }
+
 }
 
 extension RepoItem: Identifiable { }
@@ -91,11 +117,5 @@ extension RepoItem: Identifiable { }
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
     ContentView()
-  }
-}
-
-extension View {
-  var uiView: UIView {
-    UIHostingController(rootView: self).view
   }
 }
