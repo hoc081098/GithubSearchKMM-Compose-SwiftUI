@@ -3,6 +3,7 @@ import com.diffplug.gradle.spotless.SpotlessPlugin
 import com.github.benmanes.gradle.versions.VersionsPlugin
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 import java.util.EnumSet
+import kotlinx.kover.KoverPlugin
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -23,6 +24,7 @@ buildscript {
     classpath("com.github.ben-manes:gradle-versions-plugin:${versions.gradleVersions}")
     classpath("com.squareup:javapoet:1.13.0")
     classpath("dev.icerock.moko:kswift-gradle-plugin:0.5.0")
+    classpath("org.jetbrains.kotlinx:kover:0.5.1")
   }
 }
 
@@ -54,6 +56,7 @@ allprojects {
 
 subprojects {
   apply<SpotlessPlugin>()
+  apply<KoverPlugin>()
   apply<VersionsPlugin>()
 
   fun isNonStable(version: String): Boolean {

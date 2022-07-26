@@ -1,18 +1,20 @@
-name: Gradle version checker
+name: Tests
 
 on:
-#  push:
-#    branches: [ master ]
-
-  schedule:
-    # Runs at 01:00 UTC on the 1, 8, 15, 22 and 29th of every month.
-    - cron: '0 1 */7 * *'
+  push:
+    branches: [ master ]
+    paths-ignore: [ '**.md', '**.MD' ]
+  pull_request:
+    branches: [ master ]
+    paths-ignore: [ '**.md', '**.MD' ]
   workflow_dispatch:
 
-jobs:
-  gradle-versions-checker:
-    runs-on: ubuntu-latest
+env:
+  CI: true
 
+jobs:
+  build:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
@@ -35,5 +37,8 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Dependency updates
-        run: ./gradlew dependencyUpdates
+      - name: Run Tests
+        run: ./gradlew koverMergedHtmlReport
+
+      - name: Upload Test Report
+        uses: codecov/codecov-action@v3.1.0
