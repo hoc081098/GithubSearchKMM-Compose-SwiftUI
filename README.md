@@ -37,6 +37,19 @@ Minimal **Kotlin Multiplatform** project with SwiftUI, Jetpack Compose.
    - Android: [**Jetpack Compose**](https://developer.android.com/jetpack/compose)
  - [Ktor client library](https://ktor.io/docs/getting-started-ktor-client-multiplatform-mobile.html) for networking
  - [Kotlinx Serialization](https://github.com/Kotlin/kotlinx.serialization) for JSON serialization/deserialization.
+ - [Napier](https://github.com/AAkira/Napier) for Multiplatform Logging.
+ - [FlowExt](https://github.com/hoc081098/FlowExt).
+ - [MOKO KSwift](https://github.com/icerockdev/moko-kswift) is a gradle plugin for generation Swift-friendly API for Kotlin/Native framework.
+ - [kotlinx.collections.immutable](https://github.com/Kotlin/kotlinx.collections.immutable): immutable collection interfaces and implementation prototypes for Kotlin..
+
+## Overall Architecture
+
+What is shared?
+ - **domain**: Domain models, UseCases, Repositories.
+ - **presentation**: ViewModels, ViewState, ViewSingleEvent, ViewAction.
+ - **data**: Repository Implementations, Remote Data Source, Local Data Source.
+ - **utils**: Utilities, Logging Library
+
 
 ## Download APK
 
