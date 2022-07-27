@@ -52,6 +52,13 @@ Minimal **Kotlin Multiplatform** project with SwiftUI, Jetpack Compose.
 
 ### Unidirectional data flow - FlowRedux
 
+ - My implementation. **Credits: [freeletics/FlowRedux](https://github.com/freeletics/FlowRedux)**
+ - See more docs and concepts at [freeletics/RxRedux](https://github.com/freeletics/RxRedux)
+
+<p align="center">
+    <img src="https://raw.githubusercontent.com/freeletics/RxRedux/master/docs/rxredux.png" width="600" alt="RxRedux In a Nutshell"/>
+</p>
+
 ```kotlin
 public sealed interface FlowReduxStore<Action, State> {
   public val coroutineScope: CoroutineScope
