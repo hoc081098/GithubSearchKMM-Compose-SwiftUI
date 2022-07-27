@@ -186,7 +186,8 @@ class IOSGithubSearchViewModel: ObservableObject {
   # or open via XCode GUI
   open iosApp.xcworkspace
   ```
-  There's a *Build Phase* script that will do the magic. 🧞
+
+  There's a *Build Phase* script that will do the magic. 🧞 <br>
   <kbd>Cmd</kbd> + <kbd>B</kbd> to build
   <br>
   <kbd>Cmd</kbd> + <kbd>R</kbd> to run.
