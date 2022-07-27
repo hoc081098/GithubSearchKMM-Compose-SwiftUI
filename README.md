@@ -10,8 +10,6 @@ Minimal **Kotlin Multiplatform** project with SwiftUI, Jetpack Compose.
  - Android (Jetpack compose)
  - iOS (SwiftUI)
 
-## Tech Stacks
-
 ### Modern Development
  - Kotlin Multiplatform
  - Jetpack Compose
@@ -19,3 +17,15 @@ Minimal **Kotlin Multiplatform** project with SwiftUI, Jetpack Compose.
  - Dagger Hilt
  - SwiftUI
  - Koin Dependency Injection
+ - FlowRedux State Management
+
+## Tech Stacks
+ - Functional & Reactive programming with Kotlin Coroutines with Flow
+ - Clean Architecture with MVI (Uni-directional data flow)
+ - Multiplatform ViewModel
+ - Multiplatform FlowRedux State Management
+ - [Λrrow - Functional companion to Kotlin's Standard Library](https://arrow-kt.io/)
+   - [Either](https://arrow-kt.io/docs/apidocs/arrow-core/arrow.core/-either/)
+   - [Monad Comprehensions](https://arrow-kt.io/docs/patterns/monad_comprehensions/)
+   - [Option](https://arrow-kt.io/docs/apidocs/arrow-core/arrow.core/-option/)
+   - [parZip](https://arrow-kt.io/docs/apidocs/arrow-fx-coroutines/arrow.fx.coroutines/par-zip.html)
