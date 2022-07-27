@@ -29,9 +29,9 @@ Minimal **Kotlin Multiplatform** project with SwiftUI, Jetpack Compose.
    - [Monad Comprehensions](https://arrow-kt.io/docs/patterns/monad_comprehensions/)
    - [Option](https://arrow-kt.io/docs/apidocs/arrow-core/arrow.core/-option/)
    - [parZip](https://arrow-kt.io/docs/apidocs/arrow-fx-coroutines/arrow.fx.coroutines/par-zip.html)
- - Dependency injection:
+ - Dependency injection
    - iOS: [**Koin**](https://insert-koin.io/)
    - Android: [**Dagger Hilt**](https://dagger.dev/hilt/)
  - Declarative UI
    - iOS: [**SwiftUI**](https://developer.apple.com/xcode/swiftui/)
-   - Android: [**Jetpack compose**](https://developer.android.com/jetpack/compose)
+   - Android: [**Jetpack Compose**](https://developer.android.com/jetpack/compose)
