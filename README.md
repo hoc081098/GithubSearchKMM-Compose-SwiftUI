@@ -32,3 +32,6 @@ Minimal **Kotlin Multiplatform** project with SwiftUI, Jetpack Compose.
  - Dependency injection:
    - iOS: [**Koin**](https://insert-koin.io/)
    - Android: [**Dagger Hilt**](https://dagger.dev/hilt/)
+ - Declarative UI
+   - iOS: [**SwiftUI**](https://developer.apple.com/xcode/swiftui/)
+   - Android: [**Jetpack compose**](https://developer.android.com/jetpack/compose)
