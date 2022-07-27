@@ -79,7 +79,7 @@ public sealed interface FlowReduxStore<Action, State> {
 }
 ```
 
-### Multiplaform ViewModel
+### Multiplatform ViewModel
 ```kotlin
 open class GithubSearchViewModel(
   searchRepoItemsUseCase: SearchRepoItemsUseCase,
@@ -99,6 +99,62 @@ open class GithubSearchViewModel(
   fun dispatch(action: GithubSearchAction) = store.dispatch(action)
   val stateFlow: StateFlow<GithubSearchState> by store::stateFlow
   val eventFlow: Flow<GithubSearchSingleEvent> get() = eventChannel.receiveAsFlow()
+}
+```
+
+### Plaform ViewModel
+
+#### Android
+
+Extends `GithubSearchViewModel` to use `Dagger Constructor Injection`.
+
+```kotlin
+@HiltViewModel
+class DaggerGithubSearchViewModel @Inject constructor(searchRepoItemsUseCase: SearchRepoItemsUseCase) :
+  GithubSearchViewModel(searchRepoItemsUseCase)
+```
+
+#### iOS
+
+Conform to `ObservableObject` and use `@Published`.
+
+```swift
+import Foundation
+import Combine
+import shared
+import sharedSwift
+
+@MainActor
+class IOSGithubSearchViewModel: ObservableObject {
+  private let vm: GithubSearchViewModel
+
+  @Published private(set) var state: GithubSearchState
+  let eventPublisher: AnyPublisher<GithubSearchSingleEventKs, Never>
+
+  init(vm: GithubSearchViewModel) {
+    self.vm = vm
+
+    self.eventPublisher = vm.eventFlow.asNonNullPublisher()
+      .assertNoFailure()
+      .map(GithubSearchSingleEventKs.init)
+      .eraseToAnyPublisher()
+
+    self.state = vm.stateFlow.typedValue()
+    vm.stateFlow.subscribeNonNullFlow(
+      scope: vm.viewModelScope,
+      onValue: { [weak self] in self?.state = $0 }
+    )
+  }
+
+  @discardableResult
+  func dispatch(action: GithubSearchAction) -> Bool {
+    self.vm.dispatch(action: action)
+  }
+
+  deinit {
+    Napier.d("\(self)::deinit")
+    vm.clear()
+  }
 }
 ```
 
