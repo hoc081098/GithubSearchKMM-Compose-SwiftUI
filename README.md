@@ -116,7 +116,7 @@ class DaggerGithubSearchViewModel @Inject constructor(searchRepoItemsUseCase: Se
 
 #### iOS
 
-Conform to `ObservableObject` and use `@Published`.
+Conform to `ObservableObject` and use `@Published` property wrapper.
 
 ```swift
 import Foundation
