@@ -1,6 +1,7 @@
 # GithubSearchKMM
 
-Github Repos Search - Kotlin Multiplatform Mobile
+Github Repos Search - Kotlin Multiplatform Mobile using Jetpack Compose, SwiftUI,
+ FlowRedux, Coroutines Flow, Dagger Hilt, Koin Dependency Injection
 
 [![Android Build CI](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/build.yml/badge.svg)](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/build.yml)
 [![iOS Build CI](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/ios-build.yml/badge.svg)](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/ios-build.yml)
@@ -161,13 +162,30 @@ class IOSGithubSearchViewModel: ObservableObject {
 ## Download APK
 
 - [Download latest debug APK here](https://nightly.link/hoc081098/ComicReaderApp_MVI_Coroutine_RxKotlin_Jetpack/workflows/build/master/app-debug.zip)
-- [Download latest release APK here](https://nightly.link/hoc081098/ComicReaderApp_MVI_Coroutine_RxKotlin_Jetpack/actions/runs/1360316687/app-release.zip)
 
-# Develop
-- You must use **Android Studio Arctic Fox (2020.3.1)** (**note: Java 11 is now the minimum version required**)
-- Clone: `git clone https://github.com/hoc081098/ComicReaderApp_MVI_Coroutine_RxKotlin.git`
-- _Optional: **Delete `.idea` folder** if cannot open project_
-- Open project by `Android Studio` and run as usual
+# Building & Develop
+
+- `Android Studio Chipmunk | 2021.2.1` (note: **Java 11 is now the minimum version required**).
+- `XCode 13.2` or later (due to use of new Swift 5.5 concurrency APIs).
+- Clone project: `git clone https://github.com/hoc081098/GithubSearchKMM.git`
+- Android: open project by `Android Studio` and run as usual.
+- iOS
+  ```shell
+  cd GithubSearchKMM
+
+  # generate podspec files for cocopods intergration. with integration will be generated swift files for cocoapod
+  ./gradlew kSwiftsharedPodspec
+
+  # go to ios dir
+  cd iosApp
+
+  # install pods
+  pod install
+
+  # now we can open xcworkspace and build ios project
+  # or open via XCode GUI
+  open iosApp.xcworkspace
+  ```
 
 # Screenshots
 
