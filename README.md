@@ -1,5 +1,6 @@
 # GithubSearchKMM
-GithubSearchKMM
+
+Github Repos Search - Kotlin Multiplatform Mobile
 
 [![Android Build CI](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/build.yml/badge.svg)](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/build.yml)
 [![iOS Build CI](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/ios-build.yml/badge.svg)](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/ios-build.yml)
@@ -9,9 +10,12 @@ Minimal **Kotlin Multiplatform** project with SwiftUI, Jetpack Compose.
  - Android (Jetpack compose)
  - iOS (SwiftUI)
 
-# Tech Stacks
+## Tech Stacks
 
+### Modern Development
+ - Kotlin Multiplatform
  - Jetpack Compose
  - Kotlin Coroutines & Flows
  - Dagger Hilt
- - Kotlin Multiplatform
+ - SwiftUI
+ - Koin Dependency Injection
