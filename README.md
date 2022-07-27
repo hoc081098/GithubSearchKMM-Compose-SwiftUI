@@ -44,12 +44,56 @@ Minimal **Kotlin Multiplatform** project with SwiftUI, Jetpack Compose.
 
 ## Overall Architecture
 
-What is shared?
+### What is shared?
  - **domain**: Domain models, UseCases, Repositories.
  - **presentation**: ViewModels, ViewState, ViewSingleEvent, ViewAction.
  - **data**: Repository Implementations, Remote Data Source, Local Data Source.
  - **utils**: Utilities, Logging Library
 
+### Unidirectional data flow - FlowRedux
+
+```kotlin
+public sealed interface FlowReduxStore<Action, State> {
+  public val coroutineScope: CoroutineScope
+
+  public val stateFlow: StateFlow<State>
+
+  /** Get streams of actions.
+   *
+   * This [Flow] includes dispatched [Action]s (via [dispatch] function)
+   * and [Action]s returned from [SideEffect]s.
+   */
+  public val actionSharedFlow: SharedFlow<Action>
+
+  /**
+   * @return false if cannot dispatch action ([coroutineScope] was cancelled).
+   */
+  public fun dispatch(action: Action): Boolean
+}
+```
+
+### Multiplaform ViewModel
+```kotlin
+open class GithubSearchViewModel(
+  searchRepoItemsUseCase: SearchRepoItemsUseCase,
+) : ViewModel() {
+  private val store = viewModelScope.createFlowReduxStore(
+    initialState = GithubSearchState.initial(),
+    sideEffects = GithubSearchSideEffects(
+      searchRepoItemsUseCase = searchRepoItemsUseCase,
+    ).sideEffects,
+    reducer = { state, action -> action.reduce(state) }
+  )
+  private val eventChannel = store.actionSharedFlow
+    .mapNotNull { it.toGithubSearchSingleEventOrNull() }
+    .buffer(Channel.UNLIMITED)
+    .produceIn(viewModelScope)
+
+  fun dispatch(action: GithubSearchAction) = store.dispatch(action)
+  val stateFlow: StateFlow<GithubSearchState> by store::stateFlow
+  val eventFlow: Flow<GithubSearchSingleEvent> get() = eventChannel.receiveAsFlow()
+}
+```
 
 ## Download APK
 
