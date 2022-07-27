@@ -103,7 +103,7 @@ open class GithubSearchViewModel(
 }
 ```
 
-### Plaform ViewModel
+### Platform ViewModel
 
 #### Android
 
