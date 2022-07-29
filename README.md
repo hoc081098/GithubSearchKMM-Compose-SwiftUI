@@ -1,7 +1,7 @@
 # GithubSearchKMM
 
 Github Repos Search - Kotlin Multiplatform Mobile using Jetpack Compose, SwiftUI,
- FlowRedux, Coroutines Flow, Dagger Hilt, Koin Dependency Injection
+ FlowRedux, Coroutines Flow, Dagger Hilt, Koin Dependency Injection, shared KMP ViewModel
 
 [![Android Build CI](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/build.yml/badge.svg)](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/build.yml)
 [![iOS Build CI](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/ios-build.yml/badge.svg)](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/ios-build.yml)
@@ -28,6 +28,7 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
  - SwiftUI
  - Koin Dependency Injection
  - FlowRedux State Management
+ - Shared KMP ViewModel
 
 ## Tech Stacks
  - Functional & Reactive programming with **Kotlin Coroutines with Flow**
