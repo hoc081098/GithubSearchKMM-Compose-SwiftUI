@@ -18,7 +18,7 @@ Minimal **Kotlin Multiplatform** project with SwiftUI, Jetpack Compose.
 
 Liked some of my work? Buy me a coffee (or more likely a beer)
 
-[!["Buy Me A Coffee"](https://cdn.buymeacoffee.com/buttons/default-orange.png)](https://www.buymeacoffee.com/hoc081098)
+<a href="https://www.buymeacoffee.com/hoc081098" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" height=64></a>
 
 ### Modern Development
  - Kotlin Multiplatform
