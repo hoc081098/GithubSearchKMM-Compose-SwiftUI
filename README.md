@@ -43,6 +43,13 @@ Minimal **Kotlin Multiplatform** project with SwiftUI, Jetpack Compose.
  - [MOKO KSwift](https://github.com/icerockdev/moko-kswift) is a gradle plugin for generation Swift-friendly API for Kotlin/Native framework.
  - [kotlinx.collections.immutable](https://github.com/Kotlin/kotlinx.collections.immutable): immutable collection interfaces and implementation prototypes for Kotlin..
 
+# Screenshots
+
+|                                                  |                                                   |                                                  |                                                  |
+|:------------------------------------------------:|:-------------------------------------------------:|:------------------------------------------------:|:------------------------------------------------:|
+| ![](screenshots/Screenshot_Android_Light_01.png) | ![](screenshots/Screenshot_Android_Light_02.png)  | ![](screenshots/Screenshot_Android_Light_03.png) | ![](screenshots/Screenshot_Android_Light_04.png) |
+| ![](screenshots/Screenshot_Android_Dark_01.png)  |  ![](screenshots/Screenshot_Android_Dark_02.png)  | ![](screenshots/Screenshot_Android_Dark_03.png)  | ![](screenshots/Screenshot_Android_Dark_04.png)  |
+
 ## Overall Architecture
 
 ### What is shared?
@@ -191,13 +198,6 @@ class IOSGithubSearchViewModel: ObservableObject {
   <kbd>Cmd</kbd> + <kbd>B</kbd> to build
   <br>
   <kbd>Cmd</kbd> + <kbd>R</kbd> to run.
-
-# Screenshots
-
-|                                                  |                                                   |                                                  |                                                  |
-|:------------------------------------------------:|:-------------------------------------------------:|:------------------------------------------------:|:------------------------------------------------:|
-| ![](screenshots/Screenshot_Android_Light_01.png) | ![](screenshots/Screenshot_Android_Light_02.png)  | ![](screenshots/Screenshot_Android_Light_03.png) | ![](screenshots/Screenshot_Android_Light_04.png) |
-| ![](screenshots/Screenshot_Android_Dark_01.png)  |  ![](screenshots/Screenshot_Android_Dark_02.png)  | ![](screenshots/Screenshot_Android_Dark_03.png)  | ![](screenshots/Screenshot_Android_Dark_04.png)  |
 
 # LOC
 
