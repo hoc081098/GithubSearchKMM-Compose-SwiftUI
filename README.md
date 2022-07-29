@@ -196,10 +196,8 @@ class IOSGithubSearchViewModel: ObservableObject {
 
 |                         |                         |                         |                         |
 |        :---:            |          :---:          |        :---:            |          :---:          |
-| ![](screenshots/1.jpeg) | ![](screenshots/2.jpeg) | ![](screenshots/3.jpeg) | ![](screenshots/4.jpeg) |
-| ![](screenshots/5.jpeg) | ![](screenshots/6.jpeg) | ![](screenshots/7.jpeg) | ![](screenshots/8.jpeg) |
-| ![](screenshots/9.jpeg) | ![](screenshots/10.png) | ![](screenshots/11.png) | ![](screenshots/12.png) |
-| ![](screenshots/13.png) | ![](screenshots/14.png) | ![](screenshots/15.png) |                         |
+| ![](screenshots/Screenshot_Android_Light_01.png) | ![](screenshots/Screenshot_Android_Light_02.png) | ![](screenshots/Screenshot_Android_Light_03.png) | ![](screenshots/Screenshot_Android_Light_04.png) |
+| ![](screenshots/Screenshot_Android_Dark_01.png) | ![](screenshots/Screenshot_Android_Dark_02.png) | ![](screenshots/Screenshot_Android_Dark_03.png) | ![](screenshots/Screenshot_Android_Dark_04.png) |
 
 # LOC
 
