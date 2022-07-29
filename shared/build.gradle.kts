@@ -9,7 +9,7 @@ plugins {
   kotlinxSerialization
   kotlinKapt
   daggerHiltAndroid
-  id("dev.icerock.moko.kswift")
+  mokoKSwift
 }
 
 version = appConfig.versionName
@@ -73,7 +73,7 @@ kotlin {
         api(deps.atomicfu)
         api(deps.immutableCollections)
 
-        implementation("dev.icerock.moko:kswift-runtime:0.5.0")
+        implementation(deps.mokoKSwiftRuntime)
       }
     }
     val commonTest by getting {

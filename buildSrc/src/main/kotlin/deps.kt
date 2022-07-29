@@ -13,6 +13,7 @@ object versions {
   const val kotlin = "1.6.21"
   const val agp = "7.2.1"
   const val gradleVersions = "0.42.0"
+  const val mokoKSwift = "0.5.0"
 }
 
 object appConfig {
@@ -28,7 +29,7 @@ object appConfig {
   private const val MINOR = 0
   private const val PATCH = 1
   const val versionCode = MAJOR * 10000 + MINOR * 100 + PATCH
-  const val versionName = "$MAJOR.$MINOR.$PATCH-SNAPSHOT"
+  const val versionName = "$MAJOR.$MINOR.$PATCH"
 }
 
 object deps {
@@ -117,6 +118,7 @@ object deps {
     const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:$version"
   }
 
+  const val mokoKSwiftRuntime = "dev.icerock.moko:kswift-runtime:${versions.mokoKSwift}"
   const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.3.2"
 
   const val coilCompose = "io.coil-kt:coil-compose:2.1.0"
@@ -165,6 +167,7 @@ inline val PDsS.kotlinxSerialization: PDS get() = id("kotlinx-serialization")
 inline val PDsS.kotlinMultiplatform: PDS get() = kotlin("multiplatform")
 inline val PDsS.kotlinNativeCocoapods: PDS get() = kotlin("native.cocoapods")
 inline val PDsS.daggerHiltAndroid: PDS get() = id("dagger.hilt.android.plugin")
+inline val PDsS.mokoKSwift: PDS get() = id("dev.icerock.moko.kswift")
 
 inline val DependencyHandler.shared get() = project(":shared")
 inline val DependencyHandler.flowRedux get() = project(":flowredux")
