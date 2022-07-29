@@ -11,6 +11,7 @@ Github Repos Search - Kotlin Multiplatform Mobile using Jetpack Compose, SwiftUI
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fhoc081098%2FGithubSearchKMM&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![codecov](https://codecov.io/gh/hoc081098/GithubSearchKMM/branch/master/graph/badge.svg)](https://codecov.io/gh/hoc081098/GithubSearchKMM)
+[![Platform](https://img.shields.io/cocoapods/p/BadgeHub.svg?style=flat)](https://developer.apple.com/documentation/ios-ipados-release-notes/ios-ipados-14-release-notes)
 
 Minimal **Kotlin Multiplatform** project with SwiftUI, Jetpack Compose.
  - Android (Jetpack compose)
