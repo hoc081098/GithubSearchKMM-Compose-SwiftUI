@@ -45,9 +45,14 @@ Minimal **Kotlin Multiplatform** project with SwiftUI, Jetpack Compose.
 
 # Screenshots
 
+## Android (Light theme)
 |                                                  |                                                   |                                                  |                                                  |
 |:------------------------------------------------:|:-------------------------------------------------:|:------------------------------------------------:|:------------------------------------------------:|
 | ![](screenshots/Screenshot_Android_Light_01.png) | ![](screenshots/Screenshot_Android_Light_02.png)  | ![](screenshots/Screenshot_Android_Light_03.png) | ![](screenshots/Screenshot_Android_Light_04.png) |
+
+## Android (Dark theme)
+|                                                  |                                                   |                                                  |                                                  |
+|:------------------------------------------------:|:-------------------------------------------------:|:------------------------------------------------:|:------------------------------------------------:|
 | ![](screenshots/Screenshot_Android_Dark_01.png)  |  ![](screenshots/Screenshot_Android_Dark_02.png)  | ![](screenshots/Screenshot_Android_Dark_03.png)  | ![](screenshots/Screenshot_Android_Dark_04.png)  |
 
 ## Overall Architecture
