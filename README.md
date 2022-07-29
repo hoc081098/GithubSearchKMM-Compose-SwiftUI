@@ -194,7 +194,7 @@ class IOSGithubSearchViewModel: ObservableObject {
 
 ## Download APK
 
-- [Download latest debug APK here](https://nightly.link/hoc081098/ComicReaderApp_MVI_Coroutine_RxKotlin_Jetpack/workflows/build/master/app-debug.zip)
+- [Download latest debug APK here](https://nightly.link/hoc081098/GithubSearchKMM/workflows/build/master/app-debug.zip)
 
 # Building & Develop
 
