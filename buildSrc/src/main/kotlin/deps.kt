@@ -17,7 +17,7 @@ object versions {
 }
 
 object appConfig {
-  const val applicationId = "com.hoc081988.github_search_kmm.android"
+  const val applicationId = "com.hoc081098.github_search_kmm.android"
 
   const val compileSdkVersion = 32
   const val buildToolsVersion = "32.0.0"
