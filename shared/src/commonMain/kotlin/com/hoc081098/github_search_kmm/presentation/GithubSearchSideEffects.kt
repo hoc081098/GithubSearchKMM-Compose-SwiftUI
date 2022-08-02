@@ -40,8 +40,8 @@ internal value class GithubSearchSideEffects(
    * [GithubSearchAction.Search]s to [SideEffectAction.TextChanged]s
    */
   private inline fun textChanged() =
-    SideEffect<GithubSearchState, GithubSearchAction> { actions, _, _ ->
-      actions
+    SideEffect<GithubSearchState, GithubSearchAction> { actionFlow, _, _ ->
+      actionFlow
         .filterIsInstance<GithubSearchAction.Search>()
         .map { it.term.trim() }
         .debounce(600.milliseconds)
@@ -56,8 +56,8 @@ internal value class GithubSearchSideEffects(
    * [SideEffectAction.TextChanged]s to [SideEffectAction.SearchLCE]s
    */
   private inline fun search() =
-    SideEffect<GithubSearchState, GithubSearchAction> { actions, _, _ ->
-      actions
+    SideEffect<GithubSearchState, GithubSearchAction> { actionFlow, _, _ ->
+      actionFlow
         .filterIsInstance<SideEffectAction.TextChanged>()
         .flatMapLatest { action ->
           executeSearchRepoItemsUseCase(
@@ -73,13 +73,13 @@ internal value class GithubSearchSideEffects(
    * [GithubSearchAction.LoadNextPage]s to [SideEffectAction.SearchLCE]s
    */
   private inline fun nextPage() =
-    SideEffect<GithubSearchState, GithubSearchAction> { actions, getState, scope ->
-      val actionSharedFlow = actions.shareIn(scope, WhileSubscribed())
+    SideEffect<GithubSearchState, GithubSearchAction> { actionFlow, stateFlow, coroutineScope ->
+      val actionSharedFlow = actionFlow.shareIn(coroutineScope, WhileSubscribed())
 
       actionSharedFlow
         .filterIsInstance<GithubSearchAction.LoadNextPage>()
         .flatMapFirst {
-          flowFromSuspend { getState() }
+          flowFromSuspend { stateFlow.value }
             .filter { it.canLoadNextPage }
             .flatMapConcat {
               executeSearchRepoItemsUseCase(
@@ -100,13 +100,13 @@ internal value class GithubSearchSideEffects(
    * [GithubSearchAction.Retry]s to [SideEffectAction.SearchLCE]s
    */
   private inline fun retry() =
-    SideEffect<GithubSearchState, GithubSearchAction> { actions, getState, scope ->
-      val actionSharedFlow = actions.shareIn(scope, WhileSubscribed())
+    SideEffect<GithubSearchState, GithubSearchAction> { actionFlow, stateFlow, coroutineScope ->
+      val actionSharedFlow = actionFlow.shareIn(coroutineScope, WhileSubscribed())
 
       actionSharedFlow
         .filterIsInstance<GithubSearchAction.Retry>()
         .flatMapFirst {
-          flowFromSuspend { getState() }
+          flowFromSuspend { stateFlow.value }
             .filter { it.canRetry }
             .flatMapConcat {
               executeSearchRepoItemsUseCase(
