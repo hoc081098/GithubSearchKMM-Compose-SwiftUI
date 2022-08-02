@@ -27,7 +27,6 @@ internal class DefaultFlowReduxStore<Action, State>(
   private val _actionSharedFlow = MutableSharedFlow<Action>(Channel.UNLIMITED)
 
   init {
-    val getState = GetState { _stateFlow.value }
     val loopbacks = Array(sideEffects.size) { Channel<Action>() }
 
     val actionFlow = buildList(capacity = sideEffects.size + 1) {
@@ -35,7 +34,7 @@ internal class DefaultFlowReduxStore<Action, State>(
         add(
           sideEffect(
             loopbacks[index].consumeAsFlow(),
-            getState,
+            stateFlow,
             coroutineScope,
           )
         )
