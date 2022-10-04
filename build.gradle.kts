@@ -17,14 +17,14 @@ buildscript {
   dependencies {
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}")
     classpath(kotlin("serialization", version = versions.kotlin))
-    classpath("org.jetbrains.kotlinx:kover:0.5.1")
+    classpath("org.jetbrains.kotlinx:kover:0.6.1")
     classpath("com.android.tools.build:gradle:${versions.agp}")
     classpath("com.google.dagger:hilt-android-gradle-plugin:${deps.dagger.version}")
     classpath("com.diffplug.spotless:spotless-plugin-gradle:${versions.spotless}")
     classpath("com.github.ben-manes:gradle-versions-plugin:${versions.gradleVersions}")
     classpath("com.squareup:javapoet:1.13.0")
     classpath("dev.icerock.moko:kswift-gradle-plugin:${versions.mokoKSwift}")
-    classpath("org.jetbrains.kotlinx:kover:0.5.1")
+    classpath("org.jetbrains.kotlinx:kover:0.6.1")
   }
 }
 
