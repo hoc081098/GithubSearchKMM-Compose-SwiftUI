@@ -69,7 +69,7 @@ jobs:
 
 
       - name: Cache Pods
-        uses: actions/cache@v3.0.9
+        uses: actions/cache@v3.0.10
         with:
           path: ${{ github.workspace }}/iosApp/Pods
           key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
