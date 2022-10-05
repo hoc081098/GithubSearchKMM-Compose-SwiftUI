@@ -19,17 +19,17 @@ object versions {
 object appConfig {
   const val applicationId = "com.hoc081098.github_search_kmm.android"
 
-  const val compileSdkVersion = 32
-  const val buildToolsVersion = "32.0.0"
+  const val compileSdkVersion = 33
+  const val buildToolsVersion = "33.0.0"
 
   const val minSdkVersion = 23
-  const val targetSdkVersion = 32
+  const val targetSdkVersion = 33
 
   private const val MAJOR = 0
   private const val MINOR = 0
-  private const val PATCH = 1
+  private const val PATCH = 2
   const val versionCode = MAJOR * 10000 + MINOR * 100 + PATCH
-  const val versionName = "$MAJOR.$MINOR.$PATCH"
+  const val versionName = "$MAJOR.$MINOR.$PATCH-SNAPSHOT"
 }
 
 object deps {
