@@ -27,6 +27,7 @@ kotlin {
     podfile = project.file("../iosApp/Podfile")
     framework {
       baseName = "shared"
+      isStatic = true
       export(deps.coroutines.core)
       export(deps.napier)
     }
@@ -155,7 +156,7 @@ tasks.withType<KotlinNativeLink>()
   .matching { it.binary is Framework }
   .configureEach {
     doLast {
-      val swiftDirectory = File(destinationDir, "${binary.baseName}Swift")
+      val swiftDirectory = File(binary.outputDirectory, "${binary.baseName}Swift")
       val xcodeSwiftDirectory = File(buildDir, "generated/swift")
       swiftDirectory.copyRecursively(xcodeSwiftDirectory, overwrite = true)
     }

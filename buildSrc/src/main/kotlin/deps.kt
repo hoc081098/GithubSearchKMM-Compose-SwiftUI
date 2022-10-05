@@ -10,10 +10,10 @@ import org.gradle.plugin.use.PluginDependencySpec
 object versions {
   const val spotless = "6.7.2"
   const val ktlint = "0.45.2"
-  const val kotlin = "1.6.21"
-  const val agp = "7.2.1"
+  const val kotlin = "1.7.20"
+  const val agp = "7.3.0"
   const val gradleVersions = "0.42.0"
-  const val mokoKSwift = "0.5.0"
+  const val mokoKSwift = "0.6.0"
 }
 
 object appConfig {
@@ -34,15 +34,15 @@ object appConfig {
 
 object deps {
   object androidx {
-    const val appCompat = "androidx.appcompat:appcompat:1.4.1"
-    const val coreKtx = "androidx.core:core-ktx:1.7.0"
-    const val material = "com.google.android.material:material:1.6.0"
-    const val activityCompose = "androidx.activity:activity-compose:1.4.0"
+    const val appCompat = "androidx.appcompat:appcompat:1.5.1"
+    const val coreKtx = "androidx.core:core-ktx:1.9.0"
+    const val material = "com.google.android.material:material:1.6.1"
+    const val activityCompose = "androidx.activity:activity-compose:1.6.0"
     const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:1.0.0"
   }
 
   object lifecycle {
-    private const val version = "2.6.0-alpha01"
+    private const val version = "2.6.0-alpha02"
 
     const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version" // viewModelScope
     const val runtimeKtx = "androidx.lifecycle:lifecycle-runtime-ktx:$version" // lifecycleScope
@@ -59,7 +59,7 @@ object deps {
   }
 
   object coroutines {
-    private const val version = "1.6.2"
+    private const val version = "1.6.4"
 
     const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
     const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
@@ -67,13 +67,13 @@ object deps {
   }
 
   object serialization {
-    private const val version = "1.3.3"
+    private const val version = "1.4.0"
     const val json = "org.jetbrains.kotlinx:kotlinx-serialization-json:$version"
     const val core = "org.jetbrains.kotlinx:kotlinx-serialization-core:$version"
   }
 
   object ktor {
-    private const val version = "2.0.3"
+    private const val version = "2.1.2"
     const val core = "io.ktor:ktor-client-core:$version"
     const val clientJson = "io.ktor:ktor-client-json:$version"
     const val logging = "io.ktor:ktor-client-logging:$version"
@@ -86,9 +86,9 @@ object deps {
   }
 
   object compose {
-    const val androidxComposeCompilerVersion = "1.2.0-rc02"
-    private const val version = "1.2.0-rc02"
-    private const val androidxComposeMaterial3Version = "1.0.0-alpha13"
+    const val androidxComposeCompilerVersion = "1.3.2"
+    private const val version = "1.3.0-beta03"
+    private const val androidxComposeMaterial3Version = "1.0.0-beta03"
 
     const val foundation = "androidx.compose.foundation:foundation:$version"
     const val foundationLayout = "androidx.compose.foundation:foundation-layout:$version"
@@ -105,7 +105,7 @@ object deps {
   }
 
   object koin {
-    private const val version = "3.2.0"
+    private const val version = "3.2.2"
 
     const val core = "io.insert-koin:koin-core:$version"
     const val testJunit4 = "io.insert-koin:koin-test-junit4:$version"
@@ -113,27 +113,27 @@ object deps {
   }
 
   object dagger {
-    const val version = "2.42"
+    const val version = "2.44"
     const val hiltAndroid = "com.google.dagger:hilt-android:$version"
     const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:$version"
   }
 
   const val mokoKSwiftRuntime = "dev.icerock.moko:kswift-runtime:${versions.mokoKSwift}"
-  const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.3.2"
+  const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
 
-  const val coilCompose = "io.coil-kt:coil-compose:2.1.0"
+  const val coilCompose = "io.coil-kt:coil-compose:2.2.2"
   const val flowExt = "io.github.hoc081098:FlowExt:0.4.0"
 
-  const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.17.3"
+  const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.18.3"
   const val immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
 
   object arrow {
-    private const val version = "1.1.2"
+    private const val version = "1.1.3"
     const val core = "io.arrow-kt:arrow-core:$version"
     const val fx = "io.arrow-kt:arrow-fx-coroutines:$version"
   }
 
-  const val desugarJdkLibs = "com.android.tools:desugar_jdk_libs:1.1.5"
+  const val desugarJdkLibs = "com.android.tools:desugar_jdk_libs:1.2.2"
   const val napier = "io.github.aakira:napier:2.6.1"
 
   object test {
@@ -150,7 +150,7 @@ object deps {
 
     const val mockk = "io.mockk:mockk:1.12.4"
     const val kotlinJUnit = "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}"
-    const val turbine = "app.cash.turbine:turbine:0.8.0"
+    const val turbine = "app.cash.turbine:turbine:0.11.0"
   }
 }
 
