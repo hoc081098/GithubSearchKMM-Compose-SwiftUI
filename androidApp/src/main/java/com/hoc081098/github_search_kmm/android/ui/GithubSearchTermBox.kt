@@ -35,7 +35,7 @@ internal fun GithubSearchTermBox(
   onTermChanged: (String) -> Unit,
 ) {
   var term by remember { mutableStateOf(initialTerm) }
-  val isClearIconVisible by derivedStateOf { term.isNotEmpty() }
+  val isClearIconVisible by remember { derivedStateOf { term.isNotEmpty() } }
   val localFocusManager = LocalFocusManager.current
 
   TextField(
