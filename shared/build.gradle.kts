@@ -156,7 +156,9 @@ tasks.withType<KotlinNativeLink>()
   .matching { it.binary is Framework }
   .configureEach {
     doLast {
-      val swiftDirectory = File(binary.outputDirectory, "${binary.baseName}Swift")
+      val swiftDirectory = destinationDirectory.get()
+        .dir("${binary.baseName}Swift")
+        .asFile
       val xcodeSwiftDirectory = File(buildDir, "generated/swift")
       swiftDirectory.copyRecursively(xcodeSwiftDirectory, overwrite = true)
     }
