@@ -11,6 +11,7 @@ hilt {
 }
 
 android {
+  namespace = "com.hoc081098.github_search_kmm.android"
   compileSdk = appConfig.compileSdkVersion
   defaultConfig {
     applicationId = appConfig.applicationId
