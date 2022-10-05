@@ -158,5 +158,7 @@ tasks.withType<KotlinNativeLink>()
       val swiftDirectory = File(destinationDir, "${binary.baseName}Swift")
       val xcodeSwiftDirectory = File(buildDir, "generated/swift")
       swiftDirectory.copyRecursively(xcodeSwiftDirectory, overwrite = true)
+      
+      println("swiftDirectory=$swiftDirectory -> xcodeSwiftDirectory=$xcodeSwiftDirectory")
     }
   }
