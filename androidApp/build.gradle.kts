@@ -11,6 +11,7 @@ hilt {
 }
 
 android {
+  namespace = "com.hoc081098.github_search_kmm.android"
   compileSdk = appConfig.compileSdkVersion
   defaultConfig {
     applicationId = appConfig.applicationId
@@ -31,8 +32,8 @@ android {
     isCoreLibraryDesugaringEnabled = true
 
     // Sets Java compatibility to Java 11
-    sourceCompatibility = org.gradle.api.JavaVersion.VERSION_11
-    targetCompatibility = org.gradle.api.JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
   }
 
   buildFeatures {

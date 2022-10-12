@@ -27,6 +27,7 @@ kotlin {
     podfile = project.file("../iosApp/Podfile")
     framework {
       baseName = "shared"
+      isStatic = true
       export(deps.coroutines.core)
       export(deps.napier)
     }
@@ -119,6 +120,7 @@ kotlin {
 }
 
 android {
+  namespace = "com.hoc081098.github_search_kmm"
   compileSdk = appConfig.compileSdkVersion
   sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 
@@ -148,15 +150,25 @@ hilt {
 }
 
 kswift {
-  install(dev.icerock.moko.kswift.plugin.feature.SealedToSwiftEnumFeature)
+  install(dev.icerock.moko.kswift.plugin.feature.SealedToSwiftEnumFeature) {
+    filter = dev.icerock.moko.kswift.plugin.feature.Filter.Include(emptySet())
+  }
 }
 
 tasks.withType<KotlinNativeLink>()
   .matching { it.binary is Framework }
   .configureEach {
     doLast {
-      val swiftDirectory = File(destinationDir, "${binary.baseName}Swift")
-      val xcodeSwiftDirectory = File(buildDir, "generated/swift")
-      swiftDirectory.copyRecursively(xcodeSwiftDirectory, overwrite = true)
+      val kSwiftGeneratedDir = destinationDirectory.get()
+        .dir("${binary.baseName}Swift")
+        .asFile
+
+      val kSwiftPodSourceDir = buildDir
+        .resolve("cocoapods")
+        .resolve("framework")
+        .resolve("${binary.baseName}Swift")
+
+      kSwiftGeneratedDir.copyRecursively(kSwiftPodSourceDir, overwrite = true)
+      println("[COPIED] $kSwiftGeneratedDir -> $kSwiftPodSourceDir")
     }
   }

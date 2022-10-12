@@ -16,17 +16,17 @@ private let defaultOnError = { (error: KotlinThrowable) in
   fatalError("Unhandled error = \(error)")
 }
 
-extension Kotlinx_coroutines_coreStateFlow {
+extension StateFlow {
   func typedValue<T>(_ type: T.Type = T.self) -> T {
     value as! T
   }
 }
 
-extension Kotlinx_coroutines_coreFlow {
+extension Flow {
   @discardableResult
   func subscribeNonNullFlow<T: AnyObject>(
     _ type: T.Type = T.self,
-    scope: Kotlinx_coroutines_coreCoroutineScope,
+    scope: CoroutineScope,
     onValue: @escaping (T) -> Void,
     onError: ((KotlinThrowable) -> Void)? = nil,
     onComplete: (() -> Void)? = nil
@@ -49,9 +49,9 @@ private struct NonNullFlowPublisher<T: AnyObject>: Publisher {
   typealias Output = T
   typealias Failure = Error
 
-  private let flow: Kotlinx_coroutines_coreFlow
+  private let flow: Flow
 
-  init(flow: Kotlinx_coroutines_coreFlow) {
+  init(flow: Flow) {
     self.flow = flow
   }
 
@@ -70,7 +70,7 @@ private class NonNullFlowSubscription<T: AnyObject, S: Subscriber>: Subscription
   private var closable: Closeable?
 
   init(
-    flow: Kotlinx_coroutines_coreFlow,
+    flow: Flow,
     subscriber: S
   ) {
     self.subscriber = subscriber

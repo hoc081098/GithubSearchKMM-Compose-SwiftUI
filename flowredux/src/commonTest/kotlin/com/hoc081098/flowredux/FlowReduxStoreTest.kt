@@ -1,6 +1,6 @@
 package com.hoc081098.flowredux
 
-import app.cash.turbine.FlowTurbine
+import app.cash.turbine.ReceiveTurbine
 import app.cash.turbine.test
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
@@ -421,6 +421,7 @@ class FlowReduxStoreTest {
             .buffer(Channel.UNLIMITED)
             .map {
               sideEffect1Started = true
+              println("sideEffect1 delay...")
               delay(2_000)
               sideEffect1Ended = true
 
@@ -432,6 +433,7 @@ class FlowReduxStoreTest {
             .buffer(Channel.UNLIMITED)
             .map {
               sideEffect2Started = true
+              println("sideEffect2 delay...")
               delay(2_000)
               sideEffect2Ended = true
 
@@ -444,6 +446,12 @@ class FlowReduxStoreTest {
       }
     )
 
+    launch {
+      delay(200)
+      println("Cancelling scope")
+      scope.cancel()
+    }
+
     store.stateFlow
       .onSubscription {
         store.dispatch(1)
@@ -455,9 +463,6 @@ class FlowReduxStoreTest {
         awaitComplete()
       }
 
-    delay(200)
-    scope.cancel()
-
     assertTrue { sideEffect1Started && sideEffect2Started }
     assertFalse { sideEffect1Ended }
     assertFalse { sideEffect2Ended }
@@ -466,13 +471,13 @@ class FlowReduxStoreTest {
 
 @ExperimentalCoroutinesApi
 suspend fun <T> Flow<T>.testWithTestCoroutineScheduler(
-  validate: suspend FlowTurbine<T>.() -> Unit,
+  validate: suspend ReceiveTurbine<T>.() -> Unit,
 ) {
   val testScheduler = currentCoroutineContext()[TestCoroutineScheduler]
 
   if (testScheduler == null) {
-    test(validate)
+    test(validate = validate)
   } else {
-    flowOn(UnconfinedTestDispatcher(testScheduler)).test(validate)
+    flowOn(UnconfinedTestDispatcher(testScheduler)).test(validate = validate)
   }
 }

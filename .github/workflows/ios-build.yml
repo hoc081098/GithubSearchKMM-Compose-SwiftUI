@@ -67,14 +67,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-konan-
 
-
-      - name: Cache Pods
-        uses: actions/cache@v3.0.10
-        with:
-          path: ${{ github.workspace }}/iosApp/Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-
+      - name: Gen pod
+        run: ./gradlew :shared:podGenIOS --parallel
 
       - name: Gen KSwift
         run: ./gradlew kSwiftsharedPodspec
