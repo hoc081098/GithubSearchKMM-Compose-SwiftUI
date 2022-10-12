@@ -44,8 +44,8 @@ allprojects {
   // TODO: Workaround for https://github.com/google/dagger/issues/3448, https://github.com/google/dagger/issues/3459
   configurations.all {
     resolutionStrategy.eachDependency {
-      if (requested.module.group == "org.jetbrains.kotlin"
-        && requested.module.name.startsWith("kotlin-stdlib")
+      if (requested.module.group == "org.jetbrains.kotlin" &&
+        requested.module.name.startsWith("kotlin-stdlib")
       ) {
         useVersion(versions.kotlin)
       }
@@ -58,39 +58,15 @@ allprojects {
   configure<kotlinx.kover.api.KoverMergedConfig> {
     enable()
   }
-}
 
-subprojects {
   apply<SpotlessPlugin>()
-  apply<KoverPlugin>()
-  apply<VersionsPlugin>()
-
-  fun isNonStable(version: String): Boolean {
-    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { version.toUpperCase().contains(it) }
-    val regex = "^[0-9,.v-]+(-r)?$".toRegex()
-    val isStable = stableKeyword || regex.matches(version)
-    return !isStable
-  }
-
-  fun isStable(version: String) = !isNonStable(version)
-
-  tasks.withType<DependencyUpdatesTask> {
-    rejectVersionIf {
-      if (isStable(currentVersion)) {
-        isNonStable(candidate.version)
-      } else {
-        false
-      }
-    }
-  }
-
   configure<SpotlessExtension> {
     val editorConfigKeys: Set<String> = hashSetOf(
       "ij_kotlin_imports_layout",
       "indent_size",
       "end_of_line",
       "charset",
-      "continuation_indent_size",
+      "continuation_indent_size"
     )
 
     kotlin {
@@ -109,7 +85,7 @@ subprojects {
           "experimental:type-parameter-list-spacing",
           "filename",
           "annotation"
-        ].joinToString(separator = ","),
+        ].joinToString(separator = ",")
       ]
 
       ktlint(versions.ktlint)
@@ -138,7 +114,7 @@ subprojects {
         "ij_kotlin_imports_layout" to "*",
         "end_of_line" to "lf",
         "charset" to "utf-8",
-        "continuation_indent_size" to "4",
+        "continuation_indent_size" to "4"
       ]
       ktlint(versions.ktlint)
         .setUseExperimental(true)
@@ -148,6 +124,30 @@ subprojects {
       trimTrailingWhitespace()
       indentWithSpaces()
       endWithNewline()
+    }
+  }
+}
+
+subprojects {
+  apply<KoverPlugin>()
+  apply<VersionsPlugin>()
+
+  fun isNonStable(version: String): Boolean {
+    val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { version.toUpperCase().contains(it) }
+    val regex = "^[0-9,.v-]+(-r)?$".toRegex()
+    val isStable = stableKeyword || regex.matches(version)
+    return !isStable
+  }
+
+  fun isStable(version: String) = !isNonStable(version)
+
+  tasks.withType<DependencyUpdatesTask> {
+    rejectVersionIf {
+      if (isStable(currentVersion)) {
+        isNonStable(candidate.version)
+      } else {
+        false
+      }
     }
   }
 
@@ -170,8 +170,3 @@ subprojects {
     }
   }
 }
-
-tasks.register("clean", Delete::class) {
-  delete(rootProject.buildDir)
-}
-

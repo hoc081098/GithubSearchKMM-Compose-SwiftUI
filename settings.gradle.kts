@@ -32,4 +32,3 @@ fun copyToBuildSrc(sourcePath: String) {
   )
   println("[DONE] copied $sourcePath")
 }
-

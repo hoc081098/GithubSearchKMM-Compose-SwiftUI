@@ -150,7 +150,7 @@ object deps {
 
     const val mockk = "io.mockk:mockk:1.12.4"
     const val kotlinJUnit = "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}"
-    const val turbine = "app.cash.turbine:turbine:0.11.0"
+    const val turbine = "app.cash.turbine:turbine:0.12.0"
   }
 }
 
@@ -172,15 +172,6 @@ inline val PDsS.mokoKSwift: PDS get() = id("dev.icerock.moko.kswift")
 inline val DependencyHandler.shared get() = project(":shared")
 inline val DependencyHandler.flowRedux get() = project(":flowredux")
 inline val DependencyHandler.multiplatformViewModel get() = project(":multiplatform-viewmodel")
-
-fun DependencyHandler.addUnitTest(testImplementation: Boolean = true) {
-  val configName = if (testImplementation) "testImplementation" else "implementation"
-
-  add(configName, deps.test.junit)
-  add(configName, deps.test.mockk)
-  add(configName, deps.test.kotlinJUnit)
-  add(configName, deps.coroutines.test)
-}
 
 val Project.isCiBuild: Boolean
   get() = providers.environmentVariable("CI").orNull == "true"
