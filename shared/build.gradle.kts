@@ -10,6 +10,7 @@ plugins {
   kotlinKapt
   daggerHiltAndroid
   mokoKSwift
+  id("com.google.devtools.ksp")
 }
 
 version = appConfig.versionName
@@ -79,8 +80,13 @@ kotlin {
     }
     val commonTest by getting {
       dependencies {
-        implementation(kotlin("test"))
+        implementation(kotlin("test-common"))
+        implementation(kotlin("test-annotations-common"))
+
+        implementation(deps.coroutines.test)
+        implementation(deps.test.turbine)
         implementation(deps.ktor.mock)
+        implementation(deps.test.mockative)
       }
     }
 
@@ -90,7 +96,13 @@ kotlin {
         implementation(deps.dagger.hiltAndroid)
       }
     }
-    val androidTest by getting
+    val androidTest by getting {
+      dependencies {
+        implementation(kotlin("test"))
+        implementation(kotlin("test-junit"))
+        implementation(deps.test.junit)
+      }
+    }
 
     val iosX64Main by getting
     val iosArm64Main by getting
@@ -172,3 +184,11 @@ tasks.withType<KotlinNativeLink>()
       println("[COPIED] $kSwiftGeneratedDir -> $kSwiftPodSourceDir")
     }
   }
+
+dependencies {
+  configurations
+    .filter { it.name.startsWith("ksp") && it.name.contains("Test") }
+    .forEach {
+      add(it.name, deps.test.mockativeProcessor)
+    }
+}

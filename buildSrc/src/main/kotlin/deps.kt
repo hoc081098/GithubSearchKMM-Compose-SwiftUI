@@ -148,8 +148,8 @@ object deps {
       }
     }
 
-    const val mockk = "io.mockk:mockk:1.12.4"
-    const val kotlinJUnit = "org.jetbrains.kotlin:kotlin-test-junit:${versions.kotlin}"
+    const val mockative = "io.mockative:mockative:1.2.3"
+    const val mockativeProcessor = "io.mockative:mockative-processor:1.2.3"
     const val turbine = "app.cash.turbine:turbine:0.12.0"
   }
 }

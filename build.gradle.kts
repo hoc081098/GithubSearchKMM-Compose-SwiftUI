@@ -27,6 +27,10 @@ buildscript {
   }
 }
 
+plugins {
+  id("com.google.devtools.ksp") version "1.7.20-1.0.6" apply false
+}
+
 allprojects {
   tasks.withType<KotlinCompile> {
     kotlinOptions {
