@@ -11,6 +11,7 @@ import com.hoc081098.github_search_kmm.domain.model.Owner
 import com.hoc081098.github_search_kmm.domain.model.RepoItem
 import com.hoc081098.github_search_kmm.domain.repository.RepoItemRepository
 import com.hoc081098.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
+import com.hoc081098.github_search_kmm.presentation.GithubSearchState.Companion.FIRST_PAGE
 import io.mockative.Mock
 import io.mockative.classOf
 import io.mockative.given
@@ -22,10 +23,12 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -76,52 +79,108 @@ class GithubSearchViewModelTest {
   }
 
   @Test
-  fun `searches repo items WHEN dispatch a Search action with a non-blank string`() = runTest {
-    val term = "term"
-    val page = 1
-    val repoItems = genRepoItems(0..10)
-    mockSearchRepoItemsUseCase(term = term, page = page) { repoItems.right() }
+  fun `searches repo items and emits items WHEN dispatch a Search action with a non-blank string and searchRepoItemsUseCase returns a non-empty items`() =
+    runTest {
+      val term = "term"
+      val page = FIRST_PAGE.toInt() + 1
+      val repoItems = genRepoItems(0..10)
+      mockSearchRepoItemsUseCase(term = term, page = page) { repoItems.right() }
 
-    vm.dispatch(GithubSearchAction.Search(term))
+      vm.dispatch(GithubSearchAction.Search(term))
 
-    vm.stateFlow.test {
-      assertEquals(
-        GithubSearchState.initial(),
-        awaitItem()
-      )
+      vm.stateFlow.test {
+        assertEquals(
+          GithubSearchState.initial(),
+          awaitItem()
+        )
 
-      assertEquals(
-        GithubSearchState(
-          page = GithubSearchState.FIRST_PAGE,
-          term = term, // update term
-          items = persistentListOf(),
-          isLoading = true, // toggle loading
-          error = null,
-          hasReachedMax = false
-        ),
-        awaitItem()
-      )
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE,
+            term = term, // update term
+            items = persistentListOf(),
+            isLoading = true, // toggle loading
+            error = null,
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
 
-      assertEquals(
-        GithubSearchState(
-          page = page.toUInt(), // update page
-          term = term,
-          items = repoItems.toPersistentList(), // update items
-          isLoading = false, // toggle loading
-          error = null,
-          hasReachedMax = false
-        ),
-        awaitItem()
-      )
+        assertEquals(
+          GithubSearchState(
+            page = page.toUInt(), // update page
+            term = term,
+            items = repoItems, // update items
+            isLoading = false, // toggle loading
+            error = null,
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
 
-      delay(EXTRA_DELAY)
-      expectNoEvents()
+        delay(EXTRA_DELAY)
+        expectNoEvents()
+      }
+
+      verify(repoItemRepository)
+        .coroutine { searchRepoItems(term, page) }
+        .wasInvoked(exactly = once)
     }
 
-    verify(repoItemRepository)
-      .coroutine { searchRepoItems(term, page) }
-      .wasInvoked(exactly = once)
-  }
+  @Test
+  fun `debounce search actions and emits items WHEN dispatch multiple Search action with non-blank strings and searchRepoItemsUseCase returns a non-empty items`() =
+    runTest {
+      val terms = List(5) { it.toString() }
+      val finalTerm = terms.last()
+      val page = FIRST_PAGE.toInt() + 1
+      val repoItems = genRepoItems(0..10)
+      mockSearchRepoItemsUseCase(term = finalTerm, page = page) { repoItems.right() }
+
+      launch {
+        terms.forEach {
+          vm.dispatch(GithubSearchAction.Search(it))
+          delay(SEMI_DELAY)
+        }
+      }
+
+      vm.stateFlow.test {
+        assertEquals(
+          GithubSearchState.initial(),
+          awaitItem()
+        )
+
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE,
+            term = finalTerm, // update term
+            items = persistentListOf(),
+            isLoading = true, // toggle loading
+            error = null,
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        assertEquals(
+          GithubSearchState(
+            page = page.toUInt(), // update page
+            term = finalTerm,
+            items = repoItems, // update items
+            isLoading = false, // toggle loading
+            error = null,
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        delay(EXTRA_DELAY)
+        expectNoEvents()
+      }
+
+      verify(repoItemRepository)
+        .coroutine { searchRepoItems(finalTerm, page) }
+        .wasInvoked(exactly = once)
+    }
 
   private suspend inline fun mockSearchRepoItemsUseCase(
     term: String,
@@ -133,8 +192,9 @@ class GithubSearchViewModelTest {
 
   private companion object {
     private val EXTRA_DELAY = GithubSearchSideEffects.DEBOUNCE_TIME * 1.5
+    private val SEMI_DELAY = GithubSearchSideEffects.DEBOUNCE_TIME * 0.5
 
-    private fun genRepoItems(ids: IntRange): List<RepoItem> = ids.map { id ->
+    private fun genRepoItems(ids: IntRange): PersistentList<RepoItem> = ids.map { id ->
       RepoItem(
         id = id,
         fullName = "Full name: $id",
@@ -151,6 +211,6 @@ class GithubSearchViewModelTest {
         ),
         updatedAt = Clock.System.now()
       )
-    }
+    }.toPersistentList()
   }
 }
