@@ -15,6 +15,8 @@ import io.mockative.Mock
 import io.mockative.classOf
 import io.mockative.given
 import io.mockative.mock
+import io.mockative.once
+import io.mockative.verify
 import kotlin.random.Random
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -34,8 +36,8 @@ class GithubSearchViewModelTest {
   private lateinit var vm: GithubSearchViewModel
 
   @Mock
-  private val repoItemRepository = mock(classOf<RepoItemRepository>())
-  private val searchRepoItemsUseCase = SearchRepoItemsUseCase(repoItemRepository)
+  private lateinit var repoItemRepository: RepoItemRepository
+  private lateinit var searchRepoItemsUseCase: SearchRepoItemsUseCase
   private val testAppCoroutineDispatchers = TestAppCoroutineDispatchers(
     testCoroutineDispatcher = UnconfinedTestDispatcher()
   )
@@ -44,6 +46,8 @@ class GithubSearchViewModelTest {
   fun setup() {
     Dispatchers.setMain(testAppCoroutineDispatchers.testCoroutineDispatcher)
 
+    repoItemRepository = mock(classOf())
+    searchRepoItemsUseCase = SearchRepoItemsUseCase(repoItemRepository)
     vm = GithubSearchViewModel(
       searchRepoItemsUseCase = searchRepoItemsUseCase,
     )
@@ -51,6 +55,9 @@ class GithubSearchViewModelTest {
 
   @AfterTest
   fun teardown() {
+    verify(repoItemRepository).hasNoUnverifiedExpectations()
+    verify(repoItemRepository).hasNoUnmetExpectations()
+
     Dispatchers.resetMain()
   }
 
@@ -110,6 +117,10 @@ class GithubSearchViewModelTest {
       delay(EXTRA_DELAY)
       expectNoEvents()
     }
+
+    verify(repoItemRepository)
+      .coroutine { searchRepoItems(term, page) }
+      .wasInvoked(exactly = once)
   }
 
   private suspend inline fun mockSearchRepoItemsUseCase(
@@ -121,7 +132,7 @@ class GithubSearchViewModelTest {
     .then { result() }
 
   private companion object {
-    val EXTRA_DELAY = GithubSearchSideEffects.DEBOUNCE_TIME * 1.5
+    private val EXTRA_DELAY = GithubSearchSideEffects.DEBOUNCE_TIME * 1.5
 
     private fun genRepoItems(ids: IntRange): List<RepoItem> = ids.map { id ->
       RepoItem(
