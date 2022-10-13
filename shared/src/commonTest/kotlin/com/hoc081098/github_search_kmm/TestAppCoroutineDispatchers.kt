@@ -1,7 +1,6 @@
 package com.hoc081098.github_search_kmm
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.MainCoroutineDispatcher
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
 
@@ -13,5 +12,5 @@ class TestAppCoroutineDispatchers(
   override val io: CoroutineDispatcher get() = testCoroutineDispatcher
   override val default: CoroutineDispatcher get() = testCoroutineDispatcher
   override val unconfined: CoroutineDispatcher get() = testCoroutineDispatcher
-  override val immediateMain: MainCoroutineDispatcher get() = TODO()
+  override val immediateMain: CoroutineDispatcher get() = testCoroutineDispatcher
 }

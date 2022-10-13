@@ -128,6 +128,54 @@ class GithubSearchViewModelTest {
     }
 
   @Test
+  fun `searches repo items and emits items WHEN dispatch a Search action with a non-blank string and searchRepoItemsUseCase returns an empty items`() =
+    runTest {
+      val term = "term"
+      val page = FIRST_PAGE.toInt() + 1
+      mockSearchRepoItemsUseCase(term = term, page = page) { emptyList<RepoItem>().right() }
+
+      vm.dispatch(GithubSearchAction.Search(term))
+
+      vm.stateFlow.test {
+        assertEquals(
+          GithubSearchState.initial(),
+          awaitItem()
+        )
+
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE,
+            term = term, // update term
+            items = persistentListOf(),
+            isLoading = true, // toggle loading
+            error = null,
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE,
+            term = term,
+            items = persistentListOf(),
+            isLoading = false, // toggle loading
+            error = null,
+            hasReachedMax = true // update hasReachedMax
+          ),
+          awaitItem()
+        )
+
+        delay(EXTRA_DELAY)
+        expectNoEvents()
+      }
+
+      verify(repoItemRepository)
+        .coroutine { searchRepoItems(term, page) }
+        .wasInvoked(exactly = once)
+    }
+
+  @Test
   fun `debounce search actions and emits items WHEN dispatch multiple Search action with non-blank strings and searchRepoItemsUseCase returns a non-empty items`() =
     runTest {
       val terms = List(5) { it.toString() }
@@ -169,6 +217,60 @@ class GithubSearchViewModelTest {
             isLoading = false, // toggle loading
             error = null,
             hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        delay(EXTRA_DELAY)
+        expectNoEvents()
+      }
+
+      verify(repoItemRepository)
+        .coroutine { searchRepoItems(finalTerm, page) }
+        .wasInvoked(exactly = once)
+    }
+
+  @Test
+  fun `debounce search actions and emits items WHEN dispatch multiple Search action with non-blank strings and searchRepoItemsUseCase returns an empty items`() =
+    runTest {
+      val terms = List(5) { it.toString() }
+      val finalTerm = terms.last()
+      val page = FIRST_PAGE.toInt() + 1
+      mockSearchRepoItemsUseCase(term = finalTerm, page = page) { emptyList<RepoItem>().right() }
+
+      launch {
+        terms.forEach {
+          vm.dispatch(GithubSearchAction.Search(it))
+          delay(SEMI_DELAY)
+        }
+      }
+
+      vm.stateFlow.test {
+        assertEquals(
+          GithubSearchState.initial(),
+          awaitItem()
+        )
+
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE,
+            term = finalTerm, // update term
+            items = persistentListOf(),
+            isLoading = true, // toggle loading
+            error = null,
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE,
+            term = finalTerm,
+            items = persistentListOf(),
+            isLoading = false, // toggle loading
+            error = null,
+            hasReachedMax = true // update hasReachedMax
           ),
           awaitItem()
         )
