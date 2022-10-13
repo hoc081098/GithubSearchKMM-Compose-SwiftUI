@@ -155,4 +155,24 @@ android {
     minSdk = appConfig.minSdkVersion
     targetSdk = appConfig.targetSdkVersion
   }
+
+  testOptions {
+    unitTests {
+      isReturnDefaultValues = true
+      all {
+        if (it.name == "testDebugUnitTest") {
+          it.extensions.configure<kotlinx.kover.api.KoverTaskExtension> {
+            isDisabled.set(false)
+            // excludes.addAll(excludedClasses)
+          }
+        }
+      }
+    }
+  }
+}
+
+kover {
+  instrumentation {
+    excludeTasks += "testReleaseUnitTest" // exclude testReleaseUnitTest from instrumentation
+  }
 }

@@ -63,6 +63,13 @@ allprojects {
   configure<kotlinx.kover.api.KoverMergedConfig> {
     enable()
   }
+  configure<kotlinx.kover.api.KoverProjectConfig> {
+    filters { // common filters for all default Kover tasks
+      classes { // common class filter for all default Kover tasks in this project
+        excludes += excludedClasses
+      }
+    }
+  }
 
   apply<SpotlessPlugin>()
   configure<SpotlessExtension> {

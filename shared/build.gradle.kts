@@ -155,6 +155,20 @@ android {
     coreLibraryDesugaring(deps.desugarJdkLibs)
     "kapt"(deps.dagger.hiltAndroidCompiler)
   }
+
+  testOptions {
+    unitTests {
+      isReturnDefaultValues = true
+      all {
+        if (it.name == "testDebugUnitTest") {
+          it.extensions.configure<kotlinx.kover.api.KoverTaskExtension> {
+            isDisabled.set(false)
+            // excludes.addAll(excludedClasses)
+          }
+        }
+      }
+    }
+  }
 }
 
 hilt {
@@ -191,4 +205,10 @@ dependencies {
     .forEach {
       add(it.name, deps.test.mockativeProcessor)
     }
+}
+
+kover {
+  instrumentation {
+    excludeTasks += "testReleaseUnitTest" // exclude testReleaseUnitTest from instrumentation
+  }
 }

@@ -176,6 +176,11 @@ inline val DependencyHandler.multiplatformViewModel get() = project(":multiplatf
 val Project.isCiBuild: Boolean
   get() = providers.environmentVariable("CI").orNull == "true"
 
+val excludedClasses = listOf(
+  "hilt_aggregated_deps.*",
+  "io.mockative.*"
+)
+
 @Suppress("NOTHING_TO_INLINE")
 object L {
   inline operator fun <T> get(vararg elements: T): List<T> = elements.asList()
