@@ -35,6 +35,7 @@ allprojects {
   tasks.withType<KotlinCompile> {
     kotlinOptions {
       jvmTarget = JavaVersion.VERSION_11.toString()
+      languageVersion = "1.8"
     }
   }
 

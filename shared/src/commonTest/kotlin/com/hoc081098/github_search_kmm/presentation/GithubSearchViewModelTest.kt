@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import arrow.core.Either
 import arrow.core.getOrHandle
 import arrow.core.right
+import com.hoc081098.github_search_kmm.TestAntilog
 import com.hoc081098.github_search_kmm.TestAppCoroutineDispatchers
 import com.hoc081098.github_search_kmm.domain.model.AppError
 import com.hoc081098.github_search_kmm.domain.model.ArgbColor
@@ -12,6 +13,7 @@ import com.hoc081098.github_search_kmm.domain.model.RepoItem
 import com.hoc081098.github_search_kmm.domain.repository.RepoItemRepository
 import com.hoc081098.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
 import com.hoc081098.github_search_kmm.presentation.GithubSearchState.Companion.FIRST_PAGE
+import io.github.aakira.napier.Napier
 import io.mockative.Mock
 import io.mockative.classOf
 import io.mockative.given
@@ -41,12 +43,15 @@ class GithubSearchViewModelTest {
   @Mock
   private lateinit var repoItemRepository: RepoItemRepository
   private lateinit var searchRepoItemsUseCase: SearchRepoItemsUseCase
+
   private val testAppCoroutineDispatchers = TestAppCoroutineDispatchers(
     testCoroutineDispatcher = UnconfinedTestDispatcher()
   )
+  private val antilog = TestAntilog()
 
   @BeforeTest
   fun setup() {
+    Napier.base(antilog)
     Dispatchers.setMain(testAppCoroutineDispatchers.testCoroutineDispatcher)
 
     repoItemRepository = mock(classOf())
@@ -62,10 +67,11 @@ class GithubSearchViewModelTest {
     verify(repoItemRepository).hasNoUnmetExpectations()
 
     Dispatchers.resetMain()
+    Napier.takeLogarithm(antilog)
   }
 
   @Test
-  fun `rejects blank term WHEN dispatch a Search action with a blank string`() = runTest {
+  fun `rejects blank term WHEN dispatching a Search action with a blank string`() = runTest {
     vm.dispatch(GithubSearchAction.Search("   "))
 
     vm.stateFlow.test {
@@ -73,13 +79,37 @@ class GithubSearchViewModelTest {
         GithubSearchState.initial(),
         awaitItem()
       )
+
       delay(EXTRA_DELAY)
       expectNoEvents()
     }
   }
 
   @Test
-  fun `searches repo items and emits items WHEN dispatch a Search action with a non-blank string and searchRepoItemsUseCase returns a non-empty items`() =
+  fun `debounces search actions and rejects bank term WHEN dispatching multiple Search actions and the last term is blank`() =
+    runTest {
+      val terms = List(5) { it.toString() } + " "
+
+      launch {
+        terms.forEach {
+          delay(SEMI_DELAY)
+          vm.dispatch(GithubSearchAction.Search(it))
+        }
+      }
+
+      vm.stateFlow.test {
+        assertEquals(
+          GithubSearchState.initial(),
+          awaitItem()
+        )
+
+        delay(EXTRA_DELAY)
+        expectNoEvents()
+      }
+    }
+
+  @Test
+  fun `emits items WHEN dispatching a Search action with a non-blank string and searchRepoItemsUseCase returns a non-empty items`() =
     runTest {
       val term = "term"
       val page = FIRST_PAGE.toInt() + 1
@@ -128,7 +158,7 @@ class GithubSearchViewModelTest {
     }
 
   @Test
-  fun `searches repo items and emits items WHEN dispatch a Search action with a non-blank string and searchRepoItemsUseCase returns an empty items`() =
+  fun `emits items WHEN dispatching a Search action with a non-blank string and searchRepoItemsUseCase returns an empty items`() =
     runTest {
       val term = "term"
       val page = FIRST_PAGE.toInt() + 1
@@ -176,7 +206,7 @@ class GithubSearchViewModelTest {
     }
 
   @Test
-  fun `debounce search actions and emits items WHEN dispatch multiple Search action with non-blank strings and searchRepoItemsUseCase returns a non-empty items`() =
+  fun `debounces search actions and emits items WHEN dispatching multiple Search actions with non-blank strings and searchRepoItemsUseCase returns a non-empty items`() =
     runTest {
       val terms = List(5) { it.toString() }
       val finalTerm = terms.last()
@@ -231,7 +261,7 @@ class GithubSearchViewModelTest {
     }
 
   @Test
-  fun `debounce search actions and emits items WHEN dispatch multiple Search action with non-blank strings and searchRepoItemsUseCase returns an empty items`() =
+  fun `debounces search actions and emits items WHEN dispatching multiple Search actions with non-blank strings and searchRepoItemsUseCase returns an empty items`() =
     runTest {
       val terms = List(5) { it.toString() }
       val finalTerm = terms.last()
@@ -240,9 +270,10 @@ class GithubSearchViewModelTest {
 
       launch {
         terms.forEach {
-          vm.dispatch(GithubSearchAction.Search(it))
           delay(SEMI_DELAY)
+          vm.dispatch(GithubSearchAction.Search(it))
         }
+        delay(EXTRA_DELAY)
       }
 
       vm.stateFlow.test {
