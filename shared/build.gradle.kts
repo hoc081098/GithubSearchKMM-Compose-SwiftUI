@@ -39,6 +39,8 @@ kotlin {
       languageSettings.run {
         optIn("kotlinx.coroutines.FlowPreview")
         optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
+        languageVersion = "1.8"
+        progressiveMode = true
       }
     }
 
