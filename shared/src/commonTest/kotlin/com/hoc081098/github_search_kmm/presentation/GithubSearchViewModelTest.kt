@@ -30,6 +30,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -86,7 +87,7 @@ class GithubSearchViewModelTest {
   }
 
   @Test
-  fun `debounces search actions and rejects bank term WHEN dispatching multiple Search actions and the last term is blank`() =
+  fun `debounces search actions and rejects blank term WHEN dispatching multiple Search actions and the last term is blank`() =
     runTest {
       val terms = List(5) { it.toString() } + " "
 
@@ -106,6 +107,80 @@ class GithubSearchViewModelTest {
         delay(EXTRA_DELAY)
         expectNoEvents()
       }
+    }
+
+  @Test
+  fun `debounces search actions and rejects blank term and skip subsequent repetitions term WHEN dispatching multiple Search actions`() =
+    runTest {
+      val finalTerm = "#final"
+      val page = FIRST_PAGE.toInt() + 1
+      val repoItems = genRepoItems(0..5)
+      mockSearchRepoItemsUseCase(
+        term = finalTerm,
+        page = page,
+      ) { repoItems.right() }
+
+      val termsFlow = flow {
+        repeat(5) {
+          delay(SEMI_DELAY)
+          emit(it.toString())
+        }
+
+        delay(SEMI_DELAY)
+        emit(" ") // emitted then rejected
+
+        delay(EXTRA_DELAY)
+        emit(finalTerm) // [emitted]
+
+        delay(EXTRA_DELAY)
+        emit(finalTerm) // skipped
+      }
+
+      launch {
+        termsFlow.collect {
+          vm.dispatch(GithubSearchAction.Search(it))
+        }
+      }
+
+      vm.stateFlow.test {
+        assertEquals(
+          GithubSearchState.initial(),
+          awaitItem()
+        )
+
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE,
+            term = finalTerm, // updated term
+            items = persistentListOf(),
+            isLoading = true, // toggle isLoading
+            error = null,
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        assertEquals(
+          GithubSearchState(
+            page = page.toUInt(), // updated page
+            term = finalTerm,
+            items = repoItems, // updated items
+            isLoading = false, // toggle isLoading
+            error = null,
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        delay(EXTRA_DELAY)
+        delay(EXTRA_DELAY)
+        delay(EXTRA_DELAY)
+        expectNoEvents()
+      }
+
+      verify(repoItemRepository)
+        .coroutine { searchRepoItemsUseCase(term = finalTerm, page = page) }
+        .wasInvoked(exactly = once)
     }
 
   @Test
