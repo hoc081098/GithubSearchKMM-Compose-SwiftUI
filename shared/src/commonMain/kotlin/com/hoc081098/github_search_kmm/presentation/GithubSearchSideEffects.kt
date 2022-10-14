@@ -5,6 +5,7 @@ import com.hoc081098.flowext.flowFromSuspend
 import com.hoc081098.flowext.takeUntil
 import com.hoc081098.flowredux.SideEffect
 import com.hoc081098.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
+import com.hoc081098.github_search_kmm.presentation.GithubSearchState.Companion.FIRST_PAGE
 import com.hoc081098.github_search_kmm.utils.eitherLceFlow
 import kotlin.jvm.JvmInline
 import kotlin.time.Duration
@@ -63,7 +64,7 @@ internal value class GithubSearchSideEffects(
         .flatMapLatest { action ->
           executeSearchRepoItemsUseCase(
             term = action.term,
-            nextPage = 1u
+            nextPage = FIRST_PAGE + 1u
           )
         }
     }

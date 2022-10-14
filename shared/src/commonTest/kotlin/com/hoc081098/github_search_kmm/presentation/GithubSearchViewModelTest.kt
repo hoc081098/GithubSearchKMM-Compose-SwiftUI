@@ -332,7 +332,7 @@ class GithubSearchViewModelTest {
     }
 
   @Test
-  fun `debounces _ emits loading state and items state WHEN dispatching multiple Search actions with non-blank strings and searchRepoItemsUseCase returns a non-empty items`() =
+  fun `debounces _ emits loading state and items state WHEN dispatching multiple Search actions and SearchRepoItemsUseCase returns a non-empty items`() =
     runTest {
       val terms = List(5) { it.toString() }
       val finalTerm = terms.last()
@@ -387,7 +387,7 @@ class GithubSearchViewModelTest {
     }
 
   @Test
-  fun `debounces _ emits loading state and items state WHEN dispatching multiple Search actions with non-blank strings and searchRepoItemsUseCase returns an empty items`() =
+  fun `debounces _ emits loading state and items state WHEN dispatching multiple Search actions and SearchRepoItemsUseCase returns an empty items`() =
     runTest {
       val terms = List(5) { it.toString() }
       val finalTerm = terms.last()
