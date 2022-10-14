@@ -27,10 +27,15 @@ buildscript {
   }
 }
 
+plugins {
+  id("com.google.devtools.ksp") version "1.7.20-1.0.6" apply false
+}
+
 allprojects {
   tasks.withType<KotlinCompile> {
     kotlinOptions {
       jvmTarget = JavaVersion.VERSION_11.toString()
+      languageVersion = "1.8"
     }
   }
 
@@ -57,6 +62,13 @@ allprojects {
   apply<KoverPlugin>()
   configure<kotlinx.kover.api.KoverMergedConfig> {
     enable()
+  }
+  configure<kotlinx.kover.api.KoverProjectConfig> {
+    filters { // common filters for all default Kover tasks
+      classes { // common class filter for all default Kover tasks in this project
+        excludes += excludedClasses
+      }
+    }
   }
 
   apply<SpotlessPlugin>()

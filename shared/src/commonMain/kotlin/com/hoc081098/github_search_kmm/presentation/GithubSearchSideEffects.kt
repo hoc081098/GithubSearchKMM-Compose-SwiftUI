@@ -5,8 +5,9 @@ import com.hoc081098.flowext.flowFromSuspend
 import com.hoc081098.flowext.takeUntil
 import com.hoc081098.flowredux.SideEffect
 import com.hoc081098.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
-import com.hoc081098.github_search_kmm.utils.eitherLCEFlow
+import com.hoc081098.github_search_kmm.utils.eitherLceFlow
 import kotlin.jvm.JvmInline
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -44,7 +45,7 @@ internal value class GithubSearchSideEffects(
       actionFlow
         .filterIsInstance<GithubSearchAction.Search>()
         .map { it.term.trim() }
-        .debounce(600.milliseconds)
+        .debounce(DEBOUNCE_TIME)
         .filter { it.isNotBlank() }
         .distinctUntilChanged()
         .map { SideEffectAction.TextChanged(term = it) }
@@ -125,7 +126,7 @@ internal value class GithubSearchSideEffects(
     term: String,
     nextPage: UInt
   ): Flow<SideEffectAction.SearchLCE> =
-    eitherLCEFlow {
+    eitherLceFlow {
       searchRepoItemsUseCase(
         term = term,
         page = nextPage.toInt()
@@ -137,4 +138,8 @@ internal value class GithubSearchSideEffects(
         nextPage = nextPage,
       )
     }
+
+  companion object {
+    val DEBOUNCE_TIME: Duration = 600.milliseconds
+  }
 }

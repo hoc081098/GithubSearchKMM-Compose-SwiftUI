@@ -2,7 +2,6 @@ package com.hoc081098.github_search_kmm
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainCoroutineDispatcher
 
 /**
  * An interface that provides properties for accessing commonly used [CoroutineDispatcher]s. This differs from the
@@ -99,5 +98,5 @@ interface AppCoroutineDispatchers {
    *
    * [Dispatchers.Main] supports immediate execution for Android, JavaFx and Swing platforms.
    */
-  val immediateMain: MainCoroutineDispatcher
+  val immediateMain: CoroutineDispatcher
 }

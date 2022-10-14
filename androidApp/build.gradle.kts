@@ -56,6 +56,20 @@ android {
       "-opt-in=kotlinx.serialization.ExperimentalSerializationApi"
     )
   }
+
+  testOptions {
+    unitTests {
+      isReturnDefaultValues = true
+      all {
+        if (it.name == "testDebugUnitTest") {
+          it.extensions.configure<kotlinx.kover.api.KoverTaskExtension> {
+            isDisabled.set(false)
+            // excludes.addAll(excludedClasses)
+          }
+        }
+      }
+    }
+  }
 }
 
 dependencies {
@@ -115,4 +129,10 @@ fun Project.buildComposeMetricsParameters(): List<String> {
     )
   }
   return metricParameters.toList()
+}
+
+kover {
+  instrumentation {
+    excludeTasks += "testReleaseUnitTest" // exclude testReleaseUnitTest from instrumentation
+  }
 }

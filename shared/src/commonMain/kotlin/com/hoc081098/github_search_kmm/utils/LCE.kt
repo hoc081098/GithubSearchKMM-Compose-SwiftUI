@@ -2,22 +2,21 @@ package com.hoc081098.github_search_kmm.utils
 
 import arrow.core.Either
 import com.hoc081098.flowext.flowFromSuspend
+import kotlin.jvm.JvmInline
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 
 sealed interface EitherLCE<out L, out R> {
-  object Loading : EitherLCE<Nothing, Nothing>
+  data object Loading : EitherLCE<Nothing, Nothing>
 
-  data class ContentOrError<out L, out R>(val either: Either<L, R>) : EitherLCE<L, R>
+  @JvmInline
+  value class ContentOrError<out L, out R>(val either: Either<L, R>) : EitherLCE<L, R>
 }
 
-fun <L, R> eitherLCEFlow(function: suspend () -> Either<L, R>): Flow<EitherLCE<L, R>> =
+fun <L, R> eitherLceFlow(function: suspend () -> Either<L, R>): Flow<EitherLCE<L, R>> =
   flowFromSuspend(function)
-    .map {
-      @Suppress("USELESS_CAST")
-      EitherLCE.ContentOrError(it) as EitherLCE<L, R>
-    }
+    .map<Either<L, R>, EitherLCE<L, R>> { EitherLCE.ContentOrError(it) }
     .onStart { emit(EitherLCE.Loading) }
 
 sealed class LCE<out T> {
