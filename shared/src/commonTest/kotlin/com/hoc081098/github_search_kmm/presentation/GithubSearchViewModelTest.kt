@@ -87,7 +87,7 @@ class GithubSearchViewModelTest {
   }
 
   @Test
-  fun `debounces search actions and rejects blank term WHEN dispatching multiple Search actions and the last term is blank`() =
+  fun `debounces and rejects blank term WHEN dispatching multiple Search actions and the last term is blank`() =
     runTest {
       val terms = List(5) { it.toString() } + " "
 
@@ -110,7 +110,7 @@ class GithubSearchViewModelTest {
     }
 
   @Test
-  fun `debounces search actions and rejects blank term and skip subsequent repetitions term WHEN dispatching multiple Search actions`() =
+  fun `debounces _ rejects blank term and skip subsequent repetitions term WHEN dispatching multiple Search actions`() =
     runTest {
       val finalTerm = "#final"
       val page = FIRST_PAGE.toInt() + 1
@@ -184,7 +184,7 @@ class GithubSearchViewModelTest {
     }
 
   @Test
-  fun `emits items WHEN dispatching a Search action with a non-blank string and searchRepoItemsUseCase returns a non-empty items`() =
+  fun `emits loading state and items state WHEN dispatching a Search action with a non-blank string and searchRepoItemsUseCase returns a non-empty items`() =
     runTest {
       val term = "term"
       val page = FIRST_PAGE.toInt() + 1
@@ -233,7 +233,7 @@ class GithubSearchViewModelTest {
     }
 
   @Test
-  fun `emits items WHEN dispatching a Search action with a non-blank string and searchRepoItemsUseCase returns an empty items`() =
+  fun `emits loading state and items state WHEN dispatching a Search action with a non-blank string and searchRepoItemsUseCase returns an empty items`() =
     runTest {
       val term = "term"
       val page = FIRST_PAGE.toInt() + 1
@@ -281,7 +281,7 @@ class GithubSearchViewModelTest {
     }
 
   @Test
-  fun `debounces search actions and emits items WHEN dispatching multiple Search actions with non-blank strings and searchRepoItemsUseCase returns a non-empty items`() =
+  fun `debounces _ emits loading state and items state WHEN dispatching multiple Search actions with non-blank strings and searchRepoItemsUseCase returns a non-empty items`() =
     runTest {
       val terms = List(5) { it.toString() }
       val finalTerm = terms.last()
@@ -336,7 +336,7 @@ class GithubSearchViewModelTest {
     }
 
   @Test
-  fun `debounces search actions and emits items WHEN dispatching multiple Search actions with non-blank strings and searchRepoItemsUseCase returns an empty items`() =
+  fun `debounces _ emits loading state and items state WHEN dispatching multiple Search actions with non-blank strings and searchRepoItemsUseCase returns an empty items`() =
     runTest {
       val terms = List(5) { it.toString() }
       val finalTerm = terms.last()
