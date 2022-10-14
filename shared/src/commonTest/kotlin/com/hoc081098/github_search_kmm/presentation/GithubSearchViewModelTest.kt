@@ -3,6 +3,7 @@ package com.hoc081098.github_search_kmm.presentation
 import app.cash.turbine.test
 import arrow.core.Either
 import arrow.core.getOrHandle
+import arrow.core.left
 import arrow.core.right
 import com.hoc081098.github_search_kmm.TestAntilog
 import com.hoc081098.github_search_kmm.TestAppCoroutineDispatchers
@@ -184,7 +185,7 @@ class GithubSearchViewModelTest {
     }
 
   @Test
-  fun `emits loading state and items state WHEN dispatching a Search action with a non-blank string and searchRepoItemsUseCase returns a non-empty items`() =
+  fun `emits loading state and items state WHEN SearchRepoItemsUseCase returns a non-empty items`() =
     runTest {
       val term = "term"
       val page = FIRST_PAGE.toInt() + 1
@@ -233,7 +234,7 @@ class GithubSearchViewModelTest {
     }
 
   @Test
-  fun `emits loading state and items state WHEN dispatching a Search action with a non-blank string and searchRepoItemsUseCase returns an empty items`() =
+  fun `emits loading state and items state WHEN SearchRepoItemsUseCase returns an empty items`() =
     runTest {
       val term = "term"
       val page = FIRST_PAGE.toInt() + 1
@@ -267,6 +268,56 @@ class GithubSearchViewModelTest {
             isLoading = false, // toggle loading
             error = null,
             hasReachedMax = true // update hasReachedMax
+          ),
+          awaitItem()
+        )
+
+        delay(EXTRA_DELAY)
+        expectNoEvents()
+      }
+
+      verify(repoItemRepository)
+        .coroutine { searchRepoItems(term, page) }
+        .wasInvoked(exactly = once)
+    }
+
+  @Test
+  fun `emits loading state and error state WHEN SearchRepoItemsUseCase returns a Left result`() =
+    runTest {
+      val term = "term"
+      val page = FIRST_PAGE.toInt() + 1
+      val networkException = AppError.ApiException.NetworkException(null)
+
+      mockSearchRepoItemsUseCase(term = term, page = page) { networkException.left() }
+
+      vm.dispatch(GithubSearchAction.Search(term))
+
+      vm.stateFlow.test {
+        assertEquals(
+          GithubSearchState.initial(),
+          awaitItem()
+        )
+
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE,
+            term = term, // update term
+            items = persistentListOf(),
+            isLoading = true, // toggle loading
+            error = null,
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE,
+            term = term,
+            items = persistentListOf(),
+            isLoading = false, // toggle loading
+            error = networkException, // update error
+            hasReachedMax = false
           ),
           awaitItem()
         )
