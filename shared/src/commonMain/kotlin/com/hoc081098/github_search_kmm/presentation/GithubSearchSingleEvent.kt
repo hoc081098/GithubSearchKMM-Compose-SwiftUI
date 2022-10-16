@@ -6,5 +6,5 @@ import dev.icerock.moko.kswift.KSwiftInclude
 @KSwiftInclude
 sealed interface GithubSearchSingleEvent {
   data class SearchFailure(val appError: AppError) : GithubSearchSingleEvent
-  object ReachedMaxItems : GithubSearchSingleEvent
+  data object ReachedMaxItems : GithubSearchSingleEvent
 }

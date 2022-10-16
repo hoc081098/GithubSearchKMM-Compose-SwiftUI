@@ -64,7 +64,7 @@ internal value class GithubSearchSideEffects(
         .flatMapLatest { action ->
           executeSearchRepoItemsUseCase(
             term = action.term,
-            nextPage = FIRST_PAGE + 1u
+            nextPage = PAGE_1
           )
         }
     }
@@ -141,6 +141,7 @@ internal value class GithubSearchSideEffects(
     }
 
   companion object {
+    private val PAGE_1 = FIRST_PAGE + 1u
     val DEBOUNCE_TIME: Duration = 600.milliseconds
   }
 }

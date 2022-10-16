@@ -15,11 +15,11 @@ sealed interface GithubSearchAction {
     override fun reduce(state: GithubSearchState) = state
   }
 
-  object LoadNextPage : GithubSearchAction {
+  data object LoadNextPage : GithubSearchAction {
     override fun reduce(state: GithubSearchState) = state
   }
 
-  object Retry : GithubSearchAction {
+  data object Retry : GithubSearchAction {
     override fun reduce(state: GithubSearchState) = state
   }
 }
