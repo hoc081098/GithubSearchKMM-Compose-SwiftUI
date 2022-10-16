@@ -441,6 +441,61 @@ class GithubSearchViewModelTest {
         .wasInvoked(exactly = once)
     }
 
+  @Test
+  fun `debounces _ emits loading state and error state WHEN dispatching multiple Search actions and SearchRepoItemsUseCase returns a Left result`() =
+    runTest {
+      val terms = List(5) { it.toString() }
+      val finalTerm = terms.last()
+      val page = FIRST_PAGE.toInt() + 1
+      val networkException = AppError.ApiException.NetworkException(null)
+      mockSearchRepoItemsUseCase(term = finalTerm, page = page) { networkException.left() }
+
+      launch {
+        terms.forEach {
+          delay(SEMI_DELAY)
+          vm.dispatch(GithubSearchAction.Search(it))
+        }
+      }
+
+      vm.stateFlow.test {
+        assertEquals(
+          GithubSearchState.initial(),
+          awaitItem()
+        )
+
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE,
+            term = finalTerm, // update term
+            items = persistentListOf(),
+            isLoading = true, // toggle loading
+            error = null,
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE,
+            term = finalTerm,
+            items = persistentListOf(),
+            isLoading = false, // toggle loading
+            error = networkException, // update error
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        delay(EXTRA_DELAY)
+        expectNoEvents()
+      }
+
+      verify(repoItemRepository)
+        .coroutine { searchRepoItems(finalTerm, page) }
+        .wasInvoked(exactly = once)
+    }
+
   private suspend inline fun mockSearchRepoItemsUseCase(
     term: String,
     page: Int,
