@@ -30,6 +30,7 @@ import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -496,10 +497,85 @@ class GithubSearchViewModelTest {
         .wasInvoked(exactly = once)
     }
 
+  @Test
+  fun `debounces _ cancels previous execution WHEN dispatching multiple Search actions and the previous execution is not completed yet`() =
+    runTest {
+      val query1 = "#hoc081098"
+      val query2 = "#FlowExt"
+      val page = FIRST_PAGE.toInt() + 1
+      val items = genRepoItems(0..10)
+
+      mockSearchRepoItemsUseCase(term = query1, page = page) {
+        awaitCancellation() // suspend forever
+      }
+      mockSearchRepoItemsUseCase(term = query2, page = page) { items.right() }
+
+      vm.stateFlow.test {
+        assertEquals(
+          GithubSearchState.initial(),
+          awaitItem()
+        )
+
+        launch {
+          vm.dispatch(GithubSearchAction.Search(query1))
+          delay(EXTRA_DELAY)
+          vm.dispatch(GithubSearchAction.Search(query2))
+          delay(EXTRA_DELAY)
+        }
+
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE,
+            term = query1, // update term
+            items = persistentListOf(),
+            isLoading = true, // toggle loading
+            error = null,
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        // still loading, but the term is updated
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE,
+            term = query2, // update term
+            items = persistentListOf(),
+            isLoading = true,
+            error = null,
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        assertEquals(
+          GithubSearchState(
+            page = page.toUInt(), // update page
+            term = query2,
+            items = items, // update items
+            isLoading = false, // toggle loading
+            error = null,
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        delay(EXTRA_DELAY)
+        expectNoEvents()
+      }
+
+      verify(repoItemRepository)
+        .coroutine { searchRepoItems(query1, page) }
+        .wasInvoked(exactly = once)
+      verify(repoItemRepository)
+        .coroutine { searchRepoItems(query2, page) }
+        .wasInvoked(exactly = once)
+    }
+
   private suspend inline fun mockSearchRepoItemsUseCase(
     term: String,
     page: Int,
-    crossinline result: () -> Either<AppError, List<RepoItem>>
+    crossinline result: suspend () -> Either<AppError, List<RepoItem>>
   ) = given(repoItemRepository)
     .coroutine { searchRepoItemsUseCase(term, page) }
     .then { result() }
