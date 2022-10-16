@@ -637,6 +637,54 @@ class GithubSearchViewModelTest {
     }
 
   @Test
+  fun `loads next page WHEN dispatching LoadNextPage action and SearchRepoItemsUseCase returns an empty items`() =
+    runTest {
+      val term = "#hoc081098"
+      val items = genRepoItems(0..10)
+
+      val page1State = reachToPage1(term = term, items = items)
+
+      mockSearchRepoItemsUseCase(term = term, page = 2) { emptyList<RepoItem>().right() }
+
+      vm.stateFlow.test {
+        assertEquals(page1State, awaitItem())
+
+        vm.dispatch(GithubSearchAction.LoadNextPage)
+
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE + 1u,
+            term = term,
+            items = items,
+            isLoading = true, // toggle loading
+            error = null,
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE + 1u,
+            term = term,
+            items = items,
+            isLoading = false, // toggle loading
+            error = null,
+            hasReachedMax = true // set hasReachedMax to true
+          ),
+          awaitItem()
+        )
+
+        delay(EXTRA_DELAY)
+        expectNoEvents()
+      }
+
+      verify(repoItemRepository)
+        .coroutine { searchRepoItems(term, 2) }
+        .wasInvoked(exactly = once)
+    }
+
+  @Test
   fun `loads next page _ ignore other LoadNextPage actions WHEN dispatching LoadNextPage actions and SearchRepoItemsUseCase returns a non-empty items`() =
     runTest {
       val term = "#hoc081098"
