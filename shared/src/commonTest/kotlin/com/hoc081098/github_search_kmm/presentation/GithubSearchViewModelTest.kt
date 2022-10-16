@@ -572,6 +572,88 @@ class GithubSearchViewModelTest {
         .wasInvoked(exactly = once)
     }
 
+  @Test
+  fun `ignores load next page WHEN dispatching LoadNextPage action`() = runTest {
+    vm.dispatch(GithubSearchAction.LoadNextPage)
+    vm.stateFlow.test {
+      assertEquals(
+        GithubSearchState.initial(),
+        awaitItem()
+      )
+
+      delay(EXTRA_DELAY)
+      expectNoEvents()
+    }
+  }
+
+  @Test
+  fun `loads next page WHEN dispatching LoadNextPage action and SearchRepoItemsUseCase returns a non-empty items`() =
+    runTest {
+      val term = "#hoc081098"
+      val items = genRepoItems(0..10)
+
+      val page1State = reachToPage1(term = term, items = items)
+
+      val nextPageItems = genRepoItems(11..20)
+      mockSearchRepoItemsUseCase(term = term, page = 2) { nextPageItems.right() }
+
+      vm.stateFlow.test {
+        assertEquals(page1State, awaitItem())
+
+        vm.dispatch(GithubSearchAction.LoadNextPage)
+
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE + 1u,
+            term = term,
+            items = items,
+            isLoading = true, // toggle loading
+            error = null,
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        assertEquals(
+          GithubSearchState(
+            page = 2u, // update page
+            term = term,
+            items = (items + nextPageItems).toPersistentList(), // update items
+            isLoading = false, // toggle loading
+            error = null,
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        delay(EXTRA_DELAY)
+        expectNoEvents()
+      }
+
+      verify(repoItemRepository)
+        .coroutine { searchRepoItems(term, 2) }
+        .wasInvoked(exactly = once)
+    }
+
+  private suspend fun reachToPage1(term: String, items: List<RepoItem>): GithubSearchState {
+    val page = FIRST_PAGE.toInt() + 1
+    mockSearchRepoItemsUseCase(term = term, page = page) { items.right() }
+
+    vm.dispatch(GithubSearchAction.Search(term))
+
+    vm.stateFlow.test {
+      while (awaitItem().items.isEmpty()) {
+        // wait until the first page is loaded
+      }
+    }
+
+    verify(repoItemRepository)
+      .coroutine { searchRepoItems(term, page) }
+      .wasInvoked(exactly = once)
+
+    return vm.stateFlow.value
+  }
+
   private suspend inline fun mockSearchRepoItemsUseCase(
     term: String,
     page: Int,
