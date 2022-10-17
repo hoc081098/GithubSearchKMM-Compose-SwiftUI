@@ -37,6 +37,9 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: Run iosX64 tests
+        run: ./gradlew iosX64Test
+
       - name: Run Tests
         run: ./gradlew koverMergedXmlReport
 
