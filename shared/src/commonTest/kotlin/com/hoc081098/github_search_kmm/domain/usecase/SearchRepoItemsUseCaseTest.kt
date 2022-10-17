@@ -21,11 +21,12 @@ import kotlinx.coroutines.test.runTest
 
 class SearchRepoItemsUseCaseTest {
   @Mock
-  val repoItemRepository: RepoItemRepository = mock(classOf())
-  lateinit var searchRepoItemsUseCase: SearchRepoItemsUseCase
+  private lateinit var repoItemRepository: RepoItemRepository
+  private lateinit var searchRepoItemsUseCase: SearchRepoItemsUseCase
 
   @BeforeTest
   fun setup() {
+    repoItemRepository = mock(classOf())
     searchRepoItemsUseCase = SearchRepoItemsUseCase(repoItemRepository)
   }
 
