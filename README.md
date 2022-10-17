@@ -54,6 +54,11 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
  - [FlowExt](https://github.com/hoc081098/FlowExt).
  - [MOKO KSwift](https://github.com/icerockdev/moko-kswift) is a gradle plugin for generation Swift-friendly API for Kotlin/Native framework.
  - [kotlinx.collections.immutable](https://github.com/Kotlin/kotlinx.collections.immutable): immutable collection interfaces and implementation prototypes for Kotlin..
+ - Testing
+   - [Kotlin Test](https://kotlinlang.org/docs/multiplatform-run-tests.html) for running tests with Kotlin Multiplatform.
+   - [Turbine](https://github.com/cashapp/turbine) for KotlinX Coroutines Flows testing.
+   - [Mockative](https://github.com/mockative/mockative): mocking for Kotlin/Native and Kotlin Multiplatform using the Kotlin Symbol Processing API.
+   - [Kotlinx-Kover](https://github.com/Kotlin/kotlinx-kover) for Kotlin Multiplatform code coverage.
 
 # Screenshots
 
