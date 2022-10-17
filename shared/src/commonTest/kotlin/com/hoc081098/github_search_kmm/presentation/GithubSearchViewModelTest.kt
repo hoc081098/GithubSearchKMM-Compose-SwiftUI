@@ -1140,10 +1140,7 @@ class GithubSearchViewModelTest {
   }
 
   private suspend fun reachToErrorState(term: String, error: AppError): GithubSearchState {
-    mockSearchRepoItemsUseCase(term = term, page = PAGE_1) {
-      delay(1)
-      error.left()
-    }
+    mockSearchRepoItemsUseCase(term = term, page = PAGE_1) { error.left() }
 
     vm.dispatch(GithubSearchAction.Search(term))
 
