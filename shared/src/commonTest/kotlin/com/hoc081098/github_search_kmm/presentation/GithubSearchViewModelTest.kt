@@ -29,7 +29,7 @@ import kotlin.test.assertEquals
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.delay
@@ -828,7 +828,7 @@ class GithubSearchViewModelTest {
       vm.stateFlow.test {
         assertEquals(page1State, awaitItem())
 
-        launch(start = CoroutineStart.UNDISPATCHED) {
+        launch(start = UNDISPATCHED) {
           repeat(10) {
             vm.dispatch(GithubSearchAction.LoadNextPage)
             delay(100)
@@ -884,7 +884,7 @@ class GithubSearchViewModelTest {
       vm.stateFlow.test {
         assertEquals(page1State, awaitItem())
 
-        launch(start = CoroutineStart.UNDISPATCHED) {
+        launch(start = UNDISPATCHED) {
           repeat(10) {
             vm.dispatch(GithubSearchAction.LoadNextPage)
             delay(100)
@@ -941,7 +941,7 @@ class GithubSearchViewModelTest {
       vm.stateFlow.test {
         assertEquals(page1State, awaitItem())
 
-        launch(start = CoroutineStart.UNDISPATCHED) {
+        launch(start = UNDISPATCHED) {
           repeat(10) {
             vm.dispatch(GithubSearchAction.LoadNextPage)
             delay(100)
@@ -1231,7 +1231,7 @@ class GithubSearchViewModelTest {
       vm.stateFlow.test {
         assertEquals(page1State, awaitItem())
 
-        launch(start = CoroutineStart.UNDISPATCHED) {
+        launch(start = UNDISPATCHED) {
           repeat(10) {
             vm.dispatch(GithubSearchAction.Retry)
             delay(100)
@@ -1258,6 +1258,61 @@ class GithubSearchViewModelTest {
             isLoading = false, // toggle loading
             error = null,
             hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        delay(EXTRA_DELAY)
+        expectNoEvents()
+      }
+
+      verify(repoItemRepository)
+        .coroutine { searchRepoItems(term, PAGE_1) }
+        .wasInvoked(exactly = once)
+    }
+
+  @Test
+  fun `retries next page _ ignores other Retry actions WHEN dispatching Retry action and SearchRepoItemsUseCase returns an empty items`() =
+    runTest {
+      val term = "#hoc081098"
+      val error = AppError.ApiException.NetworkException(null)
+      val page1State = reachToErrorState(term = term, error = error)
+
+      mockSearchRepoItemsUseCase(term = term, page = PAGE_1) {
+        delay(1_000)
+        emptyList<RepoItem>().right()
+      }
+
+      vm.stateFlow.test {
+        assertEquals(page1State, awaitItem())
+
+        launch(start = UNDISPATCHED) {
+          repeat(10) {
+            vm.dispatch(GithubSearchAction.Retry)
+            delay(100)
+          }
+        }
+
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE,
+            term = term,
+            items = persistentListOf(),
+            isLoading = true, // toggle loading
+            error = null, // clear error
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE,
+            term = term,
+            items = persistentListOf(),
+            isLoading = false, // toggle loading
+            error = null,
+            hasReachedMax = true // set hasReachedMax to true
           ),
           awaitItem()
         )
