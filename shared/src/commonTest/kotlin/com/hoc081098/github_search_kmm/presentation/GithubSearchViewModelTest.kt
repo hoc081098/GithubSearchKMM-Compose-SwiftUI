@@ -4,17 +4,15 @@ import app.cash.turbine.ReceiveTurbine
 import app.cash.turbine.test
 import app.cash.turbine.testIn
 import arrow.core.Either
-import arrow.core.getOrHandle
 import arrow.core.left
 import arrow.core.right
 import com.hoc081098.github_search_kmm.TestAntilog
 import com.hoc081098.github_search_kmm.TestAppCoroutineDispatchers
 import com.hoc081098.github_search_kmm.domain.model.AppError
-import com.hoc081098.github_search_kmm.domain.model.ArgbColor
-import com.hoc081098.github_search_kmm.domain.model.Owner
 import com.hoc081098.github_search_kmm.domain.model.RepoItem
 import com.hoc081098.github_search_kmm.domain.repository.RepoItemRepository
 import com.hoc081098.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
+import com.hoc081098.github_search_kmm.genRepoItems
 import com.hoc081098.github_search_kmm.presentation.GithubSearchState.Companion.FIRST_PAGE
 import io.github.aakira.napier.Napier
 import io.mockative.Mock
@@ -23,12 +21,10 @@ import io.mockative.given
 import io.mockative.mock
 import io.mockative.once
 import io.mockative.verify
-import kotlin.random.Random
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.CoroutineStart.UNDISPATCHED
@@ -41,7 +37,6 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.datetime.Clock
 
 class GithubSearchViewModelTest {
   private lateinit var vm: GithubSearchViewModel
@@ -1491,25 +1486,6 @@ class GithubSearchViewModelTest {
     private val SEMI_DELAY = GithubSearchSideEffects.DEBOUNCE_TIME * 0.5
     private val PAGE_1 = FIRST_PAGE.toInt() + 1
     private val PAGE_2 = PAGE_1 + 1
-
-    private fun genRepoItems(ids: IntRange): PersistentList<RepoItem> = ids.map { id ->
-      RepoItem(
-        id = id,
-        fullName = "Full name: $id",
-        language = "Kotlin",
-        starCount = Random.nextInt(),
-        name = "Name: $id",
-        repoDescription = "Description: $id",
-        languageColor = ArgbColor.parse("#FF112233").getOrHandle { error(it) },
-        htmlUrl = "url/$id",
-        owner = Owner(
-          id = id,
-          username = "username $id",
-          avatar = "avatar/$id"
-        ),
-        updatedAt = Clock.System.now()
-      )
-    }.toPersistentList()
 
     private suspend fun ReceiveTurbine<GithubSearchSingleEvent>.assertEvents(vararg expectedEvents: GithubSearchSingleEvent) {
       expectedEvents.forEach { assertEquals(it, awaitItem()) }
