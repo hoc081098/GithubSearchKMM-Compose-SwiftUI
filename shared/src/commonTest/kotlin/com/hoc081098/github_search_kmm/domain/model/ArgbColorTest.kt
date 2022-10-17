@@ -2,8 +2,12 @@ package com.hoc081098.github_search_kmm.domain.model
 
 import arrow.core.getOrHandle
 import arrow.core.left
+import com.hoc081098.github_search_kmm.readTextResource
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class ArgbColorTest {
   @Test
@@ -44,6 +48,13 @@ class ArgbColorTest {
       g = "22".in0to1,
       b = "33".in0to1
     )
+  }
+
+  @Test
+  fun `ArgbColor_parse with a valid hex _ from colors_json`() {
+    Json.decodeFromString<List<String>>(readTextResource("colors.json")).forEach {
+      assertTrue { ArgbColor.parse(it).isRight() }
+    }
   }
 
   @Test

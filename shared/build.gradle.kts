@@ -214,3 +214,10 @@ kover {
     excludeTasks += "testReleaseUnitTest" // exclude testReleaseUnitTest from instrumentation
   }
 }
+
+tasks.register<Copy>("copyiOSTestResources") {
+  from("src/commonTest/resources")
+  into("build/bin/iosX64/debugTest/resources")
+}
+
+tasks.findByName("iosX64Test")!!.dependsOn("copyiOSTestResources")
