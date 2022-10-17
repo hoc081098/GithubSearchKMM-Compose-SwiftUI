@@ -12,7 +12,7 @@ import shared
 
 extension UIColor {
   convenience init?(argbColor: ArgbColor) {
-    if let argb = argbColor.argb() {
+    if let argb = argbColor.argb {
       self.init(
         red: CGFloat(argb.red),
         green: CGFloat(argb.green),

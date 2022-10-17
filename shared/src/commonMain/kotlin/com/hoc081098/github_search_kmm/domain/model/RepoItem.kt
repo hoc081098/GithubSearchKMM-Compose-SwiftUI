@@ -14,4 +14,3 @@ data class RepoItem(
   val owner: Owner,
   val updatedAt: Instant,
 )
-

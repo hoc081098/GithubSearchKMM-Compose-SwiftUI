@@ -4,54 +4,14 @@ import arrow.core.Either
 
 class ArgbColor private constructor(
   val hexStringWithoutPrefix: String,
+  val argb: Argb
 ) {
   data class Argb(
+    val alpha: Float,
     val red: Float,
     val green: Float,
     val blue: Float,
-    val alpha: Float,
   )
-
-  fun argb(): Argb? {
-    val int = hexStringWithoutPrefix.toULong(radix = 16)
-
-    val a: ULong
-    val r: ULong
-    val g: ULong
-    val b: ULong
-
-    when (hexStringWithoutPrefix.length) {
-      3 -> {
-        // RGB (12-bit)
-        a = 255u
-        r = (int shr 8) * 17u
-        g = (int shr 4 and 0xFu) * 17u
-        b = (int and 0xFu) * 17u
-      }
-      6 -> {
-        // RGB (24-bit)
-        a = 255u
-        r = int shr 16
-        g = int shr 8 and 0xFFu
-        b = int and 0xFFu
-      }
-      8 -> {
-        // ARGB (32-bit)
-        a = int shr 24
-        r = int shr 16 and 0xFFu
-        g = int shr 8 and 0xFFu
-        b = int and 0xFFu
-      }
-      else -> return null
-    }
-
-    return Argb(
-      red = r.toFloat() / 255f,
-      green = g.toFloat() / 255f,
-      blue = b.toFloat() / 255f,
-      alpha = a.toFloat() / 255f
-    )
-  }
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
@@ -84,9 +44,51 @@ class ArgbColor private constructor(
         }
 
         ArgbColor(
-          hexStringWithoutPrefix = formattedHexString
+          hexStringWithoutPrefix = formattedHexString,
+          argb = argb(formattedHexString)!!
         )
       }.mapLeft { "Cannot convert $hex to Color" }
+    }
+
+    private fun argb(hexStringWithoutPrefix: String): Argb? {
+      val int = hexStringWithoutPrefix.toULong(radix = 16)
+
+      val a: ULong
+      val r: ULong
+      val g: ULong
+      val b: ULong
+
+      when (hexStringWithoutPrefix.length) {
+        3 -> {
+          // RGB (12-bit)
+          a = 255u
+          r = (int shr 8) * 17u
+          g = (int shr 4 and 0xFu) * 17u
+          b = (int and 0xFu) * 17u
+        }
+        6 -> {
+          // RGB (24-bit)
+          a = 255u
+          r = int shr 16
+          g = int shr 8 and 0xFFu
+          b = int and 0xFFu
+        }
+        8 -> {
+          // ARGB (32-bit)
+          a = int shr 24
+          r = int shr 16 and 0xFFu
+          g = int shr 8 and 0xFFu
+          b = int and 0xFFu
+        }
+        else -> return null
+      }
+
+      return Argb(
+        red = r.toFloat() / 255f,
+        green = g.toFloat() / 255f,
+        blue = b.toFloat() / 255f,
+        alpha = a.toFloat() / 255f
+      )
     }
   }
 }
