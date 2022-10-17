@@ -1,3 +1,4 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import org.gradle.api.JavaVersion.VERSION_11
 import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
 import org.jetbrains.kotlin.gradle.tasks.KotlinNativeLink
@@ -11,6 +12,7 @@ plugins {
   daggerHiltAndroid
   mokoKSwift
   id("com.google.devtools.ksp")
+  id("com.codingfeline.buildkonfig")
 }
 
 version = appConfig.versionName
@@ -209,8 +211,22 @@ dependencies {
     }
 }
 
+buildkonfig {
+  packageName = "com.hoc081098.github_search_kmm"
+  defaultConfigs {
+    buildConfigField(BOOLEAN, "IS_CI_BUILD", isCiBuild.toString())
+  }
+}
+
 kover {
   instrumentation {
     excludeTasks += "testReleaseUnitTest" // exclude testReleaseUnitTest from instrumentation
   }
 }
+
+tasks.register<Copy>("copyiOSTestResources") {
+  from("src/commonTest/resources")
+  into("build/bin/iosX64/debugTest/resources")
+}
+
+tasks.findByName("iosX64Test")!!.dependsOn("copyiOSTestResources")

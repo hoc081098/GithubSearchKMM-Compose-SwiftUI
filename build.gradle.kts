@@ -29,6 +29,7 @@ buildscript {
 
 plugins {
   id("com.google.devtools.ksp") version "1.7.20-1.0.7" apply false
+  id("com.codingfeline.buildkonfig") version "0.13.3" apply false
 }
 
 allprojects {

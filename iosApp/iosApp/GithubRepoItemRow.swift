@@ -21,9 +21,8 @@ struct GithubRepoItemRow: View {
   private var url: URL? { self.urlOnce.once(self) }
 
   private let languageColorOnce = Once<GithubRepoItemRow, SwiftUI.Color?> { this in
-    if
-      let argbColor = this.item.languageColor,
-      let uiColor = UIColor.init(argbColor: argbColor) {
+    if let argbColor = this.item.languageColor {
+      let uiColor = UIColor.init(argbColor: argbColor)
       Napier.d("languageColorOnce: ", uiColor)
       return .init(uiColor)
     } else {
@@ -61,22 +60,22 @@ struct GithubRepoItemRow: View {
           .truncationMode(.tail)
 
         Spacer().frame(height: 10)
-        
+
         HStack {
           if let languageColor = self.languageColor {
             Circle()
               .fill(languageColor)
               .frame(width: 16, height: 16)
-            
+
             Spacer().frame(width: 8)
           }
-          
+
           Text(item.language ?? "Unknown language")
             .font(.subheadline)
             .foregroundColor(languageColor)
-          
+
           Spacer().frame(width: 24)
-          
+
           Image(systemName: "star.fill")
             .foregroundColor(.yellow)
           Text("\(item.starCount)")
