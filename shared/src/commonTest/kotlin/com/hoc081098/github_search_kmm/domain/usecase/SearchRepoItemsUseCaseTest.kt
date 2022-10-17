@@ -7,7 +7,6 @@ import com.hoc081098.github_search_kmm.domain.model.AppError
 import com.hoc081098.github_search_kmm.domain.repository.RepoItemRepository
 import com.hoc081098.github_search_kmm.genRepoItems
 import io.mockative.Mock
-import io.mockative.classOf
 import io.mockative.given
 import io.mockative.mock
 import io.mockative.once
@@ -26,7 +25,7 @@ class SearchRepoItemsUseCaseTest {
 
   @BeforeTest
   fun setup() {
-    repoItemRepository = mock(classOf())
+    repoItemRepository = mock(RepoItemRepository::class)
     searchRepoItemsUseCase = SearchRepoItemsUseCase(repoItemRepository)
   }
 

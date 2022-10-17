@@ -16,7 +16,6 @@ import com.hoc081098.github_search_kmm.genRepoItems
 import com.hoc081098.github_search_kmm.presentation.GithubSearchState.Companion.FIRST_PAGE
 import io.github.aakira.napier.Napier
 import io.mockative.Mock
-import io.mockative.classOf
 import io.mockative.given
 import io.mockative.mock
 import io.mockative.once
@@ -55,7 +54,7 @@ class GithubSearchViewModelTest {
     Napier.base(antilog)
     Dispatchers.setMain(testAppCoroutineDispatchers.testCoroutineDispatcher)
 
-    repoItemRepository = mock(classOf())
+    repoItemRepository = mock(RepoItemRepository::class)
     searchRepoItemsUseCase = SearchRepoItemsUseCase(repoItemRepository)
     vm = GithubSearchViewModel(
       searchRepoItemsUseCase = searchRepoItemsUseCase,

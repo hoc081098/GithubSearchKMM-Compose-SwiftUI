@@ -54,21 +54,24 @@ internal open class RepoItemRepositoryImpl(
   }
 }
 
-private fun RepoItemsSearchResponse.toRepoItemsList(colors: Map<String, ArgbColor>): List<RepoItem> =
-  items?.map { item ->
-    RepoItem(
-      id = item.id,
-      fullName = item.fullName,
-      language = item.language,
-      starCount = item.stargazersCount,
-      name = item.name,
-      repoDescription = item.description,
-      languageColor = item.language?.let { colors[it] },
-      htmlUrl = item.htmlUrl,
-      owner = item.owner.toOwner(),
-      updatedAt = item.updatedAt,
-    )
-  } ?: emptyList()
+internal fun RepoItemsSearchResponse.toRepoItemsList(colors: Map<String, ArgbColor>): List<RepoItem> =
+  items
+    ?.map { it.toRepoItem(colors) }
+    ?: emptyList()
+
+private fun RepoItemsSearchResponse.Item.toRepoItem(colors: Map<String, ArgbColor>): RepoItem =
+  RepoItem(
+    id = id,
+    fullName = fullName,
+    language = language,
+    starCount = stargazersCount,
+    name = name,
+    repoDescription = description,
+    languageColor = language?.let { colors[it] },
+    htmlUrl = htmlUrl,
+    owner = owner.toOwner(),
+    updatedAt = updatedAt,
+  )
 
 private fun RepoItemsSearchResponse.Item.Owner.toOwner(): Owner = Owner(
   id = id,
