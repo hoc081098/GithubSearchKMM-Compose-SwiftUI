@@ -11,16 +11,13 @@ import UIKit
 import shared
 
 extension UIColor {
-  convenience init?(argbColor: ArgbColor) {
-    if let argb = argbColor.argb {
-      self.init(
-        red: CGFloat(argb.red),
-        green: CGFloat(argb.green),
-        blue: CGFloat(argb.blue),
-        alpha: CGFloat(argb.alpha)
-      )
-    } else {
-      return nil
-    }
+  convenience init(argbColor: ArgbColor) {
+    let argb = argbColor.argb
+    self.init(
+      red: CGFloat(argb.red),
+      green: CGFloat(argb.green),
+      blue: CGFloat(argb.blue),
+      alpha: CGFloat(argb.alpha)
+    )
   }
 }
