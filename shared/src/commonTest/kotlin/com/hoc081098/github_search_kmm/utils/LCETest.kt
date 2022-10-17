@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
+import com.hoc081098.github_search_kmm.delay1Ms
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -90,7 +91,10 @@ class LCETest {
   fun `test eitherLceFlow with a Right value`() = runTest {
     val aRight: Either<String, Int> = 42.right()
 
-    eitherLceFlow { aRight }.test {
+    eitherLceFlow {
+      delay1Ms()
+      aRight
+    }.test {
       assertEquals(EitherLCE.Loading, awaitItem())
       assertEquals(EitherLCE.ContentOrError(aRight), awaitItem())
       awaitComplete()
@@ -101,7 +105,10 @@ class LCETest {
   fun `test eitherLceFlow with a Left value`() = runTest {
     val aLeft: Either<String, Int> = "42".left()
 
-    eitherLceFlow { aLeft }.test {
+    eitherLceFlow {
+      delay1Ms()
+      aLeft
+    }.test {
       assertEquals(EitherLCE.Loading, awaitItem())
       assertEquals(EitherLCE.ContentOrError(aLeft), awaitItem())
       awaitComplete()
