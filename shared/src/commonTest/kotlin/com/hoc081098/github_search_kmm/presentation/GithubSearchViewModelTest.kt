@@ -1215,6 +1215,62 @@ class GithubSearchViewModelTest {
         .wasInvoked(exactly = once)
     }
 
+  @Test
+  fun `retries next page _ ignores other Retry actions WHEN dispatching Retry action and SearchRepoItemsUseCase returns a non-empty items`() =
+    runTest {
+      val term = "#hoc081098"
+      val error = AppError.ApiException.NetworkException(null)
+      val page1State = reachToErrorState(term = term, error = error)
+
+      val nextPageItems = genRepoItems(11..20)
+      mockSearchRepoItemsUseCase(term = term, page = PAGE_1) {
+        delay(1_000)
+        nextPageItems.right()
+      }
+
+      vm.stateFlow.test {
+        assertEquals(page1State, awaitItem())
+
+        launch(start = CoroutineStart.UNDISPATCHED) {
+          repeat(10) {
+            vm.dispatch(GithubSearchAction.Retry)
+            delay(100)
+          }
+        }
+
+        assertEquals(
+          GithubSearchState(
+            page = FIRST_PAGE,
+            term = term,
+            items = persistentListOf(),
+            isLoading = true, // toggle loading
+            error = null, // clear error
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        assertEquals(
+          GithubSearchState(
+            page = PAGE_1.toUInt(), // increase page
+            term = term,
+            items = nextPageItems, // update items
+            isLoading = false, // toggle loading
+            error = null,
+            hasReachedMax = false
+          ),
+          awaitItem()
+        )
+
+        delay(EXTRA_DELAY)
+        expectNoEvents()
+      }
+
+      verify(repoItemRepository)
+        .coroutine { searchRepoItems(term, PAGE_1) }
+        .wasInvoked(exactly = once)
+    }
+
   private suspend fun reachToPage1(term: String, items: List<RepoItem>): GithubSearchState {
     val page = PAGE_1
     mockSearchRepoItemsUseCase(term = term, page = page) { items.right() }
