@@ -16,13 +16,12 @@ class ArgbColor private constructor(
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (other == null || this::class != other::class) return false
-    other as ArgbColor
-    return hexStringWithoutPrefix == other.hexStringWithoutPrefix
+    return argb == (other as ArgbColor).argb
   }
 
-  override fun hashCode() = hexStringWithoutPrefix.hashCode()
+  override fun hashCode(): Int = argb.hashCode()
 
-  override fun toString() = "ArgbColor(hexStringWithoutPrefix='$hexStringWithoutPrefix')"
+  override fun toString(): String = "ArgbColor(argb=$argb)"
 
   companion object {
     /**

@@ -5,7 +5,9 @@ import arrow.core.left
 import com.hoc081098.github_search_kmm.readTextResource
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
+import kotlin.test.fail
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -55,6 +57,54 @@ class ArgbColorTest {
     Json.decodeFromString<List<String>>(readTextResource("colors.json")).forEach {
       assertTrue { ArgbColor.parse(it).isRight() }
     }
+  }
+
+  @Test
+  fun `ArgbColor ==`() {
+    assertEquals(
+      ArgbColor.parse("#000000").getOrHandle { fail(it) },
+      ArgbColor.parse("#000000").getOrHandle { fail(it) }
+    )
+    assertEquals(
+      ArgbColor.parse("#112233").getOrHandle { fail(it) },
+      ArgbColor.parse("#123").getOrHandle { fail(it) }
+    )
+    assertEquals(
+      ArgbColor.parse("#FF112233").getOrHandle { fail(it) },
+      ArgbColor.parse("#123").getOrHandle { fail(it) }
+    )
+    assertEquals(
+      ArgbColor.parse("#ff112233").getOrHandle { fail(it) },
+      ArgbColor.parse("#123").getOrHandle { fail(it) }
+    )
+    assertNotEquals(
+      ArgbColor.parse("#FF112233").getOrHandle { fail(it) },
+      ArgbColor.parse("#12112233").getOrHandle { fail(it) }
+    )
+  }
+
+  @Test
+  fun `ArgbColor hashCode`() {
+    assertEquals(
+      ArgbColor.parse("#000000").getOrHandle { fail(it) }.hashCode(),
+      ArgbColor.parse("#000000").getOrHandle { fail(it) }.hashCode()
+    )
+    assertEquals(
+      ArgbColor.parse("#112233").getOrHandle { fail(it) }.hashCode(),
+      ArgbColor.parse("#123").getOrHandle { fail(it) }.hashCode()
+    )
+    assertEquals(
+      ArgbColor.parse("#FF112233").getOrHandle { fail(it) }.hashCode(),
+      ArgbColor.parse("#123").getOrHandle { fail(it) }.hashCode()
+    )
+    assertEquals(
+      ArgbColor.parse("#ff112233").getOrHandle { fail(it) }.hashCode(),
+      ArgbColor.parse("#123").getOrHandle { fail(it) }.hashCode()
+    )
+    assertNotEquals(
+      ArgbColor.parse("#FF112233").getOrHandle { fail(it) }.hashCode(),
+      ArgbColor.parse("#12112233").getOrHandle { fail(it) }.hashCode()
+    )
   }
 
   @Test
