@@ -1,6 +1,8 @@
 package com.hoc081098.github_search_kmm.presentation
 
+import app.cash.turbine.ReceiveTurbine
 import app.cash.turbine.test
+import app.cash.turbine.testIn
 import arrow.core.Either
 import arrow.core.getOrHandle
 import arrow.core.left
@@ -238,6 +240,8 @@ class GithubSearchViewModelTest {
   @Test
   fun `emits loading state and items state WHEN SearchRepoItemsUseCase returns an empty items`() =
     runTest {
+      val eventsTurbine = vm.eventFlow.testIn(this)
+
       val term = "term"
       val page = PAGE_1
       mockSearchRepoItemsUseCase(term = term, page = page) { emptyList<RepoItem>().right() }
@@ -277,6 +281,7 @@ class GithubSearchViewModelTest {
         delay(EXTRA_DELAY)
         expectNoEvents()
       }
+      eventsTurbine.assertEvents(GithubSearchSingleEvent.ReachedMaxItems)
 
       verify(repoItemRepository)
         .coroutine { searchRepoItems(term, page) }
@@ -286,6 +291,8 @@ class GithubSearchViewModelTest {
   @Test
   fun `emits loading state and error state WHEN SearchRepoItemsUseCase returns a Left result`() =
     runTest {
+      val eventsTurbine = vm.eventFlow.testIn(this)
+
       val term = "term"
       val page = PAGE_1
       val networkException = AppError.ApiException.NetworkException(null)
@@ -327,6 +334,7 @@ class GithubSearchViewModelTest {
         delay(EXTRA_DELAY)
         expectNoEvents()
       }
+      eventsTurbine.assertEvents(GithubSearchSingleEvent.SearchFailure(networkException))
 
       verify(repoItemRepository)
         .coroutine { searchRepoItems(term, page) }
@@ -391,6 +399,8 @@ class GithubSearchViewModelTest {
   @Test
   fun `debounces _ emits loading state and items state WHEN dispatching multiple Search actions and SearchRepoItemsUseCase returns an empty items`() =
     runTest {
+      val eventsTurbine = vm.eventFlow.testIn(this)
+
       val terms = List(5) { it.toString() }
       val finalTerm = terms.last()
       val page = PAGE_1
@@ -437,6 +447,7 @@ class GithubSearchViewModelTest {
         delay(EXTRA_DELAY)
         expectNoEvents()
       }
+      eventsTurbine.assertEvents(GithubSearchSingleEvent.ReachedMaxItems)
 
       verify(repoItemRepository)
         .coroutine { searchRepoItems(finalTerm, page) }
@@ -446,6 +457,8 @@ class GithubSearchViewModelTest {
   @Test
   fun `debounces _ emits loading state and error state WHEN dispatching multiple Search actions and SearchRepoItemsUseCase returns a Left result`() =
     runTest {
+      val eventsTurbine = vm.eventFlow.testIn(this)
+
       val terms = List(5) { it.toString() }
       val finalTerm = terms.last()
       val page = PAGE_1
@@ -492,6 +505,7 @@ class GithubSearchViewModelTest {
         delay(EXTRA_DELAY)
         expectNoEvents()
       }
+      eventsTurbine.assertEvents(GithubSearchSingleEvent.SearchFailure(networkException))
 
       verify(repoItemRepository)
         .coroutine { searchRepoItems(finalTerm, page) }
@@ -717,6 +731,8 @@ class GithubSearchViewModelTest {
   @Test
   fun `loads next page WHEN dispatching LoadNextPage action and SearchRepoItemsUseCase returns an empty items`() =
     runTest {
+      val eventsTurbine = vm.eventFlow.testIn(this)
+
       val term = "#hoc081098"
       val items = genRepoItems(0..10)
 
@@ -756,6 +772,7 @@ class GithubSearchViewModelTest {
         delay(EXTRA_DELAY)
         expectNoEvents()
       }
+      eventsTurbine.assertEvents(GithubSearchSingleEvent.ReachedMaxItems)
 
       verify(repoItemRepository)
         .coroutine { searchRepoItems(term, PAGE_2) }
@@ -765,6 +782,8 @@ class GithubSearchViewModelTest {
   @Test
   fun `loads next page WHEN dispatching LoadNextPage action and SearchRepoItemsUseCase returns a Left result`() =
     runTest {
+      val eventsTurbine = vm.eventFlow.testIn(this)
+
       val term = "#hoc081098"
       val items = genRepoItems(0..10)
 
@@ -805,6 +824,7 @@ class GithubSearchViewModelTest {
         delay(EXTRA_DELAY)
         expectNoEvents()
       }
+      eventsTurbine.assertEvents(GithubSearchSingleEvent.SearchFailure(nextPageError))
 
       verify(repoItemRepository)
         .coroutine { searchRepoItems(term, PAGE_2) }
@@ -871,6 +891,8 @@ class GithubSearchViewModelTest {
   @Test
   fun `loads next page _ ignores other LoadNextPage actions WHEN dispatching LoadNextPage action and SearchRepoItemsUseCase returns an empty items`() =
     runTest {
+      val eventsTurbine = vm.eventFlow.testIn(this)
+
       val term = "#hoc081098"
       val items = genRepoItems(0..10)
 
@@ -918,6 +940,7 @@ class GithubSearchViewModelTest {
         delay(EXTRA_DELAY)
         expectNoEvents()
       }
+      eventsTurbine.assertEvents(GithubSearchSingleEvent.ReachedMaxItems)
 
       verify(repoItemRepository)
         .coroutine { searchRepoItems(term, PAGE_2) }
@@ -927,6 +950,8 @@ class GithubSearchViewModelTest {
   @Test
   fun `loads next page _ ignores other LoadNextPage actions WHEN dispatching LoadNextPage action and SearchRepoItemsUseCase returns a Left result`() =
     runTest {
+      val eventsTurbine = vm.eventFlow.testIn(this)
+
       val term = "#hoc081098"
       val items = genRepoItems(0..10)
 
@@ -975,6 +1000,7 @@ class GithubSearchViewModelTest {
         delay(EXTRA_DELAY)
         expectNoEvents()
       }
+      eventsTurbine.assertEvents(GithubSearchSingleEvent.SearchFailure(nextPageError))
 
       verify(repoItemRepository)
         .coroutine { searchRepoItems(term, PAGE_2) }
@@ -998,6 +1024,8 @@ class GithubSearchViewModelTest {
   @Test
   fun `cancels retrying next page WHEN dispatching a Retry action and a Search action`() =
     runTest {
+      val eventsTurbine = vm.eventFlow.testIn(this)
+
       val term = "#hoc081098"
       val nextTerm = "#FlowExt"
       val error = AppError.ApiException.NetworkException(null)
@@ -1063,6 +1091,7 @@ class GithubSearchViewModelTest {
         delay(EXTRA_DELAY)
         expectNoEvents()
       }
+      eventsTurbine.assertEvents(GithubSearchSingleEvent.SearchFailure(error))
 
       verify(repoItemRepository)
         .coroutine { searchRepoItems(term, PAGE_1) }
@@ -1075,6 +1104,8 @@ class GithubSearchViewModelTest {
   @Test
   fun `retries next page WHEN dispatching Retry action and SearchRepoItemsUseCase returns a non-empty items`() =
     runTest {
+      val eventsTurbine = vm.eventFlow.testIn(this)
+
       val term = "#hoc081098"
       val error = AppError.ApiException.NetworkException(null)
       val page1State = reachToErrorState(term = term, error = error)
@@ -1114,6 +1145,7 @@ class GithubSearchViewModelTest {
         delay(EXTRA_DELAY)
         expectNoEvents()
       }
+      eventsTurbine.assertEvents(GithubSearchSingleEvent.SearchFailure(error))
 
       verify(repoItemRepository)
         .coroutine { searchRepoItems(term, PAGE_1) }
@@ -1123,6 +1155,8 @@ class GithubSearchViewModelTest {
   @Test
   fun `retries next page WHEN dispatching Retry action and SearchRepoItemsUseCase returns an empty items`() =
     runTest {
+      val eventsTurbine = vm.eventFlow.testIn(this)
+
       val term = "#hoc081098"
       val error = AppError.ApiException.NetworkException(null)
       val page1State = reachToErrorState(term = term, error = error)
@@ -1161,6 +1195,10 @@ class GithubSearchViewModelTest {
         delay(EXTRA_DELAY)
         expectNoEvents()
       }
+      eventsTurbine.assertEvents(
+        GithubSearchSingleEvent.SearchFailure(error),
+        GithubSearchSingleEvent.ReachedMaxItems
+      )
 
       verify(repoItemRepository)
         .coroutine { searchRepoItems(term, PAGE_1) }
@@ -1170,6 +1208,8 @@ class GithubSearchViewModelTest {
   @Test
   fun `retries next page WHEN dispatching Retry action and SearchRepoItemsUseCase returns a Left result`() =
     runTest {
+      val eventsTurbine = vm.eventFlow.testIn(this)
+
       val term = "#hoc081098"
       val error = AppError.ApiException.NetworkException(null)
       val page1State = reachToErrorState(term = term, error = error)
@@ -1209,6 +1249,10 @@ class GithubSearchViewModelTest {
         delay(EXTRA_DELAY)
         expectNoEvents()
       }
+      eventsTurbine.assertEvents(
+        GithubSearchSingleEvent.SearchFailure(error),
+        GithubSearchSingleEvent.SearchFailure(nextError)
+      )
 
       verify(repoItemRepository)
         .coroutine { searchRepoItems(term, PAGE_1) }
@@ -1218,6 +1262,8 @@ class GithubSearchViewModelTest {
   @Test
   fun `retries next page _ ignores other Retry actions WHEN dispatching Retry action and SearchRepoItemsUseCase returns a non-empty items`() =
     runTest {
+      val eventsTurbine = vm.eventFlow.testIn(this)
+
       val term = "#hoc081098"
       val error = AppError.ApiException.NetworkException(null)
       val page1State = reachToErrorState(term = term, error = error)
@@ -1265,6 +1311,7 @@ class GithubSearchViewModelTest {
         delay(EXTRA_DELAY)
         expectNoEvents()
       }
+      eventsTurbine.assertEvents(GithubSearchSingleEvent.SearchFailure(error))
 
       verify(repoItemRepository)
         .coroutine { searchRepoItems(term, PAGE_1) }
@@ -1274,6 +1321,8 @@ class GithubSearchViewModelTest {
   @Test
   fun `retries next page _ ignores other Retry actions WHEN dispatching Retry action and SearchRepoItemsUseCase returns an empty items`() =
     runTest {
+      val eventsTurbine = vm.eventFlow.testIn(this)
+
       val term = "#hoc081098"
       val error = AppError.ApiException.NetworkException(null)
       val page1State = reachToErrorState(term = term, error = error)
@@ -1320,6 +1369,10 @@ class GithubSearchViewModelTest {
         delay(EXTRA_DELAY)
         expectNoEvents()
       }
+      eventsTurbine.assertEvents(
+        GithubSearchSingleEvent.SearchFailure(error),
+        GithubSearchSingleEvent.ReachedMaxItems
+      )
 
       verify(repoItemRepository)
         .coroutine { searchRepoItems(term, PAGE_1) }
@@ -1329,6 +1382,8 @@ class GithubSearchViewModelTest {
   @Test
   fun `retries next page _ ignores other Retry actions WHEN dispatching Retry action and SearchRepoItemsUseCase returns a Left result`() =
     runTest {
+      val eventsTurbine = vm.eventFlow.testIn(this)
+
       val term = "#hoc081098"
       val error = AppError.ApiException.NetworkException(null)
       val page1State = reachToErrorState(term = term, error = error)
@@ -1376,6 +1431,10 @@ class GithubSearchViewModelTest {
         delay(EXTRA_DELAY)
         expectNoEvents()
       }
+      eventsTurbine.assertEvents(
+        GithubSearchSingleEvent.SearchFailure(error),
+        GithubSearchSingleEvent.SearchFailure(nextError)
+      )
 
       verify(repoItemRepository)
         .coroutine { searchRepoItems(term, PAGE_1) }
@@ -1451,5 +1510,11 @@ class GithubSearchViewModelTest {
         updatedAt = Clock.System.now()
       )
     }.toPersistentList()
+
+    private suspend fun ReceiveTurbine<GithubSearchSingleEvent>.assertEvents(vararg expectedEvents: GithubSearchSingleEvent) {
+      expectedEvents.forEach { assertEquals(it, awaitItem()) }
+      expectNoEvents()
+      cancel()
+    }
   }
 }
