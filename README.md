@@ -226,7 +226,7 @@ class IOSGithubSearchViewModel: ObservableObject {
   ```
   ./GithubSearchKMM/iosApp/iosApp/ContentView.swift:4:8: No such module 'sharedSwift'
   ```
-  You can run `sh scripts/run_ios.sh` again and run the following commands:
+  You can run the following commands (must select `Read from disk` inside Xcode):
   ```shell
   # go to iosApp directory
   cd iosApp
@@ -234,7 +234,7 @@ class IOSGithubSearchViewModel: ObservableObject {
   # install pods
   pod install
   ```
-  Then, you can build and run inside XCode as usual.
+  Then, you can build and run inside Xcode as usual.
 
 # LOC
 
