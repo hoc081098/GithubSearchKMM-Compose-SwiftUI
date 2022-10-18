@@ -4,6 +4,7 @@ import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.engine.HttpClientEngineFactory
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
@@ -21,22 +22,34 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 
+fun createJson(): Json = Json {
+  serializersModule = SerializersModule {
+    contextual(Instant::class, InstantSerializer)
+  }
+  ignoreUnknownKeys = true
+  coerceInputValues = true
+  prettyPrint = true
+  isLenient = true
+  encodeDefaults = true
+  allowSpecialFloatingPointValues = true
+  allowStructuredMapKeys = true
+  useArrayPolymorphism = false
+}
+
 fun <T : HttpClientEngineConfig> createHttpClient(
   engineFactory: HttpClientEngineFactory<T>,
+  json: Json,
   block: T.() -> Unit,
 ): HttpClient = HttpClient(engineFactory) {
   engine(block)
 
+  install(HttpTimeout) {
+    requestTimeoutMillis = 15_000
+    connectTimeoutMillis = 10_000
+    socketTimeoutMillis = 10_000
+  }
+
   install(ContentNegotiation) {
-    val json = Json {
-      serializersModule = SerializersModule {
-        contextual(Instant::class, InstantSerializer)
-      }
-      ignoreUnknownKeys = true
-      coerceInputValues = true
-      prettyPrint = true
-      isLenient = true
-    }
     json(json)
     register(
       ContentType.Text.Plain,
