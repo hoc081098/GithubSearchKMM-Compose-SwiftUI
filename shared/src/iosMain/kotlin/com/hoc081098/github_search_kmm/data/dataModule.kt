@@ -6,6 +6,7 @@ import com.hoc081098.github_search_kmm.data.remote.KtorGithubLanguageColorApi
 import com.hoc081098.github_search_kmm.data.remote.KtorRepoItemApi
 import com.hoc081098.github_search_kmm.data.remote.RepoItemApi
 import com.hoc081098.github_search_kmm.data.remote.createHttpClient
+import com.hoc081098.github_search_kmm.data.remote.createJson
 import com.hoc081098.github_search_kmm.domain.repository.RepoItemRepository
 import io.ktor.client.engine.darwin.Darwin
 import io.ktor.http.Url
@@ -58,9 +59,12 @@ val dataModule = module {
 
   singleOf(::PlatformAppErrorMapper)
 
+  singleOf(::createJson)
+
   single {
     createHttpClient(
-      engineFactory = Darwin
+      engineFactory = Darwin,
+      json = get()
     ) {}
   }
 }

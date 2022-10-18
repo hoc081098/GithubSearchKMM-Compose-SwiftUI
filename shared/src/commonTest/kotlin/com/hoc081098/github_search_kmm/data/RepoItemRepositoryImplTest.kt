@@ -3,12 +3,14 @@ package com.hoc081098.github_search_kmm.data
 import arrow.core.getOrHandle
 import arrow.core.left
 import arrow.core.right
+import com.hoc081098.github_search_kmm.TestAntilog
 import com.hoc081098.github_search_kmm.TestAppCoroutineDispatchers
 import com.hoc081098.github_search_kmm.data.remote.GithubLanguageColorApi
 import com.hoc081098.github_search_kmm.data.remote.RepoItemApi
 import com.hoc081098.github_search_kmm.data.remote.response.RepoItemsSearchResponse
 import com.hoc081098.github_search_kmm.domain.model.AppError
 import com.hoc081098.github_search_kmm.domain.model.ArgbColor
+import io.github.aakira.napier.Napier
 import io.mockative.Mock
 import io.mockative.given
 import io.mockative.mock
@@ -40,10 +42,12 @@ class RepoItemRepositoryImplTest {
   private lateinit var errorMapper: AppErrorMapper
 
   private val appCoroutineDispatchers = TestAppCoroutineDispatchers()
+  private val antilog = TestAntilog()
 
   @BeforeTest
   fun setup() {
     Dispatchers.setMain(appCoroutineDispatchers.testCoroutineDispatcher)
+    Napier.base(antilog)
 
     repoItemApi = mock(RepoItemApi::class)
     githubLanguageColorApi = mock(GithubLanguageColorApi::class)
@@ -63,6 +67,8 @@ class RepoItemRepositoryImplTest {
       verify(it).hasNoUnverifiedExpectations()
       verify(it).hasNoUnmetExpectations()
     }
+
+    Napier.takeLogarithm(antilog)
     Dispatchers.resetMain()
   }
 

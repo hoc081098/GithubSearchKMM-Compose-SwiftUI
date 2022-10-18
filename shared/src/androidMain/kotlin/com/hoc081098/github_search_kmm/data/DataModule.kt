@@ -4,6 +4,7 @@ import com.hoc081098.github_search_kmm.data.remote.DaggerKtorRepoItemApi
 import com.hoc081098.github_search_kmm.data.remote.GithubLanguageColorApi
 import com.hoc081098.github_search_kmm.data.remote.RepoItemApi
 import com.hoc081098.github_search_kmm.data.remote.createHttpClient
+import com.hoc081098.github_search_kmm.data.remote.createJson
 import com.hoc081098.github_search_kmm.domain.repository.RepoItemRepository
 import dagger.Binds
 import dagger.Module
@@ -15,6 +16,7 @@ import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.http.Url
 import javax.inject.Qualifier
 import javax.inject.Singleton
+import kotlinx.serialization.json.Json
 
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
@@ -57,8 +59,13 @@ internal interface DataModule {
 
     @Provides
     @Singleton
-    internal fun httpClient(): HttpClient = createHttpClient(
-      engineFactory = OkHttp
+    internal fun json(): Json = createJson()
+
+    @Provides
+    @Singleton
+    internal fun httpClient(json: Json): HttpClient = createHttpClient(
+      engineFactory = OkHttp,
+      json = json
     ) {}
   }
 }
