@@ -210,26 +210,31 @@ class IOSGithubSearchViewModel: ObservableObject {
 - Android: open project by `Android Studio` and run as usual.
 - iOS
   ```shell
+  # Cd to root project directory
   cd GithubSearchKMM
 
-  # generate podspec files for cocopods intergration. with integration will be generated swift files for cocoapod
-  ./gradlew kSwiftsharedPodspec
-
-  # go to ios dir
-  cd iosApp
-
-  # install pods
-  pod install
-
-  # now we can open xcworkspace and build ios project
-  # or open via XCode GUI
-  open iosApp.xcworkspace
+  # Setup
+  sh scripts/run_ios.sh
   ```
 
   There's a *Build Phase* script that will do the magic. 🧞 <br>
   <kbd>Cmd</kbd> + <kbd>B</kbd> to build
   <br>
   <kbd>Cmd</kbd> + <kbd>R</kbd> to run.
+
+  When you see any error like this:
+  ```
+  ./GithubSearchKMM/iosApp/iosApp/ContentView.swift:4:8: No such module 'sharedSwift'
+  ```
+  You can run `sh scripts/run_ios.sh` again and run the following commands:
+  ```shell
+  # go to iosApp directory
+  cd iosApp
+
+  # install pods
+  pod install
+  ```
+  Then, you can build and run inside XCode as usual.
 
 # LOC
 
