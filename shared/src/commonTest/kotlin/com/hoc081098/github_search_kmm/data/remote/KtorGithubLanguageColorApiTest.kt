@@ -1,10 +1,9 @@
 package com.hoc081098.github_search_kmm.data.remote
 
 import arrow.core.getOrHandle
-import arrow.core.identity
 import com.hoc081098.github_search_kmm.TestAntilog
 import com.hoc081098.github_search_kmm.TestAppCoroutineDispatchers
-import com.hoc081098.github_search_kmm.readTextResource
+import com.hoc081098.github_search_kmm.domain.model.ArgbColor
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -23,14 +22,13 @@ import kotlin.test.assertEquals
 import kotlin.test.fail
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.decodeFromString
 
-class KtorRepoItemApiTest {
-  private lateinit var ktorRepoItemApi: KtorRepoItemApi
+class KtorGithubLanguageColorApiTest {
+  private lateinit var ktorGithubLanguageColorApi: KtorGithubLanguageColorApi
   private lateinit var httpClient: HttpClient
   private lateinit var handlerChannel: Channel<MockRequestHandler>
 
-  private val baseUrl = Url("https://127.0.0.1:8080")
+  private val url = Url("https://127.0.0.1:8080")
   private val testAppCoroutineDispatchers = TestAppCoroutineDispatchers()
   private val json = createJson()
   private val antilog = TestAntilog()
@@ -45,9 +43,9 @@ class KtorRepoItemApiTest {
         handlerChannel.receive()(request)
       }
     }
-    ktorRepoItemApi = KtorRepoItemApi(
+    ktorGithubLanguageColorApi = KtorGithubLanguageColorApi(
       httpClient = httpClient,
-      baseUrl = baseUrl,
+      url = url,
       appCoroutineDispatchers = testAppCoroutineDispatchers
     )
   }
@@ -60,19 +58,31 @@ class KtorRepoItemApiTest {
   }
 
   @Test
-  fun `searchRepoItems returns a Right WHEN httpClient returns a successful response`() =
+  fun `getColors returns a Right WHEN httpClient returns a successful response and it is valid`() =
     runTest(testAppCoroutineDispatchers.testCoroutineDispatcher) {
-      val responseString = readTextResource("search_repositories_response.json")
+      val colorsResponse = """
+        |{
+        |  "ABAP CDS": {
+        |    "color": "#555e25",
+        |    "url": "https://github.com/trending?l=ABAP-CDS"
+        |  },
+        |  "Ada": {
+        |    "url": "https://github.com/trending?l=Ada"
+        |  },
+        |  "Agda": {
+        |    "color": "#315665",
+        |    "url": "https://github.com/trending?l=Agda"
+        |  }
+        |}
+      """.trimMargin("|")
 
       handlerChannel.trySend { request ->
         when (request.url.encodedPath) {
-          "/search/repositories" -> {
+          "" -> {
             check(request.method == HttpMethod.Get)
-            checkNotNull(request.url.parameters["q"])
-            checkNotNull(request.url.parameters["page"])
 
             respond(
-              content = responseString,
+              content = colorsResponse,
               status = HttpStatusCode.OK,
               headers = headersOf(
                 HttpHeaders.ContentType,
@@ -84,45 +94,15 @@ class KtorRepoItemApiTest {
         }
       }
 
-      val either = ktorRepoItemApi.searchRepoItems(
-        term = "kmm",
-        page = 1
-      )
+      val either = ktorGithubLanguageColorApi.getColors()
+      val colors = either.getOrHandle { throw it }
 
       assertEquals(
-        json.decodeFromString(responseString),
-        either.getOrHandle { throw it }
+        mapOf(
+          "ABAP CDS" to ArgbColor.parse("#555e25").getOrHandle { fail(it) },
+          "Agda" to ArgbColor.parse("#315665").getOrHandle { fail(it) },
+        ),
+        colors,
       )
-    }
-
-  @Test
-  fun `searchRepoItems returns a Left WHEN httpClient returns a failure response`() =
-    runTest(testAppCoroutineDispatchers.testCoroutineDispatcher) {
-      handlerChannel.trySend { request ->
-        when (request.url.encodedPath) {
-          "/search/repositories" -> {
-            check(request.method == HttpMethod.Get)
-            checkNotNull(request.url.parameters["q"])
-            checkNotNull(request.url.parameters["page"])
-
-            respond(
-              "{}",
-              status = HttpStatusCode.InternalServerError,
-              headers = headersOf(
-                HttpHeaders.ContentType,
-                ContentType.Application.Json.toString()
-              )
-            )
-          }
-          else -> error("Unhandled request ${request.url}")
-        }
-      }
-
-      val either = ktorRepoItemApi.searchRepoItems(
-        term = "kmm",
-        page = 1
-      )
-
-      either.fold(ifLeft = ::identity, ifRight = { fail("Expected Left, but got Right") })
     }
 }
