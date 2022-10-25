@@ -78,7 +78,7 @@ jobs:
         working-directory: iosApp
 
       - name: Build
-        uses: sersoft-gmbh/xcodebuild-action@v2.0.0
+        uses: sersoft-gmbh/xcodebuild-action@v2.0.1
         with:
           workspace: iosApp/iosApp.xcworkspace
           scheme: iosApp
