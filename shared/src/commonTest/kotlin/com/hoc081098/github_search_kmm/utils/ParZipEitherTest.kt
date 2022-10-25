@@ -1,12 +1,11 @@
 package com.hoc081098.github_search_kmm.utils
 
-import arrow.core.getOrHandle
 import arrow.core.left
 import arrow.core.right
 import com.hoc081098.github_search_kmm.delay1Ms
+import com.hoc081098.github_search_kmm.getOrThrow
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.fail
 import kotlinx.coroutines.test.runTest
 
 class ParZipEitherTest {
@@ -24,10 +23,7 @@ class ParZipEitherTest {
       combiner = { a, b -> a + b }
     )
 
-    assertEquals(
-      3,
-      either.getOrHandle { fail(it) }
-    )
+    assertEquals(3, either.getOrThrow)
   }
 
   @Test

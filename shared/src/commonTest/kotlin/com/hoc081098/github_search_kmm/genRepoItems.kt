@@ -1,6 +1,5 @@
 package com.hoc081098.github_search_kmm
 
-import arrow.core.getOrHandle
 import com.hoc081098.github_search_kmm.domain.model.ArgbColor
 import com.hoc081098.github_search_kmm.domain.model.Owner
 import com.hoc081098.github_search_kmm.domain.model.RepoItem
@@ -17,7 +16,7 @@ fun genRepoItems(ids: IntRange): PersistentList<RepoItem> = ids.map { id ->
     starCount = Random.nextInt(),
     name = "Name: $id",
     repoDescription = "Description: $id",
-    languageColor = ArgbColor.parse("#FF112233").getOrHandle { error(it) },
+    languageColor = ArgbColor.parse("#FF112233").getOrThrow,
     htmlUrl = "url/$id",
     owner = Owner(
       id = id,

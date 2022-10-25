@@ -1,13 +1,12 @@
 package com.hoc081098.github_search_kmm.data
 
-import arrow.core.getOrHandle
 import com.hoc081098.github_search_kmm.data.remote.response.RepoItemsSearchResponse
 import com.hoc081098.github_search_kmm.domain.model.ArgbColor
 import com.hoc081098.github_search_kmm.domain.model.Owner
 import com.hoc081098.github_search_kmm.domain.model.RepoItem
+import com.hoc081098.github_search_kmm.getOrThrow
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.fail
 import kotlinx.datetime.Instant
 
 class RepoItemMapperTest {
@@ -51,7 +50,7 @@ class RepoItemMapperTest {
     )
 
     val colors = mapOf(
-      "Kotlin" to ArgbColor.parse("#F18E33").getOrHandle { fail(it) },
+      "Kotlin" to ArgbColor.parse("#F18E33").getOrThrow,
     )
 
     val items = response.toRepoItemsList(colors)

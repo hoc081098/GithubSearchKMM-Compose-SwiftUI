@@ -1,9 +1,9 @@
 package com.hoc081098.github_search_kmm.data.remote
 
-import arrow.core.getOrHandle
-import arrow.core.identity
 import com.hoc081098.github_search_kmm.TestAntilog
 import com.hoc081098.github_search_kmm.TestAppCoroutineDispatchers
+import com.hoc081098.github_search_kmm.getOrThrow
+import com.hoc081098.github_search_kmm.leftValueOrThrow
 import com.hoc081098.github_search_kmm.readTextResource
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
@@ -20,7 +20,6 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.fail
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.decodeFromString
@@ -91,7 +90,7 @@ class KtorRepoItemApiTest {
 
       assertEquals(
         json.decodeFromString(responseString),
-        either.getOrHandle { throw it }
+        either.getOrThrow
       )
     }
 
@@ -123,6 +122,6 @@ class KtorRepoItemApiTest {
         page = 1
       )
 
-      either.fold(ifLeft = ::identity, ifRight = { fail("Expected Left, but got Right") })
+      either.leftValueOrThrow
     }
 }

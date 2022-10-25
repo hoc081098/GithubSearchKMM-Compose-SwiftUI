@@ -33,7 +33,7 @@ internal open class KtorGithubLanguageColorApi(
           .traverse { (k, v) ->
             ArgbColor
               .parse(v)
-              .mapLeft { IllegalStateException(it) }
+              .mapLeft(::IllegalStateException)
               .map { k to it }
           }
       }

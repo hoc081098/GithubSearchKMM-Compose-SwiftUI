@@ -1,6 +1,5 @@
 package com.hoc081098.github_search_kmm.data
 
-import arrow.core.getOrHandle
 import arrow.core.left
 import arrow.core.right
 import com.hoc081098.github_search_kmm.TestAntilog
@@ -10,6 +9,8 @@ import com.hoc081098.github_search_kmm.data.remote.RepoItemApi
 import com.hoc081098.github_search_kmm.data.remote.response.RepoItemsSearchResponse
 import com.hoc081098.github_search_kmm.domain.model.AppError
 import com.hoc081098.github_search_kmm.domain.model.ArgbColor
+import com.hoc081098.github_search_kmm.getOrThrow
+import com.hoc081098.github_search_kmm.leftValueOrThrow
 import io.github.aakira.napier.Napier
 import io.mockative.Mock
 import io.mockative.given
@@ -22,7 +23,6 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
-import kotlin.test.fail
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -88,7 +88,7 @@ class RepoItemRepositoryImplTest {
       val either = repoItemRepositoryImpl.searchRepoItems(term, page)
       assertEquals(
         FAKE_REPO_ITEMS,
-        either.getOrHandle { throw it }
+        either.getOrThrow
       )
 
       verify(repoItemApi)
@@ -117,12 +117,7 @@ class RepoItemRepositoryImplTest {
         .then { AppError.ApiException.NetworkException(error) }
 
       val either = repoItemRepositoryImpl.searchRepoItems(term, page)
-      assertIs<AppError.ApiException.NetworkException>(
-        either.fold(
-          ifLeft = { it },
-          ifRight = { fail("Expected Left but got Right") }
-        )
-      )
+      assertIs<AppError.ApiException.NetworkException>(either.leftValueOrThrow)
 
       verify(repoItemApi)
         .coroutine { searchRepoItems(term, page) }
@@ -153,12 +148,7 @@ class RepoItemRepositoryImplTest {
         .then { AppError.ApiException.NetworkException(error) }
 
       val either = repoItemRepositoryImpl.searchRepoItems(term, page)
-      assertIs<AppError.ApiException.NetworkException>(
-        either.fold(
-          ifLeft = { it },
-          ifRight = { fail("Expected Left but got Right") }
-        )
-      )
+      assertIs<AppError.ApiException.NetworkException>(either.leftValueOrThrow)
 
       verify(repoItemApi)
         .coroutine { searchRepoItems(term, page) }
@@ -175,13 +165,13 @@ class RepoItemRepositoryImplTest {
     val FAKE_GITHUB_LANGUAGE_COLORS: Map<String, ArgbColor> = mapOf(
       "Kotlin" to ArgbColor
         .parse("#814CCC")
-        .getOrHandle { error(it) },
+        .getOrThrow,
       "Java" to ArgbColor
         .parse("#B07219")
-        .getOrHandle { error(it) },
+        .getOrThrow,
       "JavaScript" to ArgbColor
         .parse("#F1E05A")
-        .getOrHandle { error(it) },
+        .getOrThrow,
     )
 
     val FAKE_REPO_ITEMS_SEARCH_RESPONSE = RepoItemsSearchResponse(

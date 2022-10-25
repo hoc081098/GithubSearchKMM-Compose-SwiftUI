@@ -1,13 +1,12 @@
 package com.hoc081098.github_search_kmm.domain.model
 
-import arrow.core.getOrHandle
 import arrow.core.left
+import com.hoc081098.github_search_kmm.getOrThrow
 import com.hoc081098.github_search_kmm.readTextResource
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
-import kotlin.test.fail
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -62,48 +61,48 @@ class ArgbColorTest {
   @Test
   fun `ArgbColor ==`() {
     assertEquals(
-      ArgbColor.parse("#000000").getOrHandle { fail(it) },
-      ArgbColor.parse("#000000").getOrHandle { fail(it) }
+      ArgbColor.parse("#000000").getOrThrow,
+      ArgbColor.parse("#000000").getOrThrow
     )
     assertEquals(
-      ArgbColor.parse("#112233").getOrHandle { fail(it) },
-      ArgbColor.parse("#123").getOrHandle { fail(it) }
+      ArgbColor.parse("#112233").getOrThrow,
+      ArgbColor.parse("#123").getOrThrow
     )
     assertEquals(
-      ArgbColor.parse("#FF112233").getOrHandle { fail(it) },
-      ArgbColor.parse("#123").getOrHandle { fail(it) }
+      ArgbColor.parse("#FF112233").getOrThrow,
+      ArgbColor.parse("#123").getOrThrow
     )
     assertEquals(
-      ArgbColor.parse("#ff112233").getOrHandle { fail(it) },
-      ArgbColor.parse("#123").getOrHandle { fail(it) }
+      ArgbColor.parse("#ff112233").getOrThrow,
+      ArgbColor.parse("#123").getOrThrow
     )
     assertNotEquals(
-      ArgbColor.parse("#FF112233").getOrHandle { fail(it) },
-      ArgbColor.parse("#12112233").getOrHandle { fail(it) }
+      ArgbColor.parse("#FF112233").getOrThrow,
+      ArgbColor.parse("#12112233").getOrThrow
     )
   }
 
   @Test
   fun `ArgbColor hashCode`() {
     assertEquals(
-      ArgbColor.parse("#000000").getOrHandle { fail(it) }.hashCode(),
-      ArgbColor.parse("#000000").getOrHandle { fail(it) }.hashCode()
+      ArgbColor.parse("#000000").getOrThrow.hashCode(),
+      ArgbColor.parse("#000000").getOrThrow.hashCode()
     )
     assertEquals(
-      ArgbColor.parse("#112233").getOrHandle { fail(it) }.hashCode(),
-      ArgbColor.parse("#123").getOrHandle { fail(it) }.hashCode()
+      ArgbColor.parse("#112233").getOrThrow.hashCode(),
+      ArgbColor.parse("#123").getOrThrow.hashCode()
     )
     assertEquals(
-      ArgbColor.parse("#FF112233").getOrHandle { fail(it) }.hashCode(),
-      ArgbColor.parse("#123").getOrHandle { fail(it) }.hashCode()
+      ArgbColor.parse("#FF112233").getOrThrow.hashCode(),
+      ArgbColor.parse("#123").getOrThrow.hashCode()
     )
     assertEquals(
-      ArgbColor.parse("#ff112233").getOrHandle { fail(it) }.hashCode(),
-      ArgbColor.parse("#123").getOrHandle { fail(it) }.hashCode()
+      ArgbColor.parse("#ff112233").getOrThrow.hashCode(),
+      ArgbColor.parse("#123").getOrThrow.hashCode()
     )
     assertNotEquals(
-      ArgbColor.parse("#FF112233").getOrHandle { fail(it) }.hashCode(),
-      ArgbColor.parse("#12112233").getOrHandle { fail(it) }.hashCode()
+      ArgbColor.parse("#FF112233").getOrThrow.hashCode(),
+      ArgbColor.parse("#12112233").getOrThrow.hashCode()
     )
   }
 
@@ -131,7 +130,7 @@ class ArgbColorTest {
 
   private fun assertArgbColor(hex: String, a: Float, r: Float, g: Float, b: Float) {
     ArgbColor.parse(hex)
-      .getOrHandle { error(it) }
+      .getOrThrow
       .argb
       .run {
         assertEquals(
