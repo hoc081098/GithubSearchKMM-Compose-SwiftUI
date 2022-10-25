@@ -11,7 +11,7 @@ import io.ktor.client.request.get
 import io.ktor.http.Url
 import kotlinx.coroutines.withContext
 
-typealias ColorResponseType = Map<String, Map<String, String?>>
+typealias ColorsResponseType = Map<String, Map<String, String?>>
 
 internal open class KtorGithubLanguageColorApi(
   private val url: Url,
@@ -23,12 +23,12 @@ internal open class KtorGithubLanguageColorApi(
       .catch {
         httpClient
           .get(url)
-          .body<ColorResponseType>()
+          .body<ColorsResponseType>()
       }
       .flatMap { it.toColors() }
   }
 
-  private fun ColorResponseType.toColors(): Either<IllegalStateException, Map<String, ArgbColor>> {
+  private fun ColorsResponseType.toColors(): Either<IllegalStateException, Map<String, ArgbColor>> {
     return mapNotNull { (k, v) ->
       v["color"]?.let {
         k to it
