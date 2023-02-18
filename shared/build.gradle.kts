@@ -80,6 +80,7 @@ kotlin {
         api(deps.immutableCollections)
 
         implementation(deps.mokoKSwiftRuntime)
+        implementation("io.github.hoc081098:kmp-viewmodel:0.1.0")
       }
     }
     val commonTest by getting {
