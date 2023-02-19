@@ -49,7 +49,7 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(project(":flowredux"))
-        api(project(":multiplatform-viewmodel"))
+        api("io.github.hoc081098:kmp-viewmodel:0.1.0")
 
         // Flow, Coroutines
         api(deps.coroutines.core)

@@ -12,7 +12,6 @@ rootProject.name = "GithubSearchKMM"
 include(":androidApp")
 include(":shared")
 include(":flowredux")
-include(":multiplatform-viewmodel")
 
 fun includeProject(name: String, filePath: String) {
   include(name)
