@@ -2,7 +2,7 @@ package com.hoc081098.github_search_kmm.presentation
 
 import com.hoc081098.flowredux.createFlowReduxStore
 import com.hoc081098.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
-import com.hoc081098.multiplatform_viewmodel.ViewModel
+import com.hoc081098.kmp.viewmodel.ViewModel
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
