@@ -49,7 +49,8 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(project(":flowredux"))
-        api("io.github.hoc081098:kmp-viewmodel:0.1.0")
+        api("io.github.hoc081098:kmp-viewmodel:0.2.0")
+        api("io.github.hoc081098:kmp-viewmodel-savedstate:0.2.0")
 
         // Flow, Coroutines
         api(deps.coroutines.core)
