@@ -2,7 +2,7 @@
 //  Napier.swift
 //  iosApp
 //
-//  Created by Hoc Nguyen T. on 7/17/22.
+//  Created by Petrus Nguyen Thai Hoc on 7/17/22.
 //  Copyright © 2022 orgName. All rights reserved.
 //
 
@@ -128,7 +128,7 @@ extension Napier {
     function: String
   ) {
     let message = items.map { "\($0)" }.joined(separator: separator)
-    
+
     let throwable: KotlinThrowable?
     if let error = error {
       throwable = NSErrorKt.asThrowable(error)

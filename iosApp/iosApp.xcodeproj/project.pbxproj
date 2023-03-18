@@ -82,6 +82,19 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		35E34EC229C5DE3C00ED7D75 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				35737204287F4AE00061F94C /* kotlinxCoroutinesFlowExtensions.swift */,
+				3579B09A2883381700BD3B25 /* Once.swift */,
+				35B1166D288EA34900FFC3C3 /* Color+init.swift */,
+				3579B0A22885BD4E00BD3B25 /* LazyView.swift */,
+				3579B09E28846FBE00BD3B25 /* Napier.swift */,
+				3579B0982883380100BD3B25 /* UIColor+init.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		7555FF72242A565900829871 = {
 			isa = PBXGroup;
 			children = (
@@ -103,25 +116,20 @@
 		7555FF7D242A565900829871 /* iosApp */ = {
 			isa = PBXGroup;
 			children = (
+				35E34EC229C5DE3C00ED7D75 /* Utils */,
 				058557BA273AAA24004C7B11 /* Assets.xcassets */,
 				7555FF82242A565900829871 /* ContentView.swift */,
 				7555FF8C242A565B00829871 /* Info.plist */,
 				2152FB032600AC8F00CF470E /* iOSApp.swift */,
 				058557D7273AAEEB004C7B11 /* Preview Content */,
-				35737204287F4AE00061F94C /* kotlinxCoroutinesFlowExtensions.swift */,
 				3573720628813C6B0061F94C /* AppError+readableErrorMessage.swift */,
 				3573720828813C930061F94C /* DIContainer+get.swift */,
 				3579B0902883238D00BD3B25 /* GithubRepoItemsList.swift */,
 				3579B092288323B900BD3B25 /* GithubRepoItemsFirstPage.swift */,
 				3579B094288323DA00BD3B25 /* ErrorMessageAndButton.swift */,
 				3579B096288323F800BD3B25 /* GithubEmptySearch.swift */,
-				3579B0982883380100BD3B25 /* UIColor+init.swift */,
-				3579B09A2883381700BD3B25 /* Once.swift */,
 				3579B09C2883385600BD3B25 /* GithubRepoItemRow.swift */,
-				3579B09E28846FBE00BD3B25 /* Napier.swift */,
 				3579B0A02885BA4D00BD3B25 /* IOSGithubSearchViewModel.swift */,
-				3579B0A22885BD4E00BD3B25 /* LazyView.swift */,
-				35B1166D288EA34900FFC3C3 /* Color+init.swift */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";

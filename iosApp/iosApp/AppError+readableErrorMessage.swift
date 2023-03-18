@@ -2,7 +2,7 @@
 //  AppError+readableErrorMessage.swift
 //  iosApp
 //
-//  Created by Hoc Nguyen T. on 7/15/22.
+//  Created by Petrus Nguyen Thai Hoc on 7/15/22.
 //  Copyright © 2022 orgName. All rights reserved.
 //
 
