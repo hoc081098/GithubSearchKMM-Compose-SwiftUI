@@ -33,6 +33,9 @@ kotlin {
       isStatic = true
       export(deps.coroutines.core)
       export(deps.napier)
+
+      export("io.github.hoc081098:kmp-viewmodel:0.3.0")
+      export("io.github.hoc081098:kmp-viewmodel-savedstate:0.3.0")
     }
   }
 
