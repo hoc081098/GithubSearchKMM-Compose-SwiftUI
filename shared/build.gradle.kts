@@ -44,7 +44,7 @@ kotlin {
       languageSettings.run {
         optIn("kotlinx.coroutines.FlowPreview")
         optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
-        languageVersion = "1.8"
+        languageVersion = "1.9"
         progressiveMode = true
       }
     }
