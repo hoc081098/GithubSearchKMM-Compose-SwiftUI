@@ -35,7 +35,7 @@ kotlin {
       export(deps.napier)
 
       export("io.github.hoc081098:kmp-viewmodel:0.3.0")
-      export("io.github.hoc081098:kmp-viewmodel-savedstate:0.3.0")
+      export("io.github.hoc081098:kmp-viewmodel-savedstate:0.4.0")
     }
   }
 
@@ -53,7 +53,7 @@ kotlin {
       dependencies {
         implementation(project(":flowredux"))
         api("io.github.hoc081098:kmp-viewmodel:0.3.0")
-        api("io.github.hoc081098:kmp-viewmodel-savedstate:0.3.0")
+        api("io.github.hoc081098:kmp-viewmodel-savedstate:0.4.0")
 
         // Flow, Coroutines
         api(deps.coroutines.core)
