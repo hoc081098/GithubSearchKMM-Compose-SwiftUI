@@ -46,6 +46,7 @@ kotlin {
         optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
         languageVersion = "1.9"
         progressiveMode = true
+        enableLanguageFeature("DataObjects")
       }
     }
 

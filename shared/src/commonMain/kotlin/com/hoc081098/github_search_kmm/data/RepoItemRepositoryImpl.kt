@@ -22,7 +22,7 @@ internal open class RepoItemRepositoryImpl(
       githubLanguageColorApi
         .getColors()
         .mapLeft(errorMapper)
-        .tapLeft {
+        .onLeft {
           Napier.e(
             message = "githubLanguageColorApi.getColors()",
             throwable = it,
@@ -37,7 +37,7 @@ internal open class RepoItemRepositoryImpl(
           page = page
         )
         .mapLeft(errorMapper)
-        .tapLeft {
+        .onLeft {
           Napier.e(
             message = "repoItemApi.searchRepoItems(term=$term, page=$page)",
             throwable = it,

@@ -1,7 +1,7 @@
 package com.hoc081098.github_search_kmm.utils
 
 import arrow.core.Either
-import arrow.core.continuations.either
+import arrow.core.raise.either
 import arrow.fx.coroutines.parZip
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext

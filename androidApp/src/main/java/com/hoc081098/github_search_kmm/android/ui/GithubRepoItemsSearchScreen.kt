@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.consumedWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hoc081098.github_search_kmm.android.R
 import com.hoc081098.github_search_kmm.android.core_ui.AppBackground
@@ -51,7 +51,6 @@ import kotlinx.datetime.Clock
 @OptIn(
   ExperimentalMaterial3Api::class,
   ExperimentalLayoutApi::class,
-  ExperimentalLifecycleComposeApi::class
 )
 @Composable
 fun GithubRepoItemsSearchScreen(
@@ -107,7 +106,7 @@ fun GithubRepoItemsSearchScreen(
     BoxWithConstraints(
       modifier = Modifier
         .padding(innerPadding)
-        .consumedWindowInsets(innerPadding)
+        .consumeWindowInsets(innerPadding)
     ) {
       Column(
         horizontalAlignment = Alignment.CenterHorizontally,

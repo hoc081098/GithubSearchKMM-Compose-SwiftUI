@@ -70,6 +70,13 @@ android {
       }
     }
   }
+
+  packagingOptions {
+    resources {
+      // TODO: Remove workaround for https://github.com/Kotlin/kotlinx.coroutines/issues/3668
+      excludes += "META-INF/versions/9/previous-compilation-data.bin"
+    }
+  }
 }
 
 dependencies {
