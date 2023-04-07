@@ -97,6 +97,7 @@ dependencies {
   kapt(deps.dagger.hiltAndroidCompiler)
 
   // Compose
+  implementation(platform(deps.compose.bom))
   implementation(deps.compose.foundation)
   implementation(deps.compose.foundationLayout)
   implementation(deps.compose.materialIconsExtended)

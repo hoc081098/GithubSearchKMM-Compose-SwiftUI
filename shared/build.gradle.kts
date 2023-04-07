@@ -11,8 +11,8 @@ plugins {
   kotlinKapt
   daggerHiltAndroid
   mokoKSwift
-  id("com.google.devtools.ksp")
-  id("com.codingfeline.buildkonfig")
+  googleKsp
+  buildKonfig
 }
 
 version = appConfig.versionName
@@ -31,11 +31,11 @@ kotlin {
     framework {
       baseName = "shared"
       isStatic = true
+
       export(deps.coroutines.core)
       export(deps.napier)
-
-      export("io.github.hoc081098:kmp-viewmodel:0.3.0")
-      export("io.github.hoc081098:kmp-viewmodel-savedstate:0.3.0")
+      export(deps.kmpViewModel.core)
+      export(deps.kmpViewModel.savedState)
     }
   }
 
@@ -52,8 +52,10 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(project(":flowredux"))
-        api("io.github.hoc081098:kmp-viewmodel:0.3.0")
-        api("io.github.hoc081098:kmp-viewmodel-savedstate:0.3.0")
+
+        // Kmp-ViewModel
+        api(deps.kmpViewModel.core)
+        api(deps.kmpViewModel.savedState)
 
         // Flow, Coroutines
         api(deps.coroutines.core)
