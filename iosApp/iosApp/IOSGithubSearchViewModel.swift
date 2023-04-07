@@ -26,8 +26,8 @@ class IOSGithubSearchViewModel: ObservableObject {
       .map(GithubSearchSingleEventKs.init)
       .eraseToAnyPublisher()
 
-    self.state = vm.stateFlow.typedValue()
-    vm.stateFlow.subscribeNonNullFlow(
+    self.state = vm.stateFlow.value
+    vm.stateFlow.subscribe(
       scope: vm.viewModelScope,
       onValue: { [weak self] in self?.state = $0 }
     )
