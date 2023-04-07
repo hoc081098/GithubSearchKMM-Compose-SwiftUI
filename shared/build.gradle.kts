@@ -105,6 +105,8 @@ kotlin {
       dependencies {
         implementation(deps.ktor.okHttp)
         implementation(deps.dagger.hiltAndroid)
+        implementation(deps.compose.runtime)
+        implementation(platform(deps.compose.bom))
       }
     }
     val androidTest by getting {

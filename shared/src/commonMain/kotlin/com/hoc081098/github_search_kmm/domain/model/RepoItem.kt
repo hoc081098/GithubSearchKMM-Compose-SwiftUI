@@ -1,7 +1,9 @@
 package com.hoc081098.github_search_kmm.domain.model
 
+import com.hoc081098.github_search_kmm.presentation.Immutable
 import kotlinx.datetime.Instant
 
+@Immutable
 data class RepoItem(
   val id: Int,
   val fullName: String,
