@@ -2,6 +2,7 @@ package com.hoc081098.github_search_kmm.android
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -44,3 +45,7 @@ fun <T> Flow<T>.collectInLaunchedEffectWithLifecycle(
     }
   }
 }
+
+@Stable
+@JvmInline
+value class StableWrapper<T>(val value: T)

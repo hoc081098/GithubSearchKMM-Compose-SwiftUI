@@ -1,7 +1,9 @@
 package com.hoc081098.github_search_kmm.domain.model
 
+import com.hoc081098.github_search_kmm.presentation.Immutable
 import dev.icerock.moko.kswift.KSwiftInclude
 
+@Immutable
 @KSwiftInclude
 sealed class AppError : RuntimeException {
   constructor() : super()
