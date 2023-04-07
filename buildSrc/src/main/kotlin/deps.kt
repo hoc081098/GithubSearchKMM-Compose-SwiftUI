@@ -176,7 +176,7 @@ inline val PDsS.kotlinNativeCocoapods: PDS get() = kotlin("native.cocoapods")
 inline val PDsS.daggerHiltAndroid: PDS get() = id("dagger.hilt.android.plugin")
 inline val PDsS.mokoKSwift: PDS get() = id("dev.icerock.moko.kswift")
 inline val PDsS.googleKsp: PDS get() = id("com.google.devtools.ksp")
-inline val PDsS.buildKonfig: PDS get() =  id("com.codingfeline.buildkonfig")
+inline val PDsS.buildKonfig: PDS get() = id("com.codingfeline.buildkonfig")
 
 inline val DependencyHandler.shared get() = project(":shared")
 inline val DependencyHandler.flowRedux get() = project(":flowredux")
