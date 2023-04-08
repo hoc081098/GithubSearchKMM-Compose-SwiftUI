@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.consumedWindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,9 +18,9 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -28,15 +28,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hoc081098.github_search_kmm.android.R
+import com.hoc081098.github_search_kmm.android.collectInLaunchedEffectWithLifecycle
 import com.hoc081098.github_search_kmm.android.core_ui.AppBackground
 import com.hoc081098.github_search_kmm.android.core_ui.AppTheme
 import com.hoc081098.github_search_kmm.android.core_ui.LoadingIndicator
 import com.hoc081098.github_search_kmm.android.core_ui.RetryButton
 import com.hoc081098.github_search_kmm.android.getReadableMessage
-import com.hoc081098.github_search_kmm.android.rememberFlowWithLifecycle
 import com.hoc081098.github_search_kmm.domain.model.Owner
 import com.hoc081098.github_search_kmm.domain.model.RepoItem
 import com.hoc081098.github_search_kmm.presentation.DaggerGithubSearchViewModel
@@ -51,34 +50,31 @@ import kotlinx.datetime.Clock
 @OptIn(
   ExperimentalMaterial3Api::class,
   ExperimentalLayoutApi::class,
-  ExperimentalLifecycleComposeApi::class
 )
 @Composable
 fun GithubRepoItemsSearchScreen(
   vm: DaggerGithubSearchViewModel = hiltViewModel()
 ) {
-  val eventFlow = rememberFlowWithLifecycle(flow = vm.eventFlow)
   val snackbarHostState = remember { SnackbarHostState() }
   val context = LocalContext.current
+  val scope = rememberCoroutineScope()
 
-  LaunchedEffect(eventFlow, snackbarHostState) {
-    eventFlow.collect { event ->
-      when (event) {
-        is GithubSearchSingleEvent.SearchFailure -> {
-          launch {
-            snackbarHostState.showSnackbar(
-              event
-                .appError
-                .getReadableMessage(context)
-            )
-          }
+  vm.eventFlow.collectInLaunchedEffectWithLifecycle { event ->
+    when (event) {
+      is GithubSearchSingleEvent.SearchFailure -> {
+        scope.launch {
+          snackbarHostState.showSnackbar(
+            event
+              .appError
+              .getReadableMessage(context)
+          )
         }
-        GithubSearchSingleEvent.ReachedMaxItems -> {
-          launch {
-            snackbarHostState.showSnackbar(
-              context.getString(R.string.loaded_all_items)
-            )
-          }
+      }
+      GithubSearchSingleEvent.ReachedMaxItems -> {
+        scope.launch {
+          snackbarHostState.showSnackbar(
+            context.getString(R.string.loaded_all_items)
+          )
         }
       }
     }
@@ -107,7 +103,7 @@ fun GithubRepoItemsSearchScreen(
     BoxWithConstraints(
       modifier = Modifier
         .padding(innerPadding)
-        .consumedWindowInsets(innerPadding)
+        .consumeWindowInsets(innerPadding)
     ) {
       Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -190,9 +186,6 @@ internal fun GithubRepoItemsSearchContent(
 }
 
 @Preview(name = "phone", device = "spec:shape=Normal,width=360,height=640,unit=dp,dpi=480")
-// @Preview(name = "landscape", device = "spec:shape=Normal,width=640,height=360,unit=dp,dpi=480")
-// @Preview(name = "foldable", device = "spec:shape=Normal,width=673,height=841,unit=dp,dpi=480")
-// @Preview(name = "tablet", device = "spec:shape=Normal,width=1280,height=800,unit=dp,dpi=480")
 @Composable
 fun SearchScreenContentPreview() {
   AppTheme {

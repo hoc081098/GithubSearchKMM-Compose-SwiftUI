@@ -29,7 +29,7 @@ internal open class CacheGithubLanguageColorApiDecorator(
       Napier.d(message = "Call $decoratee.getColors", tag = "CacheGithubLanguageColorApiDecorator")
       decoratee
         .getColors()
-        .tap { cache.value = it }
+        .onRight { cache.value = it }
     }
   }
 }

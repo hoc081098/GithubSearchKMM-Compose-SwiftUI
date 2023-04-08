@@ -5,6 +5,7 @@ import com.hoc081098.github_search_kmm.domain.model.RepoItem
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 
+@Immutable
 data class GithubSearchState(
   val page: UInt,
   val term: String,

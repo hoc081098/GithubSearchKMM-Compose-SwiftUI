@@ -2,7 +2,7 @@ package com.hoc081098.github_search_kmm.data.remote
 
 import arrow.core.Either
 import arrow.core.flatMap
-import arrow.core.traverse
+import arrow.core.raise.either
 import com.hoc081098.github_search_kmm.AppCoroutineDispatchers
 import com.hoc081098.github_search_kmm.domain.model.ArgbColor
 import io.ktor.client.HttpClient
@@ -34,11 +34,16 @@ internal open class KtorGithubLanguageColorApi(
         k to it
       }
     }
-      .traverse { (k, v) ->
-        ArgbColor
-          .parse(v)
-          .mapLeft(::IllegalStateException)
-          .map { k to it }
+      .let { pairs ->
+        either {
+          pairs.map { (k, v) ->
+            ArgbColor
+              .parse(v)
+              .mapLeft(::IllegalStateException)
+              .map { k to it }
+              .bind()
+          }
+        }
       }
       .map { it.toMap() }
   }

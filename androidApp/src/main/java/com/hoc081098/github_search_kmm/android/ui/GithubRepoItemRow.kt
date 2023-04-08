@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,16 +31,16 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.hoc081098.github_search_kmm.android.R
+import com.hoc081098.github_search_kmm.android.StableWrapper
 import com.hoc081098.github_search_kmm.android.core_ui.fromArgbColor
 import com.hoc081098.github_search_kmm.domain.model.RepoItem
 import java.text.DecimalFormat
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GithubRepoItemRow(
-  modifier: Modifier = Modifier,
   item: RepoItem,
-  decimalFormat: DecimalFormat,
+  decimalFormat: StableWrapper<DecimalFormat>,
+  modifier: Modifier = Modifier,
 ) {
   Card(
     modifier = modifier,
@@ -127,7 +126,7 @@ fun GithubRepoItemRow(
           )
 
           Text(
-            text = decimalFormat.format(item.starCount),
+            text = decimalFormat.value.format(item.starCount),
             style = MaterialTheme.typography.bodyMedium
           )
         }
