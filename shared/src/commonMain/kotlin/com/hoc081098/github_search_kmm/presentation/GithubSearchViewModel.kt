@@ -22,7 +22,7 @@ open class GithubSearchViewModel(
 
   fun dispatch(action: GithubSearchAction) = store.dispatch(action)
 
-  val eventFlow: NonNullFlowWrapper<GithubSearchSingleEvent> = sendSingleEventEffect.second.wrap()
-
   val stateFlow: NonNullStateFlowWrapper<GithubSearchState> = store.stateFlow.wrap()
+
+  val eventFlow: NonNullFlowWrapper<GithubSearchSingleEvent> = sendSingleEventEffect.second.wrap()
 }
