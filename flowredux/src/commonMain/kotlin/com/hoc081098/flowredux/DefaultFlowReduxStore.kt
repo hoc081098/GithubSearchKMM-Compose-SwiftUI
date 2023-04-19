@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.job
 
 internal class DefaultFlowReduxStore<Action, State>(
   coroutineContext: CoroutineContext,
@@ -58,7 +59,10 @@ internal class DefaultFlowReduxStore<Action, State>(
       }
       .launchIn(coroutineScope)
   }
+
   override fun close() = coroutineScope.cancel()
+
+  override fun isClosed() = coroutineScope.coroutineContext.job.isCancelled
 
   override fun dispatch(action: Action): Boolean = _actionChannel
     .trySend(action)

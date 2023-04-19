@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.TestScope
@@ -483,6 +484,33 @@ class FlowReduxStoreTest {
     assertTrue { sideEffect1Started && sideEffect2Started }
     assertFalse { sideEffect1Ended }
     assertFalse { sideEffect2Ended }
+  }
+
+  @Test
+  fun `close and isClosed`() = runTest {
+    val scope = createScope()
+
+    val store = FlowReduxStore(
+      coroutineContext = scope.coroutineContext,
+      initialState = 0,
+      sideEffects = L[
+        SideEffect<Int, Int> { _, _, coroutineScope ->
+          coroutineScope.coroutineContext.job.invokeOnCompletion {
+            println("Side effect cancelled")
+          }
+          emptyFlow()
+        }
+      ],
+      reducer = { state, _ -> state + 1 }
+    )
+
+    assertTrue { store.dispatch(1) }
+    assertFalse { store.isClosed() }
+
+    store.close()
+
+    assertFalse { store.dispatch(1) }
+    assertTrue { store.isClosed() }
   }
 }
 

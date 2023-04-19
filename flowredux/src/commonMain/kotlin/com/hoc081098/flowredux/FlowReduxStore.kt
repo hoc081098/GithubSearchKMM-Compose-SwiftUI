@@ -4,7 +4,6 @@ import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.emptyFlow
@@ -17,12 +16,29 @@ import kotlinx.coroutines.job
 
 @OptIn(ExperimentalStdlibApi::class)
 public sealed interface FlowReduxStore<Action, State> : AutoCloseable {
+  /**
+   * The state of this store.
+   */
   public val stateFlow: StateFlow<State>
 
   /**
-   * @return false if cannot dispatch action ([coroutineScope] was cancelled).
+   * @return false if cannot dispatch action (this store was closed).
    */
   public fun dispatch(action: Action): Boolean
+
+  /**
+   * Call this method to close this store.
+   * This store will not accept any action anymore, thus state will not change anymore.
+   * All [SideEffect]s will be cancelled.
+   */
+  override fun close()
+
+  /**
+   * After calling [close] method, this function will return true.
+   *
+   * @return true if this store was closed.
+   */
+  public fun isClosed(): Boolean
 }
 
 /**
