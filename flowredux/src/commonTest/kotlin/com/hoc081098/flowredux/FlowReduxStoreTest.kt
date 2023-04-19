@@ -17,7 +17,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapConcat
@@ -48,9 +47,6 @@ private fun TestScope.createScope() = CoroutineScope(
     testScheduler
   )
 )
-
-private suspend fun <T> SharedFlow<T>.toList(acc: MutableList<T>): Nothing =
-  collect { e -> acc += e }
 
 fun <Action, State> CoroutineScope.createTestFlowReduxStore(
   initialState: State,
