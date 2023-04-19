@@ -54,6 +54,14 @@ public fun <Action, State> CoroutineScope.createFlowReduxStore(
   return store
 }
 
+/**
+ * Create a [SideEffect] that maps all actions to [Output]s and send them to a [Channel].
+ * @param capacity The capacity of the [Channel].
+ * @param transformActionToOutput A function that maps an [Action] to an [Output].
+ * If the function returns `null`, the [Action] will be ignored.
+ * Otherwise, the [Action] will be mapped to an [Output] and sent to the [Channel].
+ * @return A [Pair] of the [SideEffect] and a [Flow] of [Output]s.
+ */
 public fun <Action, State, Output> sendOutputFromActionSideEffect(
   capacity: Int = Channel.UNLIMITED,
   transformActionToOutput: (Action) -> Output?,
