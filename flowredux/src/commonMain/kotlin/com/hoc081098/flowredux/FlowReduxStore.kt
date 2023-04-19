@@ -1,22 +1,14 @@
 package com.hoc081098.flowredux
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.job
 
-public sealed interface FlowReduxStore<Action, State> {
-  public val coroutineScope: CoroutineScope
-
+@OptIn(ExperimentalStdlibApi::class)
+public sealed interface FlowReduxStore<Action, State> : AutoCloseable {
   public val stateFlow: StateFlow<State>
-
-  /** Get streams of actions.
-   *
-   * This [Flow] includes dispatched [Action]s (via [dispatch] function)
-   * and [Action]s returned from [SideEffect]s.
-   */
-  public val actionSharedFlow: SharedFlow<Action>
 
   /**
    * @return false if cannot dispatch action ([coroutineScope] was cancelled).
@@ -24,13 +16,31 @@ public sealed interface FlowReduxStore<Action, State> {
   public fun dispatch(action: Action): Boolean
 }
 
+/**
+ * Create a [FlowReduxStore] with [sideEffects] and [reducer].
+ *
+ * The [FlowReduxStore] will be closed when the [CoroutineScope] is cancelled.
+ * That requires the [CoroutineScope] has a [Job] in its context.
+ * And you don't need to call [FlowReduxStore.close] manually.
+ *
+ * @receiver The [CoroutineScope] of the state machine. This scope must have a [Job] in its context.
+ * @param initialState The initial state of the state machine.
+ * @param sideEffects A list of [SideEffect]s.
+ * @param reducer A [Reducer] function.
+ */
 public fun <Action, State> CoroutineScope.createFlowReduxStore(
   initialState: State,
   sideEffects: List<SideEffect<State, Action>>,
-  reducer: Reducer<State, Action>
-): FlowReduxStore<Action, State> = DefaultFlowReduxStore(
-  coroutineScope = this,
-  initialState = initialState,
-  sideEffects = sideEffects,
-  reducer = reducer
-)
+  reducer: Reducer<State, Action>,
+): FlowReduxStore<Action, State> {
+  val store = DefaultFlowReduxStore(
+    coroutineContext = coroutineContext,
+    initialState = initialState,
+    sideEffects = sideEffects,
+    reducer = reducer
+  )
+  coroutineContext.job.invokeOnCompletion {
+    store.close()
+  }
+  return store
+}

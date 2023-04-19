@@ -1,30 +1,32 @@
 package com.hoc081098.flowredux
 
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 
 internal class DefaultFlowReduxStore<Action, State>(
-  override val coroutineScope: CoroutineScope,
+  coroutineContext: CoroutineContext,
   initialState: State,
   sideEffects: List<SideEffect<State, Action>>,
   reducer: Reducer<State, Action>
 ) : FlowReduxStore<Action, State> {
+  private val coroutineScope = CoroutineScope(coroutineContext + Job())
+
   private val _stateFlow = MutableStateFlow(initialState)
   private val _actionChannel = Channel<Action>(Channel.UNLIMITED)
-  private val _actionSharedFlow = MutableSharedFlow<Action>(Channel.UNLIMITED)
 
   override val stateFlow: StateFlow<State> = _stateFlow.asStateFlow()
 
@@ -42,19 +44,22 @@ internal class DefaultFlowReduxStore<Action, State>(
         )
       }
       add(_actionChannel.consumeAsFlow())
-    }.merge()
+    }
+      .merge()
+      .buffer(Channel.UNLIMITED) // buffer all actions, we don't want to miss any action.
 
     actionFlow
       .onEach { action ->
+        // update state
         _stateFlow.value = reducer(_stateFlow.value, action)
 
+        // send action to loopbacks
         loopbacks.sendAll(action)
-        check(_actionSharedFlow.tryEmit(action)) { "Cannot send $action" }
       }
       .launchIn(coroutineScope)
   }
+  override fun close() = coroutineScope.cancel()
 
-  override val actionSharedFlow: SharedFlow<Action> = _actionSharedFlow.asSharedFlow()
   override fun dispatch(action: Action): Boolean = _actionChannel
     .trySend(action)
     .isSuccess

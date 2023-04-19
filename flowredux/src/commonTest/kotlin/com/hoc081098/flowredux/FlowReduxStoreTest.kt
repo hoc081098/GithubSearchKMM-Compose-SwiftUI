@@ -18,13 +18,17 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.TestScope
@@ -49,6 +53,29 @@ private fun TestScope.createScope() = CoroutineScope(
 private suspend fun <T> SharedFlow<T>.toList(acc: MutableList<T>): Nothing =
   collect { e -> acc += e }
 
+fun <Action, State> CoroutineScope.createTestFlowReduxStore(
+  initialState: State,
+  sideEffects: List<SideEffect<State, Action>>,
+  reducer: Reducer<State, Action>,
+): Pair<FlowReduxStore<Action, State>, Flow<Action>> {
+  val actionChannel = Channel<Action>(Channel.UNLIMITED)
+
+  val store = createFlowReduxStore(
+    initialState = initialState,
+    sideEffects = sideEffects +
+      SideEffect { actionFlow, _, coroutineScope ->
+        actionFlow
+          .onEach(actionChannel::send)
+          .launchIn(coroutineScope)
+
+        emptyFlow()
+      },
+    reducer = reducer
+  )
+
+  return store to actionChannel.consumeAsFlow()
+}
+
 @FlowPreview
 @ExperimentalCoroutinesApi
 class FlowReduxStoreTest {
@@ -57,7 +84,7 @@ class FlowReduxStoreTest {
     val scope = createScope()
 
     var reducerInvocations = 0
-    scope.createFlowReduxStore<Int, Int>(
+    scope.createTestFlowReduxStore<Int, Int>(
       initialState = 0,
       sideEffects = L(),
       reducer = { state, _ ->
@@ -65,6 +92,7 @@ class FlowReduxStoreTest {
         state + 1
       }
     )
+      .first
       .stateFlow
       .take(1)
       .testWithTestCoroutineScheduler {
@@ -82,7 +110,7 @@ class FlowReduxStoreTest {
   fun `store without side effects just runs reducer`() = runTest {
     val scope = createScope()
 
-    val store = scope.createFlowReduxStore<String, String>(
+    val (store, actionFlow) = scope.createTestFlowReduxStore<String, String>(
       initialState = "",
       sideEffects = L(),
       reducer = { state, action ->
@@ -91,7 +119,7 @@ class FlowReduxStoreTest {
     )
     val allActions = mutableListOf<String>()
     scope.launch(start = CoroutineStart.UNDISPATCHED) {
-      store.actionSharedFlow.toList(allActions)
+      actionFlow.toList(allActions)
     }
 
     scope.launch {
@@ -121,7 +149,7 @@ class FlowReduxStoreTest {
     val scope = createScope()
     val sideEffect1Actions = mutableListOf<String>()
 
-    val store = scope.createFlowReduxStore<String, String>(
+    val (store, actionFlow) = scope.createTestFlowReduxStore<String, String>(
       initialState = "",
       sideEffects = L[
         SideEffect { actions, _, _ ->
@@ -137,7 +165,7 @@ class FlowReduxStoreTest {
     )
     val allActions = mutableListOf<String>()
     scope.launch(start = CoroutineStart.UNDISPATCHED) {
-      store.actionSharedFlow.toList(allActions)
+      actionFlow.toList(allActions)
     }
 
     scope.launch {
@@ -172,7 +200,7 @@ class FlowReduxStoreTest {
     val sideEffect1Actions = mutableListOf<String>()
     val sideEffect2Actions = mutableListOf<String>()
 
-    val store = scope.createFlowReduxStore<String, String>(
+    val (store, actionFlow) = scope.createTestFlowReduxStore<String, String>(
       initialState = "",
       sideEffects = L[
         SideEffect { actions, _, _ ->
@@ -194,7 +222,7 @@ class FlowReduxStoreTest {
     )
     val allActions = mutableListOf<String>()
     scope.launch(start = CoroutineStart.UNDISPATCHED) {
-      store.actionSharedFlow.toList(allActions)
+      actionFlow.toList(allActions)
     }
 
     scope.launch {
@@ -233,7 +261,7 @@ class FlowReduxStoreTest {
     val sideEffect1Actions = mutableListOf<Int>()
     val sideEffect2Actions = mutableListOf<Int>()
 
-    val store = scope.createFlowReduxStore<Int, String>(
+    val (store, actionFlow) = scope.createTestFlowReduxStore<Int, String>(
       initialState = "",
       sideEffects = L[
         SideEffect { actions, _, _ ->
@@ -265,7 +293,7 @@ class FlowReduxStoreTest {
     )
     val allActions = mutableListOf<Int>()
     scope.launch(start = CoroutineStart.UNDISPATCHED) {
-      store.actionSharedFlow.toList(allActions)
+      actionFlow.toList(allActions)
     }
 
     scope.launch {
@@ -315,7 +343,7 @@ class FlowReduxStoreTest {
     val sideEffect1Actions = mutableListOf<Int>()
     val sideEffect2Actions = mutableListOf<Int>()
 
-    val store = scope.createFlowReduxStore<Int, String>(
+    val (store, actionFlow) = scope.createTestFlowReduxStore<Int, String>(
       initialState = "",
       sideEffects = L[
         SideEffect { actions, _, _ ->
@@ -351,7 +379,7 @@ class FlowReduxStoreTest {
     )
     val allActions = mutableListOf<Int>()
     scope.launch(start = CoroutineStart.UNDISPATCHED) {
-      store.actionSharedFlow.toList(allActions)
+      actionFlow.toList(allActions)
     }
 
     store.stateFlow

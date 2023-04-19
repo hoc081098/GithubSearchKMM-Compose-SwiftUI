@@ -7,7 +7,6 @@ import com.hoc081098.flowredux.SideEffect
 import com.hoc081098.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
 import com.hoc081098.github_search_kmm.presentation.GithubSearchState.Companion.FIRST_PAGE
 import com.hoc081098.github_search_kmm.utils.eitherLceFlow
-import kotlin.jvm.JvmInline
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.flow.Flow
@@ -21,9 +20,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 
-@JvmInline
 @Suppress("NOTHING_TO_INLINE")
-internal value class GithubSearchSideEffects(
+internal class GithubSearchSideEffects(
   private val searchRepoItemsUseCase: SearchRepoItemsUseCase,
 ) {
   inline val sideEffects
