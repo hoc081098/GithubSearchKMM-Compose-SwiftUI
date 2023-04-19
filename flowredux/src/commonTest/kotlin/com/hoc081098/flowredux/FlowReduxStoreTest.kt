@@ -7,6 +7,7 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -489,15 +490,14 @@ class FlowReduxStoreTest {
   @Test
   fun `close and isClosed`() = runTest {
     val scope = createScope()
+    val cancelled = CompletableDeferred<Unit>()
 
     val store = FlowReduxStore(
       coroutineContext = scope.coroutineContext,
       initialState = 0,
       sideEffects = L[
         SideEffect<Int, Int> { _, _, coroutineScope ->
-          coroutineScope.coroutineContext.job.invokeOnCompletion {
-            println("Side effect cancelled")
-          }
+          coroutineScope.coroutineContext.job.invokeOnCompletion { cancelled.complete(Unit) }
           emptyFlow()
         }
       ],
@@ -511,6 +511,8 @@ class FlowReduxStoreTest {
 
     assertFalse { store.dispatch(1) }
     assertTrue { store.isClosed() }
+
+    cancelled.await()
   }
 }
 
