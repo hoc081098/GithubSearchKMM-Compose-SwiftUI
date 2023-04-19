@@ -18,15 +18,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.buffer
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
@@ -59,23 +55,15 @@ fun <Action, State> CoroutineScope.createTestFlowReduxStore(
   sideEffects: List<SideEffect<State, Action>>,
   reducer: Reducer<State, Action>,
 ): Pair<FlowReduxStore<Action, State>, Flow<Action>> {
-  val actionChannel = Channel<Action>(Channel.UNLIMITED)
+  val (sideEffect, actionFlow) = sendOutputFromActionSideEffect<Action, State, Action> { it }
 
   val store = createFlowReduxStore(
     initialState = initialState,
-    sideEffects = sideEffects +
-      SideEffect { actionFlow, _, coroutineScope ->
-        actionFlow
-          .onEach(actionChannel::send)
-          .onCompletion { actionChannel.close() }
-          .launchIn(coroutineScope)
-
-        emptyFlow()
-      },
+    sideEffects = sideEffects + sideEffect,
     reducer = reducer
   )
 
-  return store to actionChannel.consumeAsFlow()
+  return store to actionFlow
 }
 
 @FlowPreview
