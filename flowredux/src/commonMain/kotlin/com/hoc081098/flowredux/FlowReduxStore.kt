@@ -1,5 +1,6 @@
 package com.hoc081098.flowredux
 
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -71,3 +72,16 @@ public fun <Action, State, Output> sendOutputFromActionSideEffect(
 
   return sideEffect to actionChannel.receiveAsFlow()
 }
+
+@Suppress("FunctionName") // Factory function
+public fun <Action, State> FlowReduxStore(
+  coroutineContext: CoroutineContext,
+  initialState: State,
+  sideEffects: List<SideEffect<State, Action>>,
+  reducer: Reducer<State, Action>,
+): FlowReduxStore<Action, State> = DefaultFlowReduxStore(
+  coroutineContext = coroutineContext,
+  initialState = initialState,
+  sideEffects = sideEffects,
+  reducer = reducer
+)
