@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.flow.take
@@ -66,6 +67,7 @@ fun <Action, State> CoroutineScope.createTestFlowReduxStore(
       SideEffect { actionFlow, _, coroutineScope ->
         actionFlow
           .onEach(actionChannel::send)
+          .onCompletion { actionChannel.close() }
           .launchIn(coroutineScope)
 
         emptyFlow()
