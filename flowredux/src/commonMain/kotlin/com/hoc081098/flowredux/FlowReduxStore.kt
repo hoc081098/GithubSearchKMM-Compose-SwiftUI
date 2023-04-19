@@ -2,8 +2,16 @@ package com.hoc081098.flowredux
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.job
 
 @OptIn(ExperimentalStdlibApi::class)
@@ -43,4 +51,23 @@ public fun <Action, State> CoroutineScope.createFlowReduxStore(
     store.close()
   }
   return store
+}
+
+public fun <Action, State, Output> sendOutputFromActionSideEffect(
+  capacity: Int = Channel.UNLIMITED,
+  transformActionToOutput: (Action) -> Output?,
+): Pair<SideEffect<State, Action>, Flow<Output>> {
+  val actionChannel = Channel<Output>(capacity)
+
+  val sideEffect = SideEffect<State, Action> { actionFlow, _, coroutineScope ->
+    actionFlow
+      .mapNotNull(transformActionToOutput)
+      .onEach(actionChannel::send)
+      .onCompletion { actionChannel.close() }
+      .launchIn(coroutineScope)
+
+    emptyFlow()
+  }
+
+  return sideEffect to actionChannel.receiveAsFlow()
 }
