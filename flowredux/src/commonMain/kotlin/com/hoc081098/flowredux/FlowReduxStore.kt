@@ -31,7 +31,7 @@ public sealed interface FlowReduxStore<Action, State> : AutoCloseable {
    * A closed store will not accept any action anymore, thus state will not change anymore.
    * All [SideEffect]s will be cancelled.
    */
-  override fun close()
+  public override fun close()
 
   /**
    * After calling [close] method, this function will return true.
