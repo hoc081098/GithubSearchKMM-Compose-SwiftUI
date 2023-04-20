@@ -14,7 +14,7 @@ object versions {
   const val agp = "7.3.0"
   const val gradleVersions = "0.42.0"
   const val mokoKSwift = "0.6.1"
-  const val googleKsp = "1.8.20-1.0.10"
+  const val googleKsp = "1.8.10-1.0.9"
   const val buildKonfig = "0.13.3"
 }
 
