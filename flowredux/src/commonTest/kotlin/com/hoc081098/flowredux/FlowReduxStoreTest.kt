@@ -7,6 +7,7 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,7 +17,6 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapConcat
@@ -24,7 +24,10 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onSubscription
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.TestScope
@@ -46,8 +49,21 @@ private fun TestScope.createScope() = CoroutineScope(
   )
 )
 
-private suspend fun <T> SharedFlow<T>.toList(acc: MutableList<T>): Nothing =
-  collect { e -> acc += e }
+fun <Action, State> CoroutineScope.createTestFlowReduxStore(
+  initialState: State,
+  sideEffects: List<SideEffect<Action, State>>,
+  reducer: Reducer<Action, State>,
+): Pair<FlowReduxStore<Action, State>, Flow<Action>> {
+  val (effect, channel) = allActionsToOutputChannelSideEffect<Action, State, Action> { it }
+
+  val store = createFlowReduxStore(
+    initialState = initialState,
+    sideEffects = sideEffects + effect,
+    reducer = reducer
+  )
+
+  return store to channel.receiveAsFlow()
+}
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -57,7 +73,7 @@ class FlowReduxStoreTest {
     val scope = createScope()
 
     var reducerInvocations = 0
-    scope.createFlowReduxStore<Int, Int>(
+    scope.createTestFlowReduxStore<Int, Int>(
       initialState = 0,
       sideEffects = L(),
       reducer = { state, _ ->
@@ -65,6 +81,7 @@ class FlowReduxStoreTest {
         state + 1
       }
     )
+      .first
       .stateFlow
       .take(1)
       .testWithTestCoroutineScheduler {
@@ -82,7 +99,7 @@ class FlowReduxStoreTest {
   fun `store without side effects just runs reducer`() = runTest {
     val scope = createScope()
 
-    val store = scope.createFlowReduxStore<String, String>(
+    val (store, actionFlow) = scope.createTestFlowReduxStore<String, String>(
       initialState = "",
       sideEffects = L(),
       reducer = { state, action ->
@@ -91,7 +108,7 @@ class FlowReduxStoreTest {
     )
     val allActions = mutableListOf<String>()
     scope.launch(start = CoroutineStart.UNDISPATCHED) {
-      store.actionSharedFlow.toList(allActions)
+      actionFlow.toList(allActions)
     }
 
     scope.launch {
@@ -121,7 +138,7 @@ class FlowReduxStoreTest {
     val scope = createScope()
     val sideEffect1Actions = mutableListOf<String>()
 
-    val store = scope.createFlowReduxStore<String, String>(
+    val (store, actionFlow) = scope.createTestFlowReduxStore<String, String>(
       initialState = "",
       sideEffects = L[
         SideEffect { actions, _, _ ->
@@ -137,7 +154,7 @@ class FlowReduxStoreTest {
     )
     val allActions = mutableListOf<String>()
     scope.launch(start = CoroutineStart.UNDISPATCHED) {
-      store.actionSharedFlow.toList(allActions)
+      actionFlow.toList(allActions)
     }
 
     scope.launch {
@@ -172,7 +189,7 @@ class FlowReduxStoreTest {
     val sideEffect1Actions = mutableListOf<String>()
     val sideEffect2Actions = mutableListOf<String>()
 
-    val store = scope.createFlowReduxStore<String, String>(
+    val (store, actionFlow) = scope.createTestFlowReduxStore<String, String>(
       initialState = "",
       sideEffects = L[
         SideEffect { actions, _, _ ->
@@ -194,7 +211,7 @@ class FlowReduxStoreTest {
     )
     val allActions = mutableListOf<String>()
     scope.launch(start = CoroutineStart.UNDISPATCHED) {
-      store.actionSharedFlow.toList(allActions)
+      actionFlow.toList(allActions)
     }
 
     scope.launch {
@@ -233,7 +250,7 @@ class FlowReduxStoreTest {
     val sideEffect1Actions = mutableListOf<Int>()
     val sideEffect2Actions = mutableListOf<Int>()
 
-    val store = scope.createFlowReduxStore<Int, String>(
+    val (store, actionFlow) = scope.createTestFlowReduxStore<Int, String>(
       initialState = "",
       sideEffects = L[
         SideEffect { actions, _, _ ->
@@ -265,7 +282,7 @@ class FlowReduxStoreTest {
     )
     val allActions = mutableListOf<Int>()
     scope.launch(start = CoroutineStart.UNDISPATCHED) {
-      store.actionSharedFlow.toList(allActions)
+      actionFlow.toList(allActions)
     }
 
     scope.launch {
@@ -315,7 +332,7 @@ class FlowReduxStoreTest {
     val sideEffect1Actions = mutableListOf<Int>()
     val sideEffect2Actions = mutableListOf<Int>()
 
-    val store = scope.createFlowReduxStore<Int, String>(
+    val (store, actionFlow) = scope.createTestFlowReduxStore<Int, String>(
       initialState = "",
       sideEffects = L[
         SideEffect { actions, _, _ ->
@@ -351,7 +368,7 @@ class FlowReduxStoreTest {
     )
     val allActions = mutableListOf<Int>()
     scope.launch(start = CoroutineStart.UNDISPATCHED) {
-      store.actionSharedFlow.toList(allActions)
+      actionFlow.toList(allActions)
     }
 
     store.stateFlow
@@ -465,6 +482,34 @@ class FlowReduxStoreTest {
     assertTrue { sideEffect1Started && sideEffect2Started }
     assertFalse { sideEffect1Ended }
     assertFalse { sideEffect2Ended }
+  }
+
+  @Test
+  fun `close and isClosed`() = runTest {
+    val scope = createScope()
+    val cancelled = CompletableDeferred<Unit>()
+
+    val store = FlowReduxStore(
+      coroutineContext = scope.coroutineContext,
+      initialState = 0,
+      sideEffects = L[
+        SideEffect<Int, Int> { _, _, coroutineScope ->
+          coroutineScope.coroutineContext.job.invokeOnCompletion { cancelled.complete(Unit) }
+          emptyFlow()
+        }
+      ],
+      reducer = { state, _ -> state + 1 }
+    )
+
+    assertTrue { store.dispatch(1) }
+    assertFalse { store.isClosed() }
+
+    store.close()
+
+    assertFalse { store.dispatch(1) }
+    assertTrue { store.isClosed() }
+
+    cancelled.await()
   }
 }
 

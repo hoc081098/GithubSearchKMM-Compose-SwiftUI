@@ -6,9 +6,9 @@ package com.hoc081098.flowredux
  *
  * If a reducer should not react on a Action, just return the old State.
  *
- * @param S The type of the state
- * @param A The type of the Actions
+ * @param State The type of the state
+ * @param Action The type of the Actions
  */
-public fun interface Reducer<S, A> {
-  public operator fun invoke(state: S, action: A): S
+public fun interface Reducer<Action, State> {
+  public operator fun invoke(state: State, action: Action): State
 }
