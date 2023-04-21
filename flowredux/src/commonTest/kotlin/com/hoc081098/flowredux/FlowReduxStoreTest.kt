@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onSubscription
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.job
@@ -50,18 +51,18 @@ private fun TestScope.createScope() = CoroutineScope(
 
 fun <Action, State> CoroutineScope.createTestFlowReduxStore(
   initialState: State,
-  sideEffects: List<SideEffect<State, Action>>,
-  reducer: Reducer<State, Action>,
+  sideEffects: List<SideEffect<Action, State>>,
+  reducer: Reducer<Action, State>,
 ): Pair<FlowReduxStore<Action, State>, Flow<Action>> {
-  val (sideEffect, actionFlow) = sendOutputFromActionSideEffect<Action, State, Action> { it }
+  val (effect, channel) = allActionsToOutputChannelSideEffect<Action, State, Action> { it }
 
   val store = createFlowReduxStore(
     initialState = initialState,
-    sideEffects = sideEffects + sideEffect,
+    sideEffects = sideEffects + effect,
     reducer = reducer
   )
 
-  return store to actionFlow
+  return store to channel.receiveAsFlow()
 }
 
 @FlowPreview

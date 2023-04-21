@@ -27,8 +27,8 @@ internal class GithubSearchSideEffects(
   inline val sideEffects
     get() = listOf(
       // [Search]s -> [TextChanged]s
+      searchActionToTextChangedAction(),
       // [TextChanged]s -> [SearchLCE]s
-      textChanged(),
       search(),
       // [LoadNextPage]s -> [SearchLCE]s
       nextPage(),
@@ -39,8 +39,8 @@ internal class GithubSearchSideEffects(
   /**
    * [GithubSearchAction.Search]s to [SideEffectAction.TextChanged]s
    */
-  private inline fun textChanged() =
-    SideEffect<GithubSearchState, GithubSearchAction> { actionFlow, _, _ ->
+  private inline fun searchActionToTextChangedAction() =
+    SideEffect<GithubSearchAction, GithubSearchState> { actionFlow, _, _ ->
       actionFlow
         .filterIsInstance<GithubSearchAction.Search>()
         .map { it.term.trim() }
@@ -56,7 +56,7 @@ internal class GithubSearchSideEffects(
    * [SideEffectAction.TextChanged]s to [SideEffectAction.SearchLCE]s
    */
   private inline fun search() =
-    SideEffect<GithubSearchState, GithubSearchAction> { actionFlow, _, _ ->
+    SideEffect<GithubSearchAction, GithubSearchState> { actionFlow, _, _ ->
       actionFlow
         .filterIsInstance<SideEffectAction.TextChanged>()
         .flatMapLatest { action ->
@@ -73,7 +73,7 @@ internal class GithubSearchSideEffects(
    * [GithubSearchAction.LoadNextPage]s to [SideEffectAction.SearchLCE]s
    */
   private inline fun nextPage() =
-    SideEffect<GithubSearchState, GithubSearchAction> { actionFlow, stateFlow, coroutineScope ->
+    SideEffect<GithubSearchAction, GithubSearchState> { actionFlow, stateFlow, coroutineScope ->
       val actionSharedFlow = actionFlow.shareIn(coroutineScope, WhileSubscribed())
 
       actionSharedFlow
@@ -100,7 +100,7 @@ internal class GithubSearchSideEffects(
    * [GithubSearchAction.Retry]s to [SideEffectAction.SearchLCE]s
    */
   private inline fun retry() =
-    SideEffect<GithubSearchState, GithubSearchAction> { actionFlow, stateFlow, coroutineScope ->
+    SideEffect<GithubSearchAction, GithubSearchState> { actionFlow, stateFlow, coroutineScope ->
       val actionSharedFlow = actionFlow.shareIn(coroutineScope, WhileSubscribed())
 
       actionSharedFlow

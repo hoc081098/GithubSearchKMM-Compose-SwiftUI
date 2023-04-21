@@ -21,8 +21,8 @@ import kotlinx.coroutines.job
 internal class DefaultFlowReduxStore<Action, State>(
   coroutineContext: CoroutineContext,
   initialState: State,
-  sideEffects: List<SideEffect<State, Action>>,
-  reducer: Reducer<State, Action>
+  sideEffects: List<SideEffect<Action, State>>,
+  reducer: Reducer<Action, State>
 ) : FlowReduxStore<Action, State> {
   private val coroutineScope = CoroutineScope(coroutineContext + Job())
 
