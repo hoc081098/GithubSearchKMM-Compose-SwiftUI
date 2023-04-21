@@ -1,6 +1,7 @@
 package com.hoc081098.github_search_kmm.utils
 
 /**
- * A function that flips arguments order and returns a new functions
+ * A function that flips arguments order of a binary function.
+ * @return A function with the same behavior as the input, but with arguments flipped.
  */
-fun <A, B, C> ((A, B) -> C).flip(): (B, A) -> C = { b: B, a: A -> this(a, b) }
+inline fun <A, B, C> ((A, B) -> C).flip(): (B, A) -> C = { b, a -> this(a, b) }
