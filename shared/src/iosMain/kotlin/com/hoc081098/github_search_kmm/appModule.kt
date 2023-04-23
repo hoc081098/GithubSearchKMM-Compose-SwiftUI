@@ -9,6 +9,8 @@ import org.koin.dsl.module
 val IoAppCoroutineScope = named("IoAppCoroutineScope")
 val MainAppCoroutineScope = named("MainAppCoroutineScope")
 
+actual fun isDebug(): Boolean = Platform.isDebugBinary
+
 val appModule = module {
   singleOf(::IosAppCoroutineDispatchers) {
     bind<AppCoroutineDispatchers>()
