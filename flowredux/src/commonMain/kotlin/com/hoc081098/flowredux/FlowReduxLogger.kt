@@ -1,46 +1,37 @@
 package com.hoc081098.flowredux
 
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-
-public interface FlowReduxLogger<Action, State> {
-  public fun onReducer(action: Action, oldState: State, newState: State)
-  public fun onNewState(state: State)
+public fun interface FlowReduxLogger<Action, State> {
+  /**
+   * Called when the reducer is called with [action] and [prevState] to produce [nextState].
+   * @param action The action that was dispatched.
+   * @param prevState The previous state.
+   * @param nextState The new state produced by the reducer.
+   */
+  public fun onReduced(action: Action, prevState: State, nextState: State)
 
   public companion object {
+    /**
+     * Returns an empty logger that does nothing.
+     * Use this logger to disable logging.
+     */
     @Suppress("UNCHECKED_CAST")
     public fun <Action, State> empty(): FlowReduxLogger<Action, State> = Empty as FlowReduxLogger<Action, State>
   }
 }
 
 private object Empty : FlowReduxLogger<Any?, Any?> {
-  override fun onReducer(action: Any?, oldState: Any?, newState: Any?): Unit = Unit
-  override fun onNewState(state: Any?): Unit = Unit
+  override fun onReduced(action: Any?, prevState: Any?, nextState: Any?): Unit = Unit
 }
 
 public fun <Action, State> Reducer<Action, State>.withLogger(
   logger: FlowReduxLogger<Action, State>,
 ): Reducer<Action, State> = when (logger) {
   FlowReduxLogger.empty<Action, State>() -> this
-  else -> Reducer { oldState, action ->
-    val newState = this(oldState, action)
+  else -> Reducer { prevState, action ->
+    val nextState = this(prevState, action)
 
-    logger.onReducer(action, oldState, newState)
+    logger.onReduced(action, prevState, nextState)
 
-    newState
-  }
-}
-
-public fun <Action, State> loggerSideEffect(
-  logger: FlowReduxLogger<Action, State>,
-): SideEffect<Action, State>? = when (logger) {
-  FlowReduxLogger.empty<Action, State>() -> null
-  else -> SideEffect { _, stateFlow, scope ->
-    stateFlow
-      .onEach(logger::onNewState)
-      .launchIn(scope)
-
-    emptyFlow()
+    nextState
   }
 }
