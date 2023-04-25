@@ -48,6 +48,10 @@ private inline val GithubSearchState.debugString: String
     separator = ", ",
   ) { (k, v) -> "$k: $v" }
 
+/**
+ * In debug mode, log every action and state change.
+ * In release mode, do nothing.
+ */
 internal fun githubSearchFlowReduxLogger(): FlowReduxLogger<GithubSearchAction, GithubSearchState> =
   if (isDebug()) {
     FlowReduxLogger { action, prevState, nextState ->

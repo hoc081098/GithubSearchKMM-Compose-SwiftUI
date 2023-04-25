@@ -4,6 +4,7 @@ import com.hoc081098.flowext.flatMapFirst
 import com.hoc081098.flowext.flowFromSuspend
 import com.hoc081098.flowext.takeUntil
 import com.hoc081098.flowredux.SideEffect
+import com.hoc081098.flowredux.allActionsToOutputChannelSideEffect
 import com.hoc081098.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
 import com.hoc081098.github_search_kmm.presentation.GithubSearchState.Companion.FIRST_PAGE
 import com.hoc081098.github_search_kmm.utils.eitherLceFlow
@@ -18,23 +19,34 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 
 @Suppress("NOTHING_TO_INLINE")
 internal class GithubSearchSideEffects(
   private val searchRepoItemsUseCase: SearchRepoItemsUseCase,
 ) {
-  inline val sideEffects
-    get() = listOf(
-      // [Search]s -> [TextChanged]s
-      searchActionToTextChangedAction(),
-      // [TextChanged]s -> [SearchLCE]s
-      search(),
-      // [LoadNextPage]s -> [SearchLCE]s
-      nextPage(),
-      // [Retry] -> [SearchLCE]s
-      retry(),
-    )
+  private val sendSingleEventSideEffect = allActionsToOutputChannelSideEffect<GithubSearchAction,
+    GithubSearchState,
+    GithubSearchSingleEvent> { it.toGithubSearchSingleEventOrNull() }
+
+  internal val eventFlow get() = sendSingleEventSideEffect.second.receiveAsFlow()
+
+  /**
+   * @return A list of [SideEffect]s contained in this class.
+   */
+  operator fun invoke() = listOf(
+    // [Search]s -> [TextChanged]s
+    searchActionToTextChangedAction(),
+    // [TextChanged]s -> [SearchLCE]s
+    search(),
+    // [LoadNextPage]s -> [SearchLCE]s
+    nextPage(),
+    // [Retry] -> [SearchLCE]s
+    retry(),
+    // Send single event
+    sendSingleEventSideEffect.first,
+  )
 
   /**
    * [GithubSearchAction.Search]s to [SideEffectAction.TextChanged]s
