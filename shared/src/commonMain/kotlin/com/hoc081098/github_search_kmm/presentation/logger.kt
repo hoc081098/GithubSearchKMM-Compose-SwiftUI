@@ -5,6 +5,7 @@ import com.hoc081098.github_search_kmm.isDebug
 import com.hoc081098.github_search_kmm.utils.EitherLCE
 import com.hoc081098.github_search_kmm.utils.diff
 import io.github.aakira.napier.Napier
+import kotlin.LazyThreadSafetyMode.NONE
 
 private val GithubSearchAction.debugString: String
   get() = when (this) {
@@ -50,16 +51,18 @@ private inline val GithubSearchState.debugString: String
 internal fun githubSearchFlowReduxLogger(): FlowReduxLogger<GithubSearchAction, GithubSearchState> =
   if (isDebug()) {
     FlowReduxLogger { action, prevState, nextState ->
-      val diffString = prevState.debugMap
-        .diff(nextState.debugMap)
-        .joinToString(separator = ", ", prefix = "{ ", postfix = " }") { (k, v1, v2) -> "$k: ($v1 -> $v2)" }
+      val diffString by lazy(NONE) {
+        prevState.debugMap
+          .diff(nextState.debugMap)
+          .joinToString(separator = ", ", prefix = "{ ", postfix = " }") { (k, v1, v2) -> "$k: ($v1 -> $v2)" }
+      }
 
       Napier.d(
         """onReduced {
         |   Action    : ${action.debugString}
         |   Prev state: ${prevState.debugString}
         |   Next state: ${nextState.debugString}
-        |   Diff      : $diffString
+        |   Diff      : ${if (prevState == nextState) "{ }" else diffString}
         |}
         """.trimMargin(),
         tag = "GithubSearchViewModel"
