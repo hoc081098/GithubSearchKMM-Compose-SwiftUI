@@ -13,6 +13,7 @@ import kotlinx.cinterop.ObjCProtocol
 import kotlinx.cinterop.getOriginalKotlinClass
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 import org.koin.core.parameter.ParametersDefinition
 import org.koin.core.qualifier.Qualifier
 import org.koin.dsl.KoinAppDeclaration
