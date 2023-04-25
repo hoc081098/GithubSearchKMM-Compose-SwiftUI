@@ -21,5 +21,4 @@ fun rememberStableCoroutineScope(): StableCoroutineScope {
 
 /** @see rememberStableCoroutineScope */
 @Stable
-@JvmInline
-value class StableCoroutineScope(val scope: CoroutineScope) : CoroutineScope by scope
+class StableCoroutineScope(scope: CoroutineScope) : CoroutineScope by scope

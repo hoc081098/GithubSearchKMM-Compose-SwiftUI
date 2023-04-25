@@ -158,19 +158,19 @@ internal fun GithubRepoItemsSearchContent(
 ) {
   Box(modifier = modifier) {
     if (state.isFirstPage && state.isLoading) {
-      return@Box LoadingIndicator()
+      return LoadingIndicator()
     }
 
     val error = state.error
     if (state.isFirstPage && error != null) {
-      return@Box RetryButton(
+      return RetryButton(
         errorMessage = error.getReadableMessage(),
         onRetry = onRetry
       )
     }
 
     if (state.items.isEmpty()) {
-      return@Box Column(
+      return Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
