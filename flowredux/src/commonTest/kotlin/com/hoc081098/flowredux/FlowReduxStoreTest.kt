@@ -49,7 +49,7 @@ private fun TestScope.createScope() = CoroutineScope(
   )
 )
 
-fun <Action, State> CoroutineScope.createTestFlowReduxStore(
+fun <Action : Any, State> CoroutineScope.createTestFlowReduxStore(
   initialState: State,
   sideEffects: List<SideEffect<Action, State>>,
   reducer: Reducer<Action, State>,
@@ -510,6 +510,16 @@ class FlowReduxStoreTest {
     assertTrue { store.isClosed() }
 
     cancelled.await()
+  }
+
+  @Test
+  fun `empty logger`() = runTest {
+    val l1: FlowReduxLogger<Int, String> = FlowReduxLogger.empty()
+    val l2: FlowReduxLogger<String, Int> = FlowReduxLogger.empty()
+    val l3: FlowReduxLogger<Int, Int> = FlowReduxLogger.empty()
+    val l4: FlowReduxLogger<String, String> = FlowReduxLogger.empty()
+
+    assertEquals(1, setOf(l1, l2, l3, l4).size)
   }
 }
 
