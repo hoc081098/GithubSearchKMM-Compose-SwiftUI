@@ -49,7 +49,7 @@ private fun TestScope.createScope() = CoroutineScope(
   )
 )
 
-fun <Action, State> CoroutineScope.createTestFlowReduxStore(
+fun <Action: Any, State> CoroutineScope.createTestFlowReduxStore(
   initialState: State,
   sideEffects: List<SideEffect<Action, State>>,
   reducer: Reducer<Action, State>,
