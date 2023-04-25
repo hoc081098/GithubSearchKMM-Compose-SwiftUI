@@ -113,6 +113,8 @@ dependencies {
   implementation(deps.compose.uiToolingPreview)
   implementation(deps.compose.uiUtil)
   implementation(deps.compose.runtime)
+
+  lintChecks(deps.slack.composeLint)
 }
 
 fun Project.buildComposeMetricsParameters(): List<String> {

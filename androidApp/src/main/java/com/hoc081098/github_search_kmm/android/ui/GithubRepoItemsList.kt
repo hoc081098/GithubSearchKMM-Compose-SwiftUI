@@ -36,7 +36,8 @@ internal fun GithubRepoItemsList(
   error: AppError?,
   hasReachedMax: Boolean,
   onRetry: () -> Unit,
-  onLoadNextPage: () -> Unit
+  onLoadNextPage: () -> Unit,
+  modifier: Modifier = Modifier,
 ) {
   val lazyListState = rememberLazyListState()
   val currentOnLoadNextPage by rememberUpdatedState(onLoadNextPage)
@@ -70,7 +71,7 @@ internal fun GithubRepoItemsList(
   val decimalFormat = remember { StableWrapper(DecimalFormat("#,###")) }
 
   LazyColumn(
-    modifier = Modifier
+    modifier = modifier
       .padding(horizontal = 16.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp),
     state = lazyListState
