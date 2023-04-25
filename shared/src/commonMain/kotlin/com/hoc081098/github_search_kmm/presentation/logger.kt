@@ -3,6 +3,7 @@ package com.hoc081098.github_search_kmm.presentation
 import com.hoc081098.flowredux.FlowReduxLogger
 import com.hoc081098.github_search_kmm.isDebug
 import com.hoc081098.github_search_kmm.utils.EitherLCE
+import com.hoc081098.github_search_kmm.utils.diff
 import io.github.aakira.napier.Napier
 
 private val GithubSearchAction.debugString: String
@@ -29,15 +30,18 @@ private val GithubSearchAction.debugString: String
     ) { (k, v) -> "$k: $v" }
   }
 
-private inline val GithubSearchState.debugString: String
-  get() = arrayOf(
+private inline val GithubSearchState.debugMap: Map<String, Any?>
+  get() = mapOf(
     "page" to page,
     "term" to term,
     "items.size" to items.size,
     "isLoading" to isLoading,
     "error" to error,
     "hasReachedMax" to hasReachedMax,
-  ).joinToString(
+  )
+
+private inline val GithubSearchState.debugString: String
+  get() = debugMap.entries.joinToString(
     prefix = "GithubSearchState { ",
     postfix = " }",
     separator = ", ",
@@ -46,11 +50,16 @@ private inline val GithubSearchState.debugString: String
 internal fun githubSearchFlowReduxLogger(): FlowReduxLogger<GithubSearchAction, GithubSearchState> =
   if (isDebug()) {
     FlowReduxLogger { action, prevState, nextState ->
+      val diffString = prevState.debugMap
+        .diff(nextState.debugMap)
+        .joinToString(separator = ", ", prefix = "{ ", postfix = " }") { (k, v1, v2) -> "$k: ($v1 -> $v2)" }
+
       Napier.d(
         """onReduced {
         |   Action    : ${action.debugString}
         |   Prev state: ${prevState.debugString}
         |   Next state: ${nextState.debugString}
+        |   Diff      : $diffString
         |}
         """.trimMargin(),
         tag = "GithubSearchViewModel"
