@@ -68,7 +68,8 @@ internal class DefaultFlowReduxStore<Action, State>(
     .isSuccess
 }
 
-private suspend fun <T> Array<Channel<T>>.sendAll(value: T) {
+@Suppress("NOTHING_TO_INLINE")
+private suspend inline fun <T> Array<Channel<T>>.sendAll(value: T) {
   for (channel in this) {
     try {
       channel.send(value)
