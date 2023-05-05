@@ -60,6 +60,7 @@ kotlin {
     val commonMain by getting {
       dependencies {
         api(deps.coroutines.core)
+        implementation(deps.flowExt)
       }
     }
     val commonTest by getting {

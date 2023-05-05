@@ -1,13 +1,12 @@
 package com.hoc081098.flowredux
 
+import com.hoc081098.flowext.concatWith
+import com.hoc081098.flowext.neverFlow
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,7 +40,7 @@ internal class DefaultFlowReduxStore<Action, State>(
             loopbacks[index].consumeAsFlow(),
             stateFlow,
             coroutineScope,
-          )
+          ).concatWith(neverFlow())
         )
       }
       add(_actionChannel.consumeAsFlow())
@@ -69,10 +68,12 @@ internal class DefaultFlowReduxStore<Action, State>(
     .isSuccess
 }
 
-private suspend fun <T> Array<Channel<T>>.sendAll(value: T) = coroutineScope {
-  map { channel ->
-    async { channel.send(value) }
-  }.awaitAll()
-
-  Unit
+private suspend fun <T> Array<Channel<T>>.sendAll(value: T) {
+  for (channel in this) {
+    try {
+      channel.send(value)
+    } catch (_: Throwable) {
+      // Swallow all exceptions
+    }
+  }
 }

@@ -16,14 +16,24 @@ open class GithubSearchViewModel(
   searchRepoItemsUseCase: SearchRepoItemsUseCase,
   private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-  private val sideEffects = GithubSearchSideEffects(searchRepoItemsUseCase)
+  private val effectsContainer = GithubSearchSideEffectsContainer(searchRepoItemsUseCase)
 
   private val store = viewModelScope.createFlowReduxStore(
     initialState = GithubSearchState.initial(),
-    sideEffects = sideEffects(),
+    sideEffects = effectsContainer.sideEffects,
     reducer = Reducer(flip(GithubSearchAction::reduce))
       .withLogger(githubSearchFlowReduxLogger())
   )
+
+  val termStateFlow: NonNullStateFlowWrapper<String> = savedStateHandle.getStateFlow(TERM_KEY, "").wrap()
+
+  val stateFlow: NonNullStateFlowWrapper<GithubSearchState> = store.stateFlow.wrap()
+
+  val eventFlow: NonNullFlowWrapper<GithubSearchSingleEvent> = effectsContainer.eventFlow.wrap()
+
+  init {
+    store.dispatch(InitialSearchAction(termStateFlow.value))
+  }
 
   @MainThread
   fun dispatch(action: GithubSearchAction): Boolean {
@@ -32,12 +42,6 @@ open class GithubSearchViewModel(
     }
     return store.dispatch(action)
   }
-
-  val termStateFlow: NonNullStateFlowWrapper<String> = savedStateHandle.getStateFlow(TERM_KEY, "").wrap()
-
-  val stateFlow: NonNullStateFlowWrapper<GithubSearchState> = store.stateFlow.wrap()
-
-  val eventFlow: NonNullFlowWrapper<GithubSearchSingleEvent> = sideEffects.eventFlow.wrap()
 
   companion object {
     private const val TERM_KEY = "com.hoc081098.github_search_kmm.presentation.GithubSearchViewModel.term"

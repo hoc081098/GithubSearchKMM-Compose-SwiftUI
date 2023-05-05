@@ -1483,8 +1483,8 @@ class GithubSearchViewModelTest {
     .then { result() }
 
   private companion object {
-    private val EXTRA_DELAY = GithubSearchSideEffects.DEBOUNCE_TIME * 1.5
-    private val SEMI_DELAY = GithubSearchSideEffects.DEBOUNCE_TIME * 0.5
+    private val EXTRA_DELAY = GithubSearchSideEffectsContainer.DEBOUNCE_TIME * 1.5
+    private val SEMI_DELAY = GithubSearchSideEffectsContainer.DEBOUNCE_TIME * 0.5
     private val PAGE_1 = FIRST_PAGE.toInt() + 1
     private val PAGE_2 = PAGE_1 + 1
 

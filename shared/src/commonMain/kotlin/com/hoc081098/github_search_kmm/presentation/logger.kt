@@ -12,7 +12,8 @@ private val GithubSearchAction.debugString: String
     GithubSearchAction.LoadNextPage,
     GithubSearchAction.Retry,
     is GithubSearchAction.Search,
-    is SideEffectAction.TextChanged -> toString()
+    is SideEffectAction.TextChanged,
+    is InitialSearchAction -> toString()
 
     is SideEffectAction.SearchLCE -> arrayOf(
       "term" to term,

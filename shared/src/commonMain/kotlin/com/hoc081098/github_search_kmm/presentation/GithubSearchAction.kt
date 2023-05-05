@@ -24,6 +24,10 @@ sealed interface GithubSearchAction {
   }
 }
 
+internal data class InitialSearchAction(val term: String) : GithubSearchAction {
+  override fun reduce(state: GithubSearchState) = state
+}
+
 internal sealed interface SideEffectAction : GithubSearchAction {
   data class TextChanged(val term: String) : SideEffectAction {
     override fun reduce(state: GithubSearchState) = state
@@ -89,6 +93,7 @@ internal fun GithubSearchAction.toGithubSearchSingleEventOrNull(): GithubSearchS
   when (this) {
     GithubSearchAction.LoadNextPage -> null
     GithubSearchAction.Retry -> null
+    is InitialSearchAction -> null
     is GithubSearchAction.Search -> null
     is SideEffectAction.TextChanged -> null
     is SideEffectAction.SearchLCE -> {
