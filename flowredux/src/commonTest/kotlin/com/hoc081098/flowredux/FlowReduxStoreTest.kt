@@ -513,6 +513,34 @@ class FlowReduxStoreTest {
     cancelled.await()
   }
 
+  @OptIn(ExperimentalStdlibApi::class)
+  @Test
+  fun `use and isClosed`() = runTest {
+    val cancelled = CompletableDeferred<Unit>()
+
+    val store = FlowReduxStore(
+      coroutineContext = createScope().coroutineContext,
+      initialState = 0,
+      sideEffects = L[
+        SideEffect<Int, Int> { _, _, coroutineScope ->
+          coroutineScope.coroutineContext.job.invokeOnCompletion { cancelled.complete(Unit) }
+          emptyFlow()
+        }
+      ],
+      reducer = { state, _ -> state + 1 }
+    )
+
+    store.use {
+      assertTrue { store.dispatch(1) }
+      assertFalse { store.isClosed() }
+    }
+
+    assertFalse { store.dispatch(1) }
+    assertTrue { store.isClosed() }
+
+    cancelled.await()
+  }
+
   @Test
   fun `isClosed when using createFlowReduxStore`() = runTest {
     val scope = createScope()

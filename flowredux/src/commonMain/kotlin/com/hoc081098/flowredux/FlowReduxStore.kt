@@ -6,8 +6,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.job
 
-// TODO: Consider using AutoCloseable since Kotlin 1.8.20
-public sealed interface FlowReduxStore<Action, State> {
+@OptIn(ExperimentalStdlibApi::class)
+public sealed interface FlowReduxStore<Action, State> : AutoCloseable {
   /**
    * The state of this store.
    */
@@ -23,7 +23,7 @@ public sealed interface FlowReduxStore<Action, State> {
    * A closed store will not accept any action anymore, thus state will not change anymore.
    * All [SideEffect]s will be cancelled.
    */
-  public fun close()
+  public override fun close()
 
   /**
    * After calling [close] method, this function will return true.
