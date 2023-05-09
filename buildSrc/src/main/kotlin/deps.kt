@@ -10,11 +10,11 @@ import org.gradle.plugin.use.PluginDependencySpec
 object versions {
   const val spotless = "6.7.2"
   const val ktlint = "0.45.2"
-  const val kotlin = "1.8.10"
+  const val kotlin = "1.8.21"
   const val agp = "7.3.0"
   const val gradleVersions = "0.42.0"
   const val mokoKSwift = "0.6.1"
-  const val googleKsp = "1.8.10-1.0.9"
+  const val googleKsp = "1.8.21-1.0.11"
   const val buildKonfig = "0.13.3"
 }
 
@@ -61,7 +61,7 @@ object deps {
   }
 
   object coroutines {
-    private const val version = "1.7.0-Beta"
+    private const val version = "1.7.0"
 
     const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
     const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
@@ -88,7 +88,7 @@ object deps {
   }
 
   object compose {
-    const val androidxComposeCompilerVersion = "1.4.4"
+    const val androidxComposeCompilerVersion = "1.4.7"
     const val bom = "androidx.compose:compose-bom:2023.04.00"
 
     const val foundation = "androidx.compose.foundation:foundation"
@@ -129,7 +129,7 @@ object deps {
   const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
 
   const val coilCompose = "io.coil-kt:coil-compose:2.3.0"
-  const val flowExt = "io.github.hoc081098:FlowExt:0.6.0"
+  const val flowExt = "io.github.hoc081098:FlowExt:0.7.0-SNAPSHOT"
 
   const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.18.3"
   const val immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
