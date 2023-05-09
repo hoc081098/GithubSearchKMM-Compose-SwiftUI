@@ -154,6 +154,10 @@ internal class GithubSearchSideEffectsContainer(
         }
     }
 
+  /**
+   * Execute [searchRepoItemsUseCase].
+   * @return a [Flow] that emits [SideEffectAction.SearchLCE], causing state changes.
+   */
   private fun executeSearchRepoItemsUseCase(
     term: String,
     nextPage: UInt
