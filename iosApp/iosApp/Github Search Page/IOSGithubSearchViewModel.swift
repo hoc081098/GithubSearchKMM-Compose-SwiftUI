@@ -16,6 +16,7 @@ class IOSGithubSearchViewModel: ObservableObject {
   private let vm: GithubSearchViewModel
 
   @Published private(set) var state: GithubSearchState
+  @Published private(set) var term: String = ""
   let eventPublisher: AnyPublisher<GithubSearchSingleEventKs, Never>
 
   init(vm: GithubSearchViewModel) {
@@ -31,6 +32,13 @@ class IOSGithubSearchViewModel: ObservableObject {
       scope: vm.viewModelScope,
       onValue: { [weak self] in self?.state = $0 }
     )
+
+    self.vm
+      .termStateFlow
+      .asNonNullPublisher(NSString.self)
+      .assertNoFailure()
+      .map { $0 as String }
+      .assign(to: &$term)
   }
 
   @discardableResult

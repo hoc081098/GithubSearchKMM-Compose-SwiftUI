@@ -22,6 +22,14 @@ extension Flow {
   }
 }
 
+private func unconfinedScope() -> CoroutineScope {
+  CoroutineScopeKt.CoroutineScope(
+    context: Dispatchers.shared
+      .Unconfined
+      .plus(context: SupervisorKt.SupervisorJob(parent: nil))
+  )
+}
+
 // MARK: - NonNullFlowPublisher
 private struct NonNullFlowPublisher<T: AnyObject>: Publisher {
   typealias Output = T
@@ -52,14 +60,10 @@ private class NonNullFlowSubscription<T: AnyObject, S: Subscriber>: Subscription
     subscriber: S
   ) {
     self.subscriber = subscriber
-
-    let dispatcher = DIContainer.shared
-      .get(for: AppCoroutineDispatchers.self)
-      .unconfined
-    let scope = CoroutineScopeKt.CoroutineScope(context: dispatcher)
-
-    self.closable = NonNullFlowWrapper(flow).subscribe(
-      scope: scope,
+    
+    let wrapper = NonNullFlowWrapperKt.wrap(flow) as! NonNullFlowWrapper<T>
+    self.closable = wrapper.subscribe(
+      scope: unconfinedScope(),
       onValue: {
         _ = subscriber.receive($0)
       },
@@ -112,14 +116,10 @@ private class NullableFlowSubscription<T: AnyObject, S: Subscriber>: Subscriptio
     subscriber: S
   ) {
     self.subscriber = subscriber
-
-    let dispatcher = DIContainer.shared
-      .get(for: AppCoroutineDispatchers.self)
-      .unconfined
-    let scope = CoroutineScopeKt.CoroutineScope(context: dispatcher)
-
-    self.closable = NullableFlowWrapper(flow).subscribe(
-      scope: scope,
+    
+    let wrapper = NullableFlowWrapperKt.wrap(flow) as! NullableFlowWrapper<T>
+    self.closable = wrapper.subscribe(
+      scope: unconfinedScope(),
       onValue: {
         _ = subscriber.receive($0)
       },

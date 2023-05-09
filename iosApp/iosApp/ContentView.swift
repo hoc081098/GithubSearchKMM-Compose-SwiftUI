@@ -6,33 +6,35 @@ import sharedSwift
 struct ContentView: View {
   @ObservedObject var vm = IOSGithubSearchViewModel(vm: DIContainer.shared.get())
 
-  @State private var term: String = ""
-
   @State private var showingAlert = false
   @State private var event: GithubSearchSingleEventKs?
 
   var body: some View {
     let state = self.vm.state
-    let hasTerm = !state.term
+    let hasSubmittedTerm = !state.term
       .trimmingCharacters(in: .whitespacesAndNewlines)
       .isEmpty
+
+    let termBinding = Binding<String>(
+      get: { self.vm.term },
+      set: { self.vm.dispatch(action: GithubSearchActionSearch(term: $0)) }
+    )
 
     return NavigationView {
       VStack {
         HStack {
           Image(systemName: "magnifyingglass")
 
-          TextField("Search...", text: $term)
-            .onChange(of: term) { self.vm.dispatch(action: GithubSearchActionSearch(term: $0)) }
+          TextField("Search...", text: termBinding)
             .font(.title2)
 
-          Button(action: { term = "" }) {
+          Button(action: { self.vm.dispatch(action: GithubSearchActionSearch(term: "")) }) {
             Image(systemName: "xmark.circle.fill")
-              .opacity(term == "" ? 0 : 1)
+              .opacity(self.vm.term.isEmpty ? 0 : 1)
           }.foregroundColor(.secondary)
         }.padding()
 
-        if hasTerm {
+        if hasSubmittedTerm {
           Text("Search results for '\(state.term)'")
             .font(.subheadline)
         }
@@ -43,7 +45,7 @@ struct ContentView: View {
               isLoading: state.isLoading,
               error: state.error,
               items: state.items,
-              hasTerm: hasTerm,
+              hasTerm: hasSubmittedTerm,
               hasReachedMax: state.hasReachedMax,
               endOfListReached: {
                 self.vm.dispatch(action: GithubSearchActionLoadNextPage.shared)
@@ -55,7 +57,7 @@ struct ContentView: View {
           }
           else if state.items.isEmpty {
             GithubEmptySearch(
-              hasTerm: hasTerm
+              hasTerm: hasSubmittedTerm
             )
           } else {
             GithubRepoItemsList(
@@ -109,7 +111,6 @@ struct ContentView: View {
       )
     }
   }
-
 }
 
 extension RepoItem: Identifiable { }
