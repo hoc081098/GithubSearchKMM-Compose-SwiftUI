@@ -1,6 +1,8 @@
 package com.hoc081098.github_search_kmm.android.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -20,7 +22,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,6 +37,7 @@ import com.hoc081098.github_search_kmm.android.core_ui.AppTheme
 import com.hoc081098.github_search_kmm.android.core_ui.LoadingIndicator
 import com.hoc081098.github_search_kmm.android.core_ui.RetryButton
 import com.hoc081098.github_search_kmm.android.getReadableMessage
+import com.hoc081098.github_search_kmm.android.rememberStableCoroutineScope
 import com.hoc081098.github_search_kmm.domain.model.Owner
 import com.hoc081098.github_search_kmm.domain.model.RepoItem
 import com.hoc081098.github_search_kmm.presentation.DaggerGithubSearchViewModel
@@ -44,6 +46,7 @@ import com.hoc081098.github_search_kmm.presentation.GithubSearchSingleEvent
 import com.hoc081098.github_search_kmm.presentation.GithubSearchState
 import com.hoc081098.github_search_kmm.presentation.GithubSearchState.Companion.FIRST_PAGE
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
@@ -53,11 +56,13 @@ import kotlinx.datetime.Clock
 )
 @Composable
 fun GithubRepoItemsSearchScreen(
-  vm: DaggerGithubSearchViewModel = hiltViewModel()
+  modifier: Modifier = Modifier,
+  vm: DaggerGithubSearchViewModel = hiltViewModel(),
 ) {
   val snackbarHostState = remember { SnackbarHostState() }
+
   val context = LocalContext.current
-  val scope = rememberCoroutineScope()
+  val scope = rememberStableCoroutineScope()
 
   vm.eventFlow.collectInLaunchedEffectWithLifecycle { event ->
     when (event) {
@@ -81,8 +86,12 @@ fun GithubRepoItemsSearchScreen(
   }
 
   val state by vm.stateFlow.collectAsStateWithLifecycle()
+  val term by vm.termStateFlow.collectAsStateWithLifecycle(context = Dispatchers.Main.immediate)
+
+  val dispatch: (GithubSearchAction) -> Unit = remember { { vm.dispatch(it) } }
 
   Scaffold(
+    modifier = modifier,
     topBar = {
       CenterAlignedTopAppBar(
         title = {
@@ -110,10 +119,8 @@ fun GithubRepoItemsSearchScreen(
       ) {
         GithubSearchTermBox(
           modifier = Modifier.fillMaxWidth(),
-          onTermChanged = {
-            vm.dispatch(GithubSearchAction.Search(term = it))
-          },
-          initialTerm = state.term,
+          term = term,
+          onTermChanged = { dispatch(GithubSearchAction.Search(term = it)) },
         )
 
         if (state.term.isNotBlank()) {
@@ -133,61 +140,66 @@ fun GithubRepoItemsSearchScreen(
         GithubRepoItemsSearchContent(
           modifier = Modifier.weight(1f),
           state = state,
-          dispatch = vm::dispatch
+          onRetry = { dispatch(GithubSearchAction.Retry) },
+          onLoadNextPage = { dispatch(GithubSearchAction.LoadNextPage) }
         )
       }
     }
   }
 }
 
+@SuppressLint("ComposeModifierReused")
 @Composable
 internal fun GithubRepoItemsSearchContent(
-  modifier: Modifier = Modifier,
   state: GithubSearchState,
-  dispatch: (GithubSearchAction) -> Unit
+  onRetry: () -> Unit,
+  onLoadNextPage: () -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-  if (state.isFirstPage && state.isLoading) {
-    return LoadingIndicator()
-  }
+  Box(modifier = modifier) {
+    if (state.isFirstPage && state.isLoading) {
+      return LoadingIndicator()
+    }
 
-  val error = state.error
-  if (state.isFirstPage && error != null) {
-    return RetryButton(
-      errorMessage = error.getReadableMessage(),
-      onRetry = { dispatch(GithubSearchAction.Retry) }
-    )
-  }
-
-  if (state.items.isEmpty()) {
-    return Column(
-      modifier = modifier.fillMaxSize(),
-      verticalArrangement = Arrangement.Center,
-      horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-      Text(
-        text = if (state.term.isNotBlank()) {
-          "Empty results"
-        } else {
-          "Search github repositories..."
-        },
-        style = MaterialTheme.typography.titleLarge
+    val error = state.error
+    if (state.isFirstPage && error != null) {
+      return RetryButton(
+        errorMessage = error.getReadableMessage(),
+        onRetry = onRetry
       )
     }
-  }
 
-  GithubRepoItemsList(
-    items = state.items,
-    isLoading = state.isLoading,
-    error = state.error,
-    hasReachedMax = state.hasReachedMax,
-    onRetry = { dispatch(GithubSearchAction.Retry) },
-    onLoadNextPage = { dispatch(GithubSearchAction.LoadNextPage) }
-  )
+    if (state.items.isEmpty()) {
+      return Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+      ) {
+        Text(
+          text = if (state.term.isNotBlank()) {
+            "Empty results"
+          } else {
+            "Search github repositories..."
+          },
+          style = MaterialTheme.typography.titleLarge
+        )
+      }
+    }
+
+    GithubRepoItemsList(
+      items = state.items,
+      isLoading = state.isLoading,
+      error = state.error,
+      hasReachedMax = state.hasReachedMax,
+      onRetry = onRetry,
+      onLoadNextPage = onLoadNextPage
+    )
+  }
 }
 
 @Preview(name = "phone", device = "spec:shape=Normal,width=360,height=640,unit=dp,dpi=480")
 @Composable
-fun SearchScreenContentPreview() {
+private fun SearchScreenContentPreview() {
   AppTheme {
     AppBackground {
       GithubRepoItemsSearchContent(
@@ -219,7 +231,8 @@ fun SearchScreenContentPreview() {
           error = null,
           hasReachedMax = false
         ),
-        dispatch = {}
+        onRetry = {},
+        onLoadNextPage = {},
       )
     }
   }

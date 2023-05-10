@@ -1,10 +1,11 @@
 package com.hoc081098.flowredux
 
+import com.hoc081098.flowext.concatWith
+import com.hoc081098.flowext.neverFlow
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.job
+import kotlinx.coroutines.launch
 
 internal class DefaultFlowReduxStore<Action, State>(
   coroutineContext: CoroutineContext,
@@ -41,7 +43,7 @@ internal class DefaultFlowReduxStore<Action, State>(
             loopbacks[index].consumeAsFlow(),
             stateFlow,
             coroutineScope,
-          )
+          ).concatWith(neverFlow())
         )
       }
       add(_actionChannel.consumeAsFlow())
@@ -69,10 +71,19 @@ internal class DefaultFlowReduxStore<Action, State>(
     .isSuccess
 }
 
-private suspend fun <T> Array<Channel<T>>.sendAll(value: T) = coroutineScope {
-  map { channel ->
-    async { channel.send(value) }
-  }.awaitAll()
-
-  Unit
+@OptIn(DelicateCoroutinesApi::class)
+@Suppress("NOTHING_TO_INLINE")
+private suspend inline fun <T> Array<Channel<T>>.sendAll(value: T) = coroutineScope {
+  for (channel in this@sendAll) {
+    if (channel.isClosedForSend) {
+      continue
+    }
+    launch {
+      try {
+        channel.send(value)
+      } catch (_: Throwable) {
+        // Swallow all exceptions
+      }
+    }
+  }
 }

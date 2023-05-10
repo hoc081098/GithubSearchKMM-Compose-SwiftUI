@@ -7,7 +7,7 @@ Github Repos Search - Kotlin Multiplatform Mobile using Jetpack Compose, SwiftUI
 [![iOS Build CI](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/ios-build.yml/badge.svg)](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/ios-build.yml)
 [![Validate Gradle Wrapper](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/gradle-wrapper-validation.yml/badge.svg)](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/gradle-wrapper-validation.yml)
 [![API](https://img.shields.io/badge/API-23%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=23)
-[![Kotlin](https://img.shields.io/badge/kotlin-1.8.10-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.8.21-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fhoc081098%2FGithubSearchKMM&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![codecov](https://codecov.io/gh/hoc081098/GithubSearchKMM/branch/master/graph/badge.svg?token=qzSAFkj09P)](https://codecov.io/gh/hoc081098/GithubSearchKMM)
@@ -101,44 +101,73 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
 
 ```kotlin
 public sealed interface FlowReduxStore<Action, State> {
-  public val coroutineScope: CoroutineScope
-
+  /**
+   * The state of this store.
+   */
   public val stateFlow: StateFlow<State>
 
-  /** Get streams of actions.
-   *
-   * This [Flow] includes dispatched [Action]s (via [dispatch] function)
-   * and [Action]s returned from [SideEffect]s.
-   */
-  public val actionSharedFlow: SharedFlow<Action>
-
   /**
-   * @return false if cannot dispatch action ([coroutineScope] was cancelled).
+   * @return false if cannot dispatch action (this store was closed).
    */
   public fun dispatch(action: Action): Boolean
+
+  /**
+   * Call this method to close this store.
+   * A closed store will not accept any action anymore, thus state will not change anymore.
+   * All [SideEffect]s will be cancelled.
+   */
+  public fun close()
+
+  /**
+   * After calling [close] method, this function will return true.
+   *
+   * @return true if this store was closed.
+   */
+  public fun isClosed(): Boolean
 }
 ```
 
 ### Multiplatform ViewModel
+
 ```kotlin
 open class GithubSearchViewModel(
   searchRepoItemsUseCase: SearchRepoItemsUseCase,
+  private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+  private val effectsContainer = GithubSearchSideEffectsContainer(searchRepoItemsUseCase)
+
   private val store = viewModelScope.createFlowReduxStore(
     initialState = GithubSearchState.initial(),
-    sideEffects = GithubSearchSideEffects(
-      searchRepoItemsUseCase = searchRepoItemsUseCase,
-    ).sideEffects,
-    reducer = { state, action -> action.reduce(state) }
+    sideEffects = effectsContainer.sideEffects,
+    reducer = Reducer(flip(GithubSearchAction::reduce))
+      .withLogger(githubSearchFlowReduxLogger())
   )
-  private val eventChannel = store.actionSharedFlow
-    .mapNotNull { it.toGithubSearchSingleEventOrNull() }
-    .buffer(Channel.UNLIMITED)
-    .produceIn(viewModelScope)
 
-  fun dispatch(action: GithubSearchAction) = store.dispatch(action)
-  val stateFlow: StateFlow<GithubSearchState> by store::stateFlow
-  val eventFlow: Flow<GithubSearchSingleEvent> get() = eventChannel.receiveAsFlow()
+  val termStateFlow: NonNullStateFlowWrapper<String> = savedStateHandle.getStateFlow(TERM_KEY, "").wrap()
+  val stateFlow: NonNullStateFlowWrapper<GithubSearchState> = store.stateFlow.wrap()
+  val eventFlow: NonNullFlowWrapper<GithubSearchSingleEvent> = effectsContainer.eventFlow.wrap()
+
+  init {
+    store.dispatch(InitialSearchAction(termStateFlow.value))
+  }
+
+  @MainThread
+  fun dispatch(action: GithubSearchAction): Boolean {
+    if (action is GithubSearchAction.Search) {
+      savedStateHandle[TERM_KEY] = action.term
+    }
+    return store.dispatch(action)
+  }
+
+  companion object {
+    private const val TERM_KEY = "com.hoc081098.github_search_kmm.presentation.GithubSearchViewModel.term"
+
+    /**
+     * Used by non-Android platforms.
+     */
+    fun create(searchRepoItemsUseCase: SearchRepoItemsUseCase): GithubSearchViewModel =
+      GithubSearchViewModel(searchRepoItemsUseCase, SavedStateHandle())
+  }
 }
 ```
 
@@ -150,8 +179,10 @@ Extends `GithubSearchViewModel` to use `Dagger Constructor Injection`.
 
 ```kotlin
 @HiltViewModel
-class DaggerGithubSearchViewModel @Inject constructor(searchRepoItemsUseCase: SearchRepoItemsUseCase) :
-  GithubSearchViewModel(searchRepoItemsUseCase)
+class DaggerGithubSearchViewModel @Inject constructor(
+  searchRepoItemsUseCase: SearchRepoItemsUseCase,
+  savedStateHandle: SavedStateHandle,
+) : GithubSearchViewModel(searchRepoItemsUseCase, savedStateHandle)
 ```
 
 #### iOS
@@ -169,6 +200,7 @@ class IOSGithubSearchViewModel: ObservableObject {
   private let vm: GithubSearchViewModel
 
   @Published private(set) var state: GithubSearchState
+  @Published private(set) var term: String = ""
   let eventPublisher: AnyPublisher<GithubSearchSingleEventKs, Never>
 
   init(vm: GithubSearchViewModel) {
@@ -179,11 +211,18 @@ class IOSGithubSearchViewModel: ObservableObject {
       .map(GithubSearchSingleEventKs.init)
       .eraseToAnyPublisher()
 
-    self.state = vm.stateFlow.typedValue()
-    vm.stateFlow.subscribeNonNullFlow(
+    self.state = vm.stateFlow.value
+    vm.stateFlow.subscribe(
       scope: vm.viewModelScope,
       onValue: { [weak self] in self?.state = $0 }
     )
+
+    self.vm
+      .termStateFlow
+      .asNonNullPublisher(NSString.self)
+      .assertNoFailure()
+      .map { $0 as String }
+      .assign(to: &$term)
   }
 
   @discardableResult
@@ -242,14 +281,14 @@ class IOSGithubSearchViewModel: ObservableObject {
 --------------------------------------------------------------------------------
  Language             Files        Lines        Blank      Comment         Code
 --------------------------------------------------------------------------------
- Kotlin                  96         7111          863          398         5850
+ Kotlin                 105         7647          936          439         6272
  JSON                     7         3938            0            0         3938
- Swift                   16          857          110           98          649
- Markdown                 1          255           47            0          208
- Bourne Shell             2          245           28          110          107
- Batch                    1           91           21            0           70
- XML                      7           71            6            0           65
+ Swift                   16          903          118          102          683
+ Markdown                 1          294           54            0          240
+ Bourne Shell             2          250           28          116          106
+ Batch                    1           92           21            0           71
+ XML                      6           69            6            0           63
 --------------------------------------------------------------------------------
- Total                  130        12568         1075          606        10887
+ Total                  138        13193         1163          657        11373
 --------------------------------------------------------------------------------
 ```

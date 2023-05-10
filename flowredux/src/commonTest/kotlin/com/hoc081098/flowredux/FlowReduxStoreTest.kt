@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
@@ -510,6 +511,49 @@ class FlowReduxStoreTest {
     assertTrue { store.isClosed() }
 
     cancelled.await()
+  }
+
+  @OptIn(ExperimentalStdlibApi::class)
+  @Test
+  fun `use and isClosed`() = runTest {
+    val cancelled = CompletableDeferred<Unit>()
+
+    val store = FlowReduxStore(
+      coroutineContext = createScope().coroutineContext,
+      initialState = 0,
+      sideEffects = L[
+        SideEffect<Int, Int> { _, _, coroutineScope ->
+          coroutineScope.coroutineContext.job.invokeOnCompletion { cancelled.complete(Unit) }
+          emptyFlow()
+        }
+      ],
+      reducer = { state, _ -> state + 1 }
+    )
+
+    store.use {
+      assertTrue { store.dispatch(1) }
+      assertFalse { store.isClosed() }
+    }
+
+    assertFalse { store.dispatch(1) }
+    assertTrue { store.isClosed() }
+
+    cancelled.await()
+  }
+
+  @Test
+  fun `isClosed when using createFlowReduxStore`() = runTest {
+    val scope = createScope()
+
+    val (store) = scope.createTestFlowReduxStore<Int, String>(
+      initialState = "",
+      sideEffects = L(),
+      reducer = { state, action -> state + action }
+    )
+
+    assertFalse { store.isClosed() }
+    scope.coroutineContext.job.cancelAndJoin()
+    assertTrue { store.isClosed() }
   }
 
   @Test

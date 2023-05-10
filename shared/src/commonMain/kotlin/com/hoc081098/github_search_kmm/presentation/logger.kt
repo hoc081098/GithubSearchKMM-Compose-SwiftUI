@@ -12,7 +12,8 @@ private val GithubSearchAction.debugString: String
     GithubSearchAction.LoadNextPage,
     GithubSearchAction.Retry,
     is GithubSearchAction.Search,
-    is SideEffectAction.TextChanged -> toString()
+    is SideEffectAction.TextChanged,
+    is InitialSearchAction -> toString()
 
     is SideEffectAction.SearchLCE -> arrayOf(
       "term" to term,
@@ -48,6 +49,10 @@ private inline val GithubSearchState.debugString: String
     separator = ", ",
   ) { (k, v) -> "$k: $v" }
 
+/**
+ * In debug mode, log every action and state change.
+ * In release mode, do nothing.
+ */
 internal fun githubSearchFlowReduxLogger(): FlowReduxLogger<GithubSearchAction, GithubSearchState> =
   if (isDebug()) {
     FlowReduxLogger { action, prevState, nextState ->

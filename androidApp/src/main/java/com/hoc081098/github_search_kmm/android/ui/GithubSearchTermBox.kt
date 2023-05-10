@@ -15,7 +15,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,12 +29,10 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun GithubSearchTermBox(
-  modifier: Modifier = Modifier,
-  initialTerm: String,
+  term: String,
   onTermChanged: (String) -> Unit,
+  modifier: Modifier = Modifier,
 ) {
-  var term by remember { mutableStateOf(initialTerm) }
-  val isClearIconVisible by remember { derivedStateOf { term.isNotEmpty() } }
   val localFocusManager = LocalFocusManager.current
 
   TextField(
@@ -45,10 +42,7 @@ internal fun GithubSearchTermBox(
       bottom = 16.dp,
     ),
     value = term,
-    onValueChange = {
-      term = it
-      onTermChanged(it)
-    },
+    onValueChange = onTermChanged,
     label = { Text("Search...") },
     leadingIcon = {
       Icon(
@@ -58,12 +52,12 @@ internal fun GithubSearchTermBox(
     },
     trailingIcon = {
       AnimatedVisibility(
-        visible = isClearIconVisible,
+        visible = term.isNotEmpty(),
         enter = fadeIn(),
         exit = fadeOut()
       ) {
         IconButton(
-          onClick = { term = "" }
+          onClick = { onTermChanged("") }
         ) {
           Icon(
             imageVector = Icons.Outlined.Clear,
@@ -88,9 +82,10 @@ internal fun GithubSearchTermBox(
 
 @Preview
 @Composable
-fun SearchTermBoxPreview() {
+private fun SearchTermBoxPreview() {
+  var term by remember { mutableStateOf("Test") }
   GithubSearchTermBox(
-    onTermChanged = {},
-    initialTerm = "Test",
+    onTermChanged = { term = it },
+    term = term,
   )
 }

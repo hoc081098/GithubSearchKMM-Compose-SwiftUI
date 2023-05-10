@@ -14,6 +14,7 @@ import com.hoc081098.github_search_kmm.domain.repository.RepoItemRepository
 import com.hoc081098.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
 import com.hoc081098.github_search_kmm.genRepoItems
 import com.hoc081098.github_search_kmm.presentation.GithubSearchState.Companion.FIRST_PAGE
+import com.hoc081098.kmp.viewmodel.SavedStateHandle
 import io.github.aakira.napier.Napier
 import io.mockative.Mock
 import io.mockative.given
@@ -58,6 +59,7 @@ class GithubSearchViewModelTest {
     searchRepoItemsUseCase = SearchRepoItemsUseCase(repoItemRepository)
     vm = GithubSearchViewModel(
       searchRepoItemsUseCase = searchRepoItemsUseCase,
+      savedStateHandle = SavedStateHandle(),
     )
   }
 
@@ -1481,8 +1483,8 @@ class GithubSearchViewModelTest {
     .then { result() }
 
   private companion object {
-    private val EXTRA_DELAY = GithubSearchSideEffects.DEBOUNCE_TIME * 1.5
-    private val SEMI_DELAY = GithubSearchSideEffects.DEBOUNCE_TIME * 0.5
+    private val EXTRA_DELAY = GithubSearchSideEffectsContainer.DEBOUNCE_TIME * 1.5
+    private val SEMI_DELAY = GithubSearchSideEffectsContainer.DEBOUNCE_TIME * 0.5
     private val PAGE_1 = FIRST_PAGE.toInt() + 1
     private val PAGE_2 = PAGE_1 + 1
 

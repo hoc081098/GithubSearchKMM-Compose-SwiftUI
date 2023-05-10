@@ -4,6 +4,7 @@ import com.hoc081098.flowext.flatMapFirst
 import com.hoc081098.flowext.flowFromSuspend
 import com.hoc081098.flowext.takeUntil
 import com.hoc081098.flowredux.SideEffect
+import com.hoc081098.flowredux.allActionsToOutputChannelSideEffect
 import com.hoc081098.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
 import com.hoc081098.github_search_kmm.presentation.GithubSearchState.Companion.FIRST_PAGE
 import com.hoc081098.github_search_kmm.utils.eitherLceFlow
@@ -18,22 +19,38 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.take
 
 @Suppress("NOTHING_TO_INLINE")
-internal class GithubSearchSideEffects(
+internal class GithubSearchSideEffectsContainer(
   private val searchRepoItemsUseCase: SearchRepoItemsUseCase,
 ) {
-  inline val sideEffects
+  private val sendSingleEventSideEffect = allActionsToOutputChannelSideEffect<GithubSearchAction,
+    GithubSearchState,
+    GithubSearchSingleEvent> { it.toGithubSearchSingleEventOrNull() }
+
+  internal val eventFlow get() = sendSingleEventSideEffect.second.receiveAsFlow()
+
+  /**
+   * @return A list of [SideEffect]s contained in this class.
+   */
+  internal val sideEffects
     get() = listOf(
       // [Search]s -> [TextChanged]s
       searchActionToTextChangedAction(),
+      // [InitialSearch]s -> [TextChanged]s
+      initialSearchToTextChangedAction(),
       // [TextChanged]s -> [SearchLCE]s
-      search(),
+      performSearch(),
       // [LoadNextPage]s -> [SearchLCE]s
-      nextPage(),
+      loadNextPage(),
       // [Retry] -> [SearchLCE]s
       retry(),
+      // Send single event
+      sendSingleEventSideEffect.first,
     )
 
   /**
@@ -51,11 +68,27 @@ internal class GithubSearchSideEffects(
     }
 
   /**
+   * [InitialSearchAction] to [SideEffectAction.TextChanged].
+   */
+  private inline fun initialSearchToTextChangedAction() =
+    SideEffect<GithubSearchAction, GithubSearchState> { actionFlow, _, _ ->
+      actionFlow
+        .filterIsInstance<InitialSearchAction>()
+        .mapNotNull { action ->
+          action
+            .term
+            .takeIf { it.isNotBlank() }
+        }
+        .take(1)
+        .map { SideEffectAction.TextChanged(term = it) }
+    }
+
+  /**
    * Load first page after text changed.
    *
    * [SideEffectAction.TextChanged]s to [SideEffectAction.SearchLCE]s
    */
-  private inline fun search() =
+  private inline fun performSearch() =
     SideEffect<GithubSearchAction, GithubSearchState> { actionFlow, _, _ ->
       actionFlow
         .filterIsInstance<SideEffectAction.TextChanged>()
@@ -72,7 +105,7 @@ internal class GithubSearchSideEffects(
    *
    * [GithubSearchAction.LoadNextPage]s to [SideEffectAction.SearchLCE]s
    */
-  private inline fun nextPage() =
+  private inline fun loadNextPage() =
     SideEffect<GithubSearchAction, GithubSearchState> { actionFlow, stateFlow, coroutineScope ->
       val actionSharedFlow = actionFlow.shareIn(coroutineScope, WhileSubscribed())
 
@@ -121,6 +154,10 @@ internal class GithubSearchSideEffects(
         }
     }
 
+  /**
+   * Execute [searchRepoItemsUseCase].
+   * @return a [Flow] that emits [SideEffectAction.SearchLCE], causing state changes.
+   */
   private fun executeSearchRepoItemsUseCase(
     term: String,
     nextPage: UInt
