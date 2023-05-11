@@ -159,7 +159,7 @@ object deps {
       }
     }
 
-    const val mockative = "io.mockative:mockative:1.4.0"
+    const val mockative = "io.mockative:mockative:1.4.1"
     const val mockativeProcessor = "io.mockative:mockative-processor:1.4.0"
     const val turbine = "app.cash.turbine:turbine:0.12.3"
   }
