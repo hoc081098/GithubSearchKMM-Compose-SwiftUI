@@ -128,7 +128,7 @@ object deps {
   const val mokoKSwiftRuntime = "dev.icerock.moko:kswift-runtime:${versions.mokoKSwift}"
   const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
 
-  const val coilCompose = "io.coil-kt:coil-compose:2.3.0"
+  const val coilCompose = "io.coil-kt:coil-compose:2.4.0"
   const val flowExt = "io.github.hoc081098:FlowExt:0.7.0-SNAPSHOT"
 
   const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.18.3"
