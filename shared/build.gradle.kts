@@ -18,7 +18,7 @@ plugins {
 version = appConfig.versionName
 
 kotlin {
-  android()
+  androidTarget()
   iosX64()
   iosArm64()
   iosSimulatorArm64()
@@ -102,6 +102,8 @@ kotlin {
     }
 
     val androidMain by getting {
+      dependsOn(commonMain)
+
       dependencies {
         implementation(deps.ktor.okHttp)
         implementation(deps.dagger.hiltAndroid)
@@ -109,7 +111,9 @@ kotlin {
         implementation(platform(deps.compose.bom))
       }
     }
-    val androidTest by getting {
+    val androidUnitTest by getting {
+      dependsOn(commonTest)
+
       dependencies {
         implementation(kotlin("test"))
         implementation(kotlin("test-junit"))
