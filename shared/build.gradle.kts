@@ -237,6 +237,10 @@ kover {
   }
 }
 
+kapt {
+  correctErrorTypes = true
+}
+
 tasks.register<Copy>("copyiOSTestResources") {
   from("src/commonTest/resources")
   into("build/bin/iosX64/debugTest/resources")
