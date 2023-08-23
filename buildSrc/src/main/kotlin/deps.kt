@@ -10,7 +10,7 @@ import org.gradle.plugin.use.PluginDependencySpec
 object versions {
   const val spotless = "6.7.2"
   const val ktlint = "0.45.2"
-  const val kotlin = "1.8.21"
+  const val kotlin = "1.9.10"
   const val agp = "7.3.0"
   const val gradleVersions = "0.42.0"
   const val mokoKSwift = "0.6.1"
