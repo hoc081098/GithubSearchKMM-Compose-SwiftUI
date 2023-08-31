@@ -75,7 +75,7 @@ object deps {
   }
 
   object ktor {
-    private const val version = "2.2.4"
+    private const val version = "2.3.4"
     const val core = "io.ktor:ktor-client-core:$version"
     const val clientJson = "io.ktor:ktor-client-json:$version"
     const val logging = "io.ktor:ktor-client-logging:$version"
