@@ -2,6 +2,7 @@ package com.hoc081098.github_search_kmm.utils
 
 import io.github.aakira.napier.Napier
 import kotlin.native.internal.ObjCErrorException
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.convert
 import platform.Foundation.NSError
 import platform.Foundation.NSLocalizedDescriptionKey
@@ -15,6 +16,7 @@ import platform.darwin.NSInteger
  *
  * The Kotlin throwable can be retrieved from the [NSError.userInfo] with the key `KotlinException`.
  */
+@OptIn(ExperimentalForeignApi::class)
 fun Throwable.asNSError(): NSError {
   val userInfo = buildMap<Any?, Any> {
     this["KotlinException"] = this@asNSError
@@ -32,6 +34,7 @@ fun Throwable.asNSError(): NSError {
 /**
  * Indicates if `this` [NSError] represents a [Throwable].
  */
+@OptIn(ExperimentalForeignApi::class)
 val NSError.isKotlinThrowable: Boolean
   get() {
     return domain == "KotlinException" &&
