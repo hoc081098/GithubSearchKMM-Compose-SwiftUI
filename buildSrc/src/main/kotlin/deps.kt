@@ -10,22 +10,21 @@ import org.gradle.plugin.use.PluginDependencySpec
 object versions {
   const val spotless = "6.7.2"
   const val ktlint = "0.45.2"
-  const val kotlin = "1.9.0"
+  const val kotlin = "1.9.10"
   const val agp = "8.1.0"
   const val gradleVersions = "0.42.0"
   const val mokoKSwift = "0.6.1"
-  const val googleKsp = "1.9.0-1.0.13"
+  const val googleKsp = "1.9.10-1.0.13"
   const val buildKonfig = "0.13.3"
 }
 
 object appConfig {
   const val applicationId = "com.hoc081098.github_search_kmm.android"
 
-  const val compileSdkVersion = 33
-  const val buildToolsVersion = "33.0.0"
+  const val compileSdkVersion = 34
 
   const val minSdkVersion = 23
-  const val targetSdkVersion = 33
+  const val targetSdkVersion = 34
 
   private const val MAJOR = 0
   private const val MINOR = 0
@@ -69,13 +68,13 @@ object deps {
   }
 
   object serialization {
-    private const val version = "1.5.1"
+    private const val version = "1.6.0"
     const val json = "org.jetbrains.kotlinx:kotlinx-serialization-json:$version"
     const val core = "org.jetbrains.kotlinx:kotlinx-serialization-core:$version"
   }
 
   object ktor {
-    private const val version = "2.3.3"
+    private const val version = "2.3.4"
     const val core = "io.ktor:ktor-client-core:$version"
     const val clientJson = "io.ktor:ktor-client-json:$version"
     const val logging = "io.ktor:ktor-client-logging:$version"
@@ -88,8 +87,8 @@ object deps {
   }
 
   object compose {
-    const val androidxComposeCompilerVersion = "1.5.1"
-    const val bom = "androidx.compose:compose-bom:2023.06.01"
+    const val androidxComposeCompilerVersion = "1.5.3"
+    const val bom = "androidx.compose:compose-bom:2023.09.01"
 
     const val foundation = "androidx.compose.foundation:foundation"
     const val foundationLayout = "androidx.compose.foundation:foundation-layout"
@@ -106,7 +105,7 @@ object deps {
   }
 
   object koin {
-    private const val version = "3.4.3"
+    private const val version = "3.5.0"
 
     const val core = "io.insert-koin:koin-core:$version"
     const val testJunit4 = "io.insert-koin:koin-test-junit4:$version"
@@ -120,22 +119,22 @@ object deps {
   }
 
   object kmpViewModel {
-    private const val version = "0.4.0"
+    private const val version = "0.5.0"
     const val core = "io.github.hoc081098:kmp-viewmodel:$version"
     const val savedState = "io.github.hoc081098:kmp-viewmodel-savedstate:$version"
   }
 
   const val mokoKSwiftRuntime = "dev.icerock.moko:kswift-runtime:${versions.mokoKSwift}"
-  const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
+  const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.1"
 
   const val coilCompose = "io.coil-kt:coil-compose:2.4.0"
   const val flowExt = "io.github.hoc081098:FlowExt:0.7.1"
 
-  const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.21.0"
+  const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.22.0"
   const val immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
 
   object arrow {
-    private const val version = "1.2.0"
+    private const val version = "1.2.1"
     const val core = "io.arrow-kt:arrow-core:$version"
     const val fx = "io.arrow-kt:arrow-fx-coroutines:$version"
   }
@@ -159,9 +158,9 @@ object deps {
       }
     }
 
-    const val mockative = "io.mockative:mockative:1.4.1"
-    const val mockativeProcessor = "io.mockative:mockative-processor:1.4.1"
-    const val turbine = "app.cash.turbine:turbine:0.12.3"
+    const val mockative = "io.mockative:mockative:2.0.1"
+    const val mockativeProcessor = "io.mockative:mockative-processor:2.0.1"
+    const val turbine = "app.cash.turbine:turbine:1.0.0"
   }
 }
 

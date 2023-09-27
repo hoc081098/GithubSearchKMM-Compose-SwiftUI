@@ -151,7 +151,6 @@ android {
 
   defaultConfig {
     minSdk = appConfig.minSdkVersion
-    targetSdk = appConfig.targetSdkVersion
   }
 
   compileOptions {
@@ -177,15 +176,14 @@ android {
       }
     }
   }
+
+  buildFeatures {
+    buildConfig = true
+  }
 }
 
 hilt {
   enableAggregatingTask = true
-}
-
-dependencies {
-  coreLibraryDesugaring(deps.desugarJdkLibs)
-  add("ksp", deps.dagger.hiltAndroidCompiler)
 }
 
 kswift {
@@ -213,6 +211,12 @@ tasks.withType<KotlinNativeLink>()
   }
 
 dependencies {
+  coreLibraryDesugaring(deps.desugarJdkLibs)
+  add("kspCommonMainMetadata", deps.dagger.hiltAndroidCompiler)
+  add("kspAndroid", deps.dagger.hiltAndroidCompiler)
+}
+
+dependencies {
   configurations
     .filter { it.name.startsWith("ksp") && it.name.contains("Test") }
     .forEach {
@@ -233,13 +237,17 @@ kover {
   }
 }
 
-kapt {
-  correctErrorTypes = true
-}
-
 tasks.register<Copy>("copyiOSTestResources") {
   from("src/commonTest/resources")
   into("build/bin/iosX64/debugTest/resources")
 }
 
 tasks.findByName("iosX64Test")!!.dependsOn("copyiOSTestResources")
+
+tasks
+  .withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>()
+  .configureEach {
+    compilerOptions
+      .languageVersion
+      .set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
+  }
