@@ -17,6 +17,16 @@ plugins {
 version = appConfig.versionName
 
 kotlin {
+  jvmToolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+    vendor = JvmVendorSpec.AZUL
+  }
+  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEach {
+    compilerOptions {
+      jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+    }
+  }
+
   androidTarget()
   iosX64()
   iosArm64()
@@ -171,7 +181,7 @@ android {
       all {
         if (it.name == "testDebugUnitTest") {
           it.extensions.configure<kotlinx.kover.api.KoverTaskExtension> {
-            isDisabled.set(false)
+            isDisabled = false
             // excludes.addAll(excludedClasses)
           }
         }
@@ -249,7 +259,5 @@ tasks.findByName("iosX64Test")!!.dependsOn("copyiOSTestResources")
 tasks
   .withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>()
   .configureEach {
-    compilerOptions
-      .languageVersion
-      .set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9)
+    compilerOptions.languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
   }

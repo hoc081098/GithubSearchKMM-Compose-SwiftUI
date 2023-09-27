@@ -9,32 +9,38 @@ plugins {
 }
 
 kotlin {
-  explicitApi()
-
-  jvm {
-    compilations.all {
-      kotlinOptions.jvmTarget = VERSION_11.toString()
+  jvmToolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+    vendor = JvmVendorSpec.AZUL
+  }
+  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEach {
+    compilerOptions {
+      jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
     }
   }
-//  js(BOTH) {
-//    compilations.all {
-//      kotlinOptions {
-//        sourceMap = true
-//        moduleKind = "umd"
-//        metaInfo = true
-//      }
-//    }
-//    browser {
-//      testTask {
-//        useMocha()
-//      }
-//    }
-//    nodejs {
-//      testTask {
-//        useMocha()
-//      }
-//    }
-//  }
+
+  explicitApi()
+
+  jvm()
+  js(IR) {
+    compilations.all {
+      kotlinOptions {
+        sourceMap = true
+        moduleKind = "umd"
+        metaInfo = true
+      }
+    }
+    browser {
+      testTask(Action {
+        useMocha()
+      })
+    }
+    nodejs {
+      testTask(Action {
+        useMocha()
+      })
+    }
+  }
 
   iosArm64()
   iosArm32()
@@ -81,14 +87,14 @@ kotlin {
         implementation(kotlin("test-junit"))
       }
     }
-//    val jsMain by getting {
-//      dependsOn(commonMain)
-//    }
-//    val jsTest by getting {
-//      dependencies {
-//        implementation(kotlin("test-js"))
-//      }
-//    }
+    val jsMain by getting {
+      dependsOn(commonMain)
+    }
+    val jsTest by getting {
+      dependencies {
+        implementation(kotlin("test-js"))
+      }
+    }
 
     val nativeMain by creating {
       dependsOn(commonMain)
