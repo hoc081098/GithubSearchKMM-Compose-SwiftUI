@@ -11,7 +11,7 @@ object versions {
   const val spotless = "6.7.2"
   const val ktlint = "0.45.2"
   const val kotlin = "1.9.0"
-  const val agp = "7.3.0"
+  const val agp = "8.1.0"
   const val gradleVersions = "0.42.0"
   const val mokoKSwift = "0.6.1"
   const val googleKsp = "1.9.0-1.0.13"
@@ -114,7 +114,7 @@ object deps {
   }
 
   object dagger {
-    const val version = "2.47"
+    const val version = "2.48"
     const val hiltAndroid = "com.google.dagger:hilt-android:$version"
     const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:$version"
   }

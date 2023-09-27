@@ -8,7 +8,6 @@ plugins {
   kotlinNativeCocoapods
   androidLib
   kotlinxSerialization
-  kotlinKapt
   daggerHiltAndroid
   mokoKSwift
   googleKsp
@@ -168,11 +167,6 @@ android {
     targetCompatibility = VERSION_11
   }
 
-  dependencies {
-    coreLibraryDesugaring(deps.desugarJdkLibs)
-    "kapt"(deps.dagger.hiltAndroidCompiler)
-  }
-
   testOptions {
     unitTests {
       isReturnDefaultValues = true
@@ -190,6 +184,11 @@ android {
 
 hilt {
   enableAggregatingTask = true
+}
+
+dependencies {
+  coreLibraryDesugaring(deps.desugarJdkLibs)
+  add("ksp", deps.dagger.hiltAndroidCompiler)
 }
 
 kswift {
