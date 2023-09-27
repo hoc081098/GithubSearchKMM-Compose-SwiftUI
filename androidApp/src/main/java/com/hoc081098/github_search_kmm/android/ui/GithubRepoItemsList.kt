@@ -17,10 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.hoc081098.flowext.ThrottleConfiguration
 import com.hoc081098.flowext.throttleTime
-import com.hoc081098.github_search_kmm.android.StableWrapper
+import com.hoc081098.github_search_kmm.android.compose_utils.StableWrapper
 import com.hoc081098.github_search_kmm.android.core_ui.LoadingIndicator
 import com.hoc081098.github_search_kmm.android.core_ui.RetryButton
-import com.hoc081098.github_search_kmm.android.getReadableMessage
+import com.hoc081098.github_search_kmm.android.core_ui.getReadableMessage
 import com.hoc081098.github_search_kmm.domain.model.AppError
 import com.hoc081098.github_search_kmm.domain.model.RepoItem
 import io.github.aakira.napier.Napier

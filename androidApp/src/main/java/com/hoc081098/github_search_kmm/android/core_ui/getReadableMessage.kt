@@ -1,9 +1,10 @@
-package com.hoc081098.github_search_kmm.android
+package com.hoc081098.github_search_kmm.android.core_ui
 
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.platform.LocalContext
+import com.hoc081098.github_search_kmm.android.R
 import com.hoc081098.github_search_kmm.domain.model.AppError
 
 @Composable
