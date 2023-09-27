@@ -1,10 +1,10 @@
 package com.hoc081098.github_search_kmm.data.remote
 
-import com.hoc081098.github_search_kmm.TestAntilog
-import com.hoc081098.github_search_kmm.TestAppCoroutineDispatchers
 import com.hoc081098.github_search_kmm.domain.model.ArgbColor
-import com.hoc081098.github_search_kmm.getOrThrow
-import com.hoc081098.github_search_kmm.leftValueOrThrow
+import com.hoc081098.github_search_kmm.test_utils.TestAntilog
+import com.hoc081098.github_search_kmm.test_utils.TestAppCoroutineDispatchers
+import com.hoc081098.github_search_kmm.test_utils.getOrThrow
+import com.hoc081098.github_search_kmm.test_utils.leftValueOrThrow
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine

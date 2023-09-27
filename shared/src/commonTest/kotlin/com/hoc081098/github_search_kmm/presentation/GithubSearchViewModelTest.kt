@@ -6,21 +6,24 @@ import app.cash.turbine.testIn
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
-import com.hoc081098.github_search_kmm.TestAntilog
-import com.hoc081098.github_search_kmm.TestAppCoroutineDispatchers
 import com.hoc081098.github_search_kmm.domain.model.AppError
 import com.hoc081098.github_search_kmm.domain.model.RepoItem
 import com.hoc081098.github_search_kmm.domain.repository.RepoItemRepository
 import com.hoc081098.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
-import com.hoc081098.github_search_kmm.genRepoItems
 import com.hoc081098.github_search_kmm.presentation.GithubSearchState.Companion.FIRST_PAGE
+import com.hoc081098.github_search_kmm.test_utils.TestAntilog
+import com.hoc081098.github_search_kmm.test_utils.TestAppCoroutineDispatchers
+import com.hoc081098.github_search_kmm.test_utils.genRepoItems
+import com.hoc081098.github_search_kmm.test_utils.invokesWithoutArgs
 import com.hoc081098.kmp.viewmodel.SavedStateHandle
 import io.github.aakira.napier.Napier
 import io.mockative.Mock
-import io.mockative.given
+import io.mockative.coEvery
+import io.mockative.coVerify
 import io.mockative.mock
 import io.mockative.once
-import io.mockative.verify
+import io.mockative.verifyNoUnmetExpectations
+import io.mockative.verifyNoUnverifiedExpectations
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -65,8 +68,8 @@ class GithubSearchViewModelTest {
 
   @AfterTest
   fun teardown() {
-    verify(repoItemRepository).hasNoUnverifiedExpectations()
-    verify(repoItemRepository).hasNoUnmetExpectations()
+    verifyNoUnverifiedExpectations(repoItemRepository)
+    verifyNoUnmetExpectations(repoItemRepository)
 
     Dispatchers.resetMain()
     Napier.takeLogarithm(antilog)
@@ -179,8 +182,7 @@ class GithubSearchViewModelTest {
         expectNoEvents()
       }
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItemsUseCase(term = finalTerm, page = page) }
+      coVerify { repoItemRepository.searchRepoItems(term = finalTerm, page = page) }
         .wasInvoked(exactly = once)
     }
 
@@ -228,8 +230,7 @@ class GithubSearchViewModelTest {
         expectNoEvents()
       }
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(term, page) }
+      coVerify { repoItemRepository.searchRepoItems(term, page) }
         .wasInvoked(exactly = once)
     }
 
@@ -279,8 +280,7 @@ class GithubSearchViewModelTest {
       }
       eventsTurbine.assertEvents(GithubSearchSingleEvent.ReachedMaxItems)
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(term, page) }
+      coVerify { repoItemRepository.searchRepoItems(term, page) }
         .wasInvoked(exactly = once)
     }
 
@@ -332,8 +332,7 @@ class GithubSearchViewModelTest {
       }
       eventsTurbine.assertEvents(GithubSearchSingleEvent.SearchFailure(networkException))
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(term, page) }
+      coVerify { repoItemRepository.searchRepoItems(term, page) }
         .wasInvoked(exactly = once)
     }
 
@@ -387,8 +386,7 @@ class GithubSearchViewModelTest {
         expectNoEvents()
       }
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(finalTerm, page) }
+      coVerify { repoItemRepository.searchRepoItems(finalTerm, page) }
         .wasInvoked(exactly = once)
     }
 
@@ -445,8 +443,7 @@ class GithubSearchViewModelTest {
       }
       eventsTurbine.assertEvents(GithubSearchSingleEvent.ReachedMaxItems)
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(finalTerm, page) }
+      coVerify { repoItemRepository.searchRepoItems(finalTerm, page) }
         .wasInvoked(exactly = once)
     }
 
@@ -503,8 +500,7 @@ class GithubSearchViewModelTest {
       }
       eventsTurbine.assertEvents(GithubSearchSingleEvent.SearchFailure(networkException))
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(finalTerm, page) }
+      coVerify { repoItemRepository.searchRepoItems(finalTerm, page) }
         .wasInvoked(exactly = once)
     }
 
@@ -575,11 +571,9 @@ class GithubSearchViewModelTest {
         expectNoEvents()
       }
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(query1, page) }
+      coVerify { repoItemRepository.searchRepoItems(query1, page) }
         .wasInvoked(exactly = once)
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(query2, page) }
+      coVerify { repoItemRepository.searchRepoItems(query2, page) }
         .wasInvoked(exactly = once)
     }
 
@@ -666,12 +660,10 @@ class GithubSearchViewModelTest {
         expectNoEvents()
       }
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(term, PAGE_2) }
+      coVerify { repoItemRepository.searchRepoItems(term, PAGE_2) }
         .wasInvoked(exactly = once)
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(nextTerm, PAGE_1) }
+      coVerify { repoItemRepository.searchRepoItems(nextTerm, PAGE_1) }
         .wasInvoked(exactly = once)
     }
 
@@ -719,8 +711,7 @@ class GithubSearchViewModelTest {
         expectNoEvents()
       }
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(term, PAGE_2) }
+      coVerify { repoItemRepository.searchRepoItems(term, PAGE_2) }
         .wasInvoked(exactly = once)
     }
 
@@ -770,8 +761,7 @@ class GithubSearchViewModelTest {
       }
       eventsTurbine.assertEvents(GithubSearchSingleEvent.ReachedMaxItems)
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(term, PAGE_2) }
+      coVerify { repoItemRepository.searchRepoItems(term, PAGE_2) }
         .wasInvoked(exactly = once)
     }
 
@@ -822,8 +812,7 @@ class GithubSearchViewModelTest {
       }
       eventsTurbine.assertEvents(GithubSearchSingleEvent.SearchFailure(nextPageError))
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(term, PAGE_2) }
+      coVerify { repoItemRepository.searchRepoItems(term, PAGE_2) }
         .wasInvoked(exactly = once)
     }
 
@@ -879,8 +868,7 @@ class GithubSearchViewModelTest {
         expectNoEvents()
       }
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(term, PAGE_2) }
+      coVerify { repoItemRepository.searchRepoItems(term, PAGE_2) }
         .wasInvoked(exactly = once)
     }
 
@@ -938,8 +926,7 @@ class GithubSearchViewModelTest {
       }
       eventsTurbine.assertEvents(GithubSearchSingleEvent.ReachedMaxItems)
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(term, PAGE_2) }
+      coVerify { repoItemRepository.searchRepoItems(term, PAGE_2) }
         .wasInvoked(exactly = once)
     }
 
@@ -998,8 +985,7 @@ class GithubSearchViewModelTest {
       }
       eventsTurbine.assertEvents(GithubSearchSingleEvent.SearchFailure(nextPageError))
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(term, PAGE_2) }
+      coVerify { repoItemRepository.searchRepoItems(term, PAGE_2) }
         .wasInvoked(exactly = once)
     }
 
@@ -1089,11 +1075,9 @@ class GithubSearchViewModelTest {
       }
       eventsTurbine.assertEvents(GithubSearchSingleEvent.SearchFailure(error))
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(term, PAGE_1) }
+      coVerify { repoItemRepository.searchRepoItems(term, PAGE_1) }
         .wasInvoked(exactly = once)
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(nextTerm, PAGE_1) }
+      coVerify { repoItemRepository.searchRepoItems(nextTerm, PAGE_1) }
         .wasInvoked(exactly = once)
     }
 
@@ -1143,8 +1127,7 @@ class GithubSearchViewModelTest {
       }
       eventsTurbine.assertEvents(GithubSearchSingleEvent.SearchFailure(error))
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(term, PAGE_1) }
+      coVerify { repoItemRepository.searchRepoItems(term, PAGE_1) }
         .wasInvoked(exactly = once)
     }
 
@@ -1196,8 +1179,7 @@ class GithubSearchViewModelTest {
         GithubSearchSingleEvent.ReachedMaxItems
       )
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(term, PAGE_1) }
+      coVerify { repoItemRepository.searchRepoItems(term, PAGE_1) }
         .wasInvoked(exactly = once)
     }
 
@@ -1250,8 +1232,7 @@ class GithubSearchViewModelTest {
         GithubSearchSingleEvent.SearchFailure(nextError)
       )
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(term, PAGE_1) }
+      coVerify { repoItemRepository.searchRepoItems(term, PAGE_1) }
         .wasInvoked(exactly = once)
     }
 
@@ -1309,8 +1290,7 @@ class GithubSearchViewModelTest {
       }
       eventsTurbine.assertEvents(GithubSearchSingleEvent.SearchFailure(error))
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(term, PAGE_1) }
+      coVerify { repoItemRepository.searchRepoItems(term, PAGE_1) }
         .wasInvoked(exactly = once)
     }
 
@@ -1370,8 +1350,7 @@ class GithubSearchViewModelTest {
         GithubSearchSingleEvent.ReachedMaxItems
       )
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(term, PAGE_1) }
+      coVerify { repoItemRepository.searchRepoItems(term, PAGE_1) }
         .wasInvoked(exactly = once)
     }
 
@@ -1432,8 +1411,7 @@ class GithubSearchViewModelTest {
         GithubSearchSingleEvent.SearchFailure(nextError)
       )
 
-      verify(repoItemRepository)
-        .coroutine { searchRepoItems(term, PAGE_1) }
+      coVerify { repoItemRepository.searchRepoItems(term, PAGE_1) }
         .wasInvoked(exactly = once)
     }
 
@@ -1449,8 +1427,7 @@ class GithubSearchViewModelTest {
       }
     }
 
-    verify(repoItemRepository)
-      .coroutine { searchRepoItems(term, page) }
+    coVerify { repoItemRepository.searchRepoItems(term, page) }
       .wasInvoked(exactly = once)
 
     return vm.stateFlow.value
@@ -1467,8 +1444,7 @@ class GithubSearchViewModelTest {
       }
     }
 
-    verify(repoItemRepository)
-      .coroutine { searchRepoItems(term, PAGE_1) }
+    coVerify { repoItemRepository.searchRepoItems(term, PAGE_1) }
       .wasInvoked(exactly = once)
 
     return vm.stateFlow.value
@@ -1478,9 +1454,8 @@ class GithubSearchViewModelTest {
     term: String,
     page: Int,
     crossinline result: suspend () -> Either<AppError, List<RepoItem>>
-  ) = given(repoItemRepository)
-    .coroutine { searchRepoItemsUseCase(term, page) }
-    .then { result() }
+  ) = coEvery { repoItemRepository.searchRepoItems(term, page) }
+    .invokesWithoutArgs { result() }
 
   private companion object {
     private val EXTRA_DELAY = GithubSearchSideEffectsContainer.DEBOUNCE_TIME * 1.5

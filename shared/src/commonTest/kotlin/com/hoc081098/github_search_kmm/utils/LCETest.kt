@@ -4,7 +4,7 @@ import app.cash.turbine.test
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
-import com.hoc081098.github_search_kmm.delay1Ms
+import com.hoc081098.github_search_kmm.test_utils.delay1Ms
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs

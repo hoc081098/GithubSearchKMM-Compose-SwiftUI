@@ -1,10 +1,10 @@
 package com.hoc081098.github_search_kmm.data.remote
 
-import com.hoc081098.github_search_kmm.TestAntilog
-import com.hoc081098.github_search_kmm.TestAppCoroutineDispatchers
-import com.hoc081098.github_search_kmm.getOrThrow
-import com.hoc081098.github_search_kmm.leftValueOrThrow
-import com.hoc081098.github_search_kmm.readTextResource
+import com.hoc081098.github_search_kmm.test_utils.TestAntilog
+import com.hoc081098.github_search_kmm.test_utils.TestAppCoroutineDispatchers
+import com.hoc081098.github_search_kmm.test_utils.getOrThrow
+import com.hoc081098.github_search_kmm.test_utils.leftValueOrThrow
+import com.hoc081098.github_search_kmm.test_utils.readTextResource
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -22,7 +22,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.test.runTest
-import kotlinx.serialization.decodeFromString
 
 class KtorRepoItemApiTest {
   private lateinit var ktorRepoItemApi: KtorRepoItemApi

@@ -1,5 +1,6 @@
-package com.hoc081098.github_search_kmm
+package com.hoc081098.github_search_kmm.test_utils
 
+import com.hoc081098.github_search_kmm.BuildKonfig
 import io.github.aakira.napier.Antilog
 import io.github.aakira.napier.LogLevel
 import kotlinx.datetime.Clock
