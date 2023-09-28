@@ -20,7 +20,7 @@ fun <L, R> eitherLceFlow(function: suspend () -> Either<L, R>): Flow<EitherLCE<L
     .onStart { emit(EitherLCE.Loading) }
 
 sealed class LCE<out T> {
-  object Loading : LCE<Nothing>()
+  data object Loading : LCE<Nothing>()
   data class Content<out T>(val content: T) : LCE<T>()
   data class Error(val error: Throwable) : LCE<Nothing>()
 

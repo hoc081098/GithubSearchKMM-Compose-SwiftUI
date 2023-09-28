@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.hoc081098.github_search_kmm.android.R
-import com.hoc081098.github_search_kmm.android.StableWrapper
+import com.hoc081098.github_search_kmm.android.compose_utils.StableWrapper
 import com.hoc081098.github_search_kmm.android.core_ui.fromArgbColor
 import com.hoc081098.github_search_kmm.domain.model.RepoItem
 import java.text.DecimalFormat

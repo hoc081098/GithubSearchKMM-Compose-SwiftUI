@@ -1,4 +1,4 @@
-package com.hoc081098.github_search_kmm
+package com.hoc081098.github_search_kmm.test_utils
 
 import app.cash.turbine.ReceiveTurbine
 import app.cash.turbine.test

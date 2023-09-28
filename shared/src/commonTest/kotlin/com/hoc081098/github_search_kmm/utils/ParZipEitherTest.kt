@@ -2,8 +2,8 @@ package com.hoc081098.github_search_kmm.utils
 
 import arrow.core.left
 import arrow.core.right
-import com.hoc081098.github_search_kmm.delay1Ms
-import com.hoc081098.github_search_kmm.getOrThrow
+import com.hoc081098.github_search_kmm.test_utils.delay1Ms
+import com.hoc081098.github_search_kmm.test_utils.getOrThrow
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.test.runTest

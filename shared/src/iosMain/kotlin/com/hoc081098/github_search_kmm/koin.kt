@@ -1,12 +1,13 @@
 package com.hoc081098.github_search_kmm
 
-import com.hoc081098.github_search_kmm.data.dataModule
-import com.hoc081098.github_search_kmm.domain.domainModule
-import com.hoc081098.github_search_kmm.presentation.presentationModule
+import com.hoc081098.github_search_kmm.data.DataModule
+import com.hoc081098.github_search_kmm.domain.DomainModule
+import com.hoc081098.github_search_kmm.presentation.PresentationModule
 import io.github.aakira.napier.Antilog
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.LogLevel
 import io.github.aakira.napier.Napier
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ObjCClass
 import kotlinx.cinterop.ObjCObject
 import kotlinx.cinterop.ObjCProtocol
@@ -37,10 +38,10 @@ object DIContainer : KoinComponent {
     startKoin {
       appDeclaration()
       modules(
-        dataModule,
-        domainModule,
-        appModule,
-        presentationModule,
+        DataModule,
+        DomainModule,
+        AppModule,
+        PresentationModule,
       )
       printLogger(
         if (isDebug()) {
@@ -52,6 +53,7 @@ object DIContainer : KoinComponent {
     }
   }
 
+  @OptIn(BetaInteropApi::class)
   fun get(
     type: ObjCObject,
     qualifier: Qualifier? = null,

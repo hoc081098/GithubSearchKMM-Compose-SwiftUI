@@ -2,15 +2,20 @@ package com.hoc081098.github_search_kmm.data.remote
 
 import arrow.core.left
 import arrow.core.right
-import com.hoc081098.github_search_kmm.TestAntilog
 import com.hoc081098.github_search_kmm.domain.model.ArgbColor
-import com.hoc081098.github_search_kmm.getOrThrow
+import com.hoc081098.github_search_kmm.test_utils.TestAntilog
+import com.hoc081098.github_search_kmm.test_utils.getOrThrow
+import com.hoc081098.github_search_kmm.test_utils.invokesWithoutArgs
 import io.github.aakira.napier.Napier
-import io.mockative.given
+import io.mockative.coEvery
+import io.mockative.coVerify
+import io.mockative.every
 import io.mockative.mock
 import io.mockative.once
 import io.mockative.twice
 import io.mockative.verify
+import io.mockative.verifyNoUnmetExpectations
+import io.mockative.verifyNoUnverifiedExpectations
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -38,8 +43,8 @@ class CacheGithubLanguageColorApiDecoratorTest {
 
   @AfterTest
   fun teardown() {
-    verify(decoratee).hasNoUnverifiedExpectations()
-    verify(decoratee).hasNoUnmetExpectations()
+    verifyNoUnverifiedExpectations(decoratee)
+    verifyNoUnmetExpectations(decoratee)
 
     Napier.takeLogarithm(antilog)
   }
@@ -48,13 +53,11 @@ class CacheGithubLanguageColorApiDecoratorTest {
   fun `cache Right value WHEN decoratee_getColors returns a Right value`() = runTest {
     val right = mapOf("kotlin" to ArgbColor.parse("#F18E33").getOrThrow).right()
 
-    given(decoratee)
-      .invocation { toString() }
-      .thenReturn("GithubLanguageColorApi")
+    every { decoratee.toString() }
+      .returns("GithubLanguageColorApi")
 
-    given(decoratee)
-      .coroutine { getColors() }
-      .then {
+    coEvery { decoratee.getColors() }
+      .invokesWithoutArgs {
         delay(100)
         right
       }
@@ -73,11 +76,9 @@ class CacheGithubLanguageColorApiDecoratorTest {
       )
       .forEach { assertEquals(right, it) }
 
-    verify(decoratee)
-      .coroutine { getColors() }
+    coVerify { decoratee.getColors() }
       .wasInvoked(exactly = once)
-    verify(decoratee)
-      .invocation { toString() }
+    coVerify { decoratee.toString() }
       .wasInvoked()
   }
 
@@ -88,13 +89,11 @@ class CacheGithubLanguageColorApiDecoratorTest {
 
     var call = 0
 
-    given(decoratee)
-      .invocation { toString() }
-      .thenReturn("GithubLanguageColorApi")
+    every { decoratee.toString() }
+      .returns("GithubLanguageColorApi")
 
-    given(decoratee)
-      .coroutine { getColors() }
-      .then {
+    coEvery { decoratee.getColors() }
+      .invokesWithoutArgs {
         delay(100)
 
         when (call++) {
@@ -122,11 +121,9 @@ class CacheGithubLanguageColorApiDecoratorTest {
       eithers
     )
 
-    verify(decoratee)
-      .coroutine { getColors() }
+    coVerify { decoratee.getColors() }
       .wasInvoked(exactly = twice)
-    verify(decoratee)
-      .invocation { toString() }
+    verify { decoratee.toString() }
       .wasInvoked()
   }
 }

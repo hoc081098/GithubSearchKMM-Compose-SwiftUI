@@ -1,13 +1,12 @@
 package com.hoc081098.github_search_kmm.domain.model
 
 import arrow.core.left
-import com.hoc081098.github_search_kmm.getOrThrow
-import com.hoc081098.github_search_kmm.readTextResource
+import com.hoc081098.github_search_kmm.test_utils.getOrThrow
+import com.hoc081098.github_search_kmm.test_utils.readTextResource
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 class ArgbColorTest {
@@ -18,17 +17,17 @@ class ArgbColorTest {
     assertArgbColor(hex = "#00000000", a = 0f, r = 0f, g = 0f, b = 0f)
     assertArgbColor(
       hex = "#12345678",
-      a = "12".in0to1,
-      r = "34".in0to1,
-      g = "56".in0to1,
-      b = "78".in0to1
+      a = "12".hexToFloat,
+      r = "34".hexToFloat,
+      g = "56".hexToFloat,
+      b = "78".hexToFloat
     )
     assertArgbColor(
       hex = "#123",
       a = 1f,
-      r = "11".in0to1,
-      g = "22".in0to1,
-      b = "33".in0to1
+      r = "11".hexToFloat,
+      g = "22".hexToFloat,
+      b = "33".hexToFloat
     )
 
     // without # prefix
@@ -37,17 +36,17 @@ class ArgbColorTest {
     assertArgbColor(hex = "00000000", a = 0f, r = 0f, g = 0f, b = 0f)
     assertArgbColor(
       hex = "12345678",
-      a = "12".in0to1,
-      r = "34".in0to1,
-      g = "56".in0to1,
-      b = "78".in0to1
+      a = "12".hexToFloat,
+      r = "34".hexToFloat,
+      g = "56".hexToFloat,
+      b = "78".hexToFloat
     )
     assertArgbColor(
       hex = "123",
       a = 1f,
-      r = "11".in0to1,
-      g = "22".in0to1,
-      b = "33".in0to1
+      r = "11".hexToFloat,
+      g = "22".hexToFloat,
+      b = "33".hexToFloat
     )
   }
 
@@ -121,8 +120,6 @@ class ArgbColorTest {
     assertInvalidHex(hex = "#12345XYZ")
   }
 
-  private val String.in0to1 get() = toInt(radix = 16) / 255f
-
   private fun assertInvalidHex(hex: String) = assertEquals(
     expected = "Cannot convert $hex to Color".left(),
     actual = ArgbColor.parse(hex),
@@ -164,3 +161,8 @@ class ArgbColorTest {
     const val ABSOLUTE_TOLERANCE = 1e-3f
   }
 }
+
+/**
+ * Convert a hex string to a float in range [0, 1].
+ */
+private val String.hexToFloat get() = toInt(radix = 16) / 255f

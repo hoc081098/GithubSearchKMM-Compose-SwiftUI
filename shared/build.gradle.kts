@@ -7,8 +7,8 @@ plugins {
   kotlinMultiplatform
   kotlinNativeCocoapods
   androidLib
-  kotlinxSerialization
   kotlinKapt
+  kotlinxSerialization
   daggerHiltAndroid
   mokoKSwift
   googleKsp
@@ -18,7 +18,17 @@ plugins {
 version = appConfig.versionName
 
 kotlin {
-  android()
+  jvmToolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+    vendor = JvmVendorSpec.AZUL
+  }
+  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>().configureEach {
+    compilerOptions {
+      jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+    }
+  }
+
+  androidTarget()
   iosX64()
   iosArm64()
   iosSimulatorArm64()
@@ -44,9 +54,6 @@ kotlin {
       languageSettings.run {
         optIn("kotlinx.coroutines.FlowPreview")
         optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
-        languageVersion = "1.9"
-        progressiveMode = true
-        enableLanguageFeature("DataObjects")
       }
     }
 
@@ -102,6 +109,8 @@ kotlin {
     }
 
     val androidMain by getting {
+      dependsOn(commonMain)
+
       dependencies {
         implementation(deps.ktor.okHttp)
         implementation(deps.dagger.hiltAndroid)
@@ -109,7 +118,9 @@ kotlin {
         implementation(platform(deps.compose.bom))
       }
     }
-    val androidTest by getting {
+    val androidUnitTest by getting {
+      dependsOn(commonTest)
+
       dependencies {
         implementation(kotlin("test"))
         implementation(kotlin("test-junit"))
@@ -151,7 +162,6 @@ android {
 
   defaultConfig {
     minSdk = appConfig.minSdkVersion
-    targetSdk = appConfig.targetSdkVersion
   }
 
   compileOptions {
@@ -164,23 +174,22 @@ android {
     targetCompatibility = VERSION_11
   }
 
-  dependencies {
-    coreLibraryDesugaring(deps.desugarJdkLibs)
-    "kapt"(deps.dagger.hiltAndroidCompiler)
-  }
-
   testOptions {
     unitTests {
       isReturnDefaultValues = true
       all {
         if (it.name == "testDebugUnitTest") {
           it.extensions.configure<kotlinx.kover.api.KoverTaskExtension> {
-            isDisabled.set(false)
+            isDisabled = false
             // excludes.addAll(excludedClasses)
           }
         }
       }
     }
+  }
+
+  buildFeatures {
+    buildConfig = true
   }
 }
 
@@ -213,6 +222,12 @@ tasks.withType<KotlinNativeLink>()
   }
 
 dependencies {
+  coreLibraryDesugaring(deps.desugarJdkLibs)
+  add("kspCommonMainMetadata", deps.dagger.hiltAndroidCompiler)
+  add("kspAndroid", deps.dagger.hiltAndroidCompiler)
+}
+
+dependencies {
   configurations
     .filter { it.name.startsWith("ksp") && it.name.contains("Test") }
     .forEach {
@@ -239,3 +254,9 @@ tasks.register<Copy>("copyiOSTestResources") {
 }
 
 tasks.findByName("iosX64Test")!!.dependsOn("copyiOSTestResources")
+
+tasks
+  .withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>()
+  .configureEach {
+    compilerOptions.languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
+  }

@@ -16,6 +16,6 @@ fun GithubSearchKmmApp() {
 
 @Preview
 @Composable
-fun GithubSearchKmmAppPreview() {
+private fun GithubSearchKmmAppPreview() {
   GithubSearchKmmApp()
 }

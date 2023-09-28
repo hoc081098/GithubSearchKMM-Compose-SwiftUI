@@ -1,3 +1,5 @@
+@file:Suppress("PrivatePropertyName")
+
 package com.hoc081098.github_search_kmm.data
 
 import com.hoc081098.github_search_kmm.data.remote.CacheGithubLanguageColorApiDecorator
@@ -18,7 +20,7 @@ import org.koin.dsl.module
 private val GithubLanguageColorApiUrl = named("GithubLanguageColorApiUrl")
 private val RepoItemApiBaseUrl = named("RepoItemApiBaseUrl")
 
-val dataModule = module {
+val DataModule = module {
   singleOf(::RepoItemRepositoryImpl) {
     bind<RepoItemRepository>()
   }

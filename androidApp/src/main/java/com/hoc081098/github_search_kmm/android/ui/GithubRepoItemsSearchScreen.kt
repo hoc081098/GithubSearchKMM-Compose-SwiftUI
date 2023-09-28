@@ -31,13 +31,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hoc081098.github_search_kmm.android.R
-import com.hoc081098.github_search_kmm.android.collectInLaunchedEffectWithLifecycle
+import com.hoc081098.github_search_kmm.android.compose_utils.CollectWithLifecycleEffect
+import com.hoc081098.github_search_kmm.android.compose_utils.rememberStableCoroutineScope
 import com.hoc081098.github_search_kmm.android.core_ui.AppBackground
 import com.hoc081098.github_search_kmm.android.core_ui.AppTheme
 import com.hoc081098.github_search_kmm.android.core_ui.LoadingIndicator
 import com.hoc081098.github_search_kmm.android.core_ui.RetryButton
-import com.hoc081098.github_search_kmm.android.getReadableMessage
-import com.hoc081098.github_search_kmm.android.rememberStableCoroutineScope
+import com.hoc081098.github_search_kmm.android.core_ui.getReadableMessage
 import com.hoc081098.github_search_kmm.domain.model.Owner
 import com.hoc081098.github_search_kmm.domain.model.RepoItem
 import com.hoc081098.github_search_kmm.presentation.DaggerGithubSearchViewModel
@@ -64,7 +64,7 @@ fun GithubRepoItemsSearchScreen(
   val context = LocalContext.current
   val scope = rememberStableCoroutineScope()
 
-  vm.eventFlow.collectInLaunchedEffectWithLifecycle { event ->
+  vm.eventFlow.CollectWithLifecycleEffect { event ->
     when (event) {
       is GithubSearchSingleEvent.SearchFailure -> {
         scope.launch {

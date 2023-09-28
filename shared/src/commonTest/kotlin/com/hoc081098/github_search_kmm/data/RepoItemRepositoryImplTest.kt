@@ -2,21 +2,26 @@ package com.hoc081098.github_search_kmm.data
 
 import arrow.core.left
 import arrow.core.right
-import com.hoc081098.github_search_kmm.TestAntilog
-import com.hoc081098.github_search_kmm.TestAppCoroutineDispatchers
 import com.hoc081098.github_search_kmm.data.remote.GithubLanguageColorApi
 import com.hoc081098.github_search_kmm.data.remote.RepoItemApi
 import com.hoc081098.github_search_kmm.data.remote.response.RepoItemsSearchResponse
 import com.hoc081098.github_search_kmm.domain.model.AppError
 import com.hoc081098.github_search_kmm.domain.model.ArgbColor
-import com.hoc081098.github_search_kmm.getOrThrow
-import com.hoc081098.github_search_kmm.leftValueOrThrow
+import com.hoc081098.github_search_kmm.test_utils.TestAntilog
+import com.hoc081098.github_search_kmm.test_utils.TestAppCoroutineDispatchers
+import com.hoc081098.github_search_kmm.test_utils.getOrThrow
+import com.hoc081098.github_search_kmm.test_utils.invokesWithoutArgs
+import com.hoc081098.github_search_kmm.test_utils.leftValueOrThrow
 import io.github.aakira.napier.Napier
 import io.mockative.Mock
-import io.mockative.given
+import io.mockative.coEvery
+import io.mockative.coVerify
+import io.mockative.every
 import io.mockative.mock
 import io.mockative.once
 import io.mockative.verify
+import io.mockative.verifyNoUnmetExpectations
+import io.mockative.verifyNoUnverifiedExpectations
 import kotlin.random.Random
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -64,8 +69,8 @@ class RepoItemRepositoryImplTest {
   @AfterTest
   fun teardown() {
     arrayOf(repoItemApi, githubLanguageColorApi, errorMapper).forEach {
-      verify(it).hasNoUnverifiedExpectations()
-      verify(it).hasNoUnmetExpectations()
+      verifyNoUnverifiedExpectations(it)
+      verifyNoUnmetExpectations(it)
     }
 
     Napier.takeLogarithm(antilog)
@@ -78,12 +83,10 @@ class RepoItemRepositoryImplTest {
       val term = "term"
       val page = 1
 
-      given(repoItemApi)
-        .coroutine { searchRepoItems(term, page) }
-        .then { FAKE_REPO_ITEMS_SEARCH_RESPONSE.right() }
-      given(githubLanguageColorApi)
-        .coroutine { getColors() }
-        .then { FAKE_GITHUB_LANGUAGE_COLORS.right() }
+      coEvery { repoItemApi.searchRepoItems(term, page) }
+        .invokesWithoutArgs { FAKE_REPO_ITEMS_SEARCH_RESPONSE.right() }
+      coEvery { githubLanguageColorApi.getColors() }
+        .invokesWithoutArgs { FAKE_GITHUB_LANGUAGE_COLORS.right() }
 
       val either = repoItemRepositoryImpl.searchRepoItems(term, page)
       assertEquals(
@@ -91,11 +94,9 @@ class RepoItemRepositoryImplTest {
         either.getOrThrow
       )
 
-      verify(repoItemApi)
-        .coroutine { searchRepoItems(term, page) }
+      coVerify { repoItemApi.searchRepoItems(term, page) }
         .wasInvoked(exactly = once)
-      verify(githubLanguageColorApi)
-        .coroutine { getColors() }
+      coVerify { githubLanguageColorApi.getColors() }
         .wasInvoked(exactly = once)
     }
 
@@ -106,27 +107,21 @@ class RepoItemRepositoryImplTest {
       val page = 1
       val error = RuntimeException("Broken!")
 
-      given(repoItemApi)
-        .coroutine { searchRepoItems(term, page) }
-        .then { error.left() }
-      given(githubLanguageColorApi)
-        .coroutine { getColors() }
-        .then { FAKE_GITHUB_LANGUAGE_COLORS.right() }
-      given(errorMapper)
-        .invocation { invoke(error) }
-        .then { AppError.ApiException.NetworkException(error) }
+      coEvery { repoItemApi.searchRepoItems(term, page) }
+        .invokesWithoutArgs { error.left() }
+      coEvery { githubLanguageColorApi.getColors() }
+        .invokesWithoutArgs { FAKE_GITHUB_LANGUAGE_COLORS.right() }
+      every { errorMapper(error) }
+        .invokesWithoutArgs { AppError.ApiException.NetworkException(error) }
 
       val either = repoItemRepositoryImpl.searchRepoItems(term, page)
       assertIs<AppError.ApiException.NetworkException>(either.leftValueOrThrow)
 
-      verify(repoItemApi)
-        .coroutine { searchRepoItems(term, page) }
+      coVerify { repoItemApi.searchRepoItems(term, page) }
         .wasInvoked(exactly = once)
-      verify(githubLanguageColorApi)
-        .coroutine { getColors() }
+      coVerify { githubLanguageColorApi.getColors() }
         .wasInvoked(exactly = once)
-      verify(errorMapper)
-        .invocation { invoke(error) }
+      verify { errorMapper(error) }
         .wasInvoked(exactly = once)
     }
 
@@ -137,27 +132,21 @@ class RepoItemRepositoryImplTest {
       val page = 1
       val error = RuntimeException("Broken!")
 
-      given(repoItemApi)
-        .coroutine { searchRepoItems(term, page) }
-        .then { FAKE_REPO_ITEMS_SEARCH_RESPONSE.right() }
-      given(githubLanguageColorApi)
-        .coroutine { getColors() }
-        .then { error.left() }
-      given(errorMapper)
-        .invocation { invoke(error) }
-        .then { AppError.ApiException.NetworkException(error) }
+      coEvery { repoItemApi.searchRepoItems(term, page) }
+        .invokesWithoutArgs { FAKE_REPO_ITEMS_SEARCH_RESPONSE.right() }
+      coEvery { githubLanguageColorApi.getColors() }
+        .invokesWithoutArgs { error.left() }
+      every { errorMapper(error) }
+        .invokesWithoutArgs { AppError.ApiException.NetworkException(error) }
 
       val either = repoItemRepositoryImpl.searchRepoItems(term, page)
       assertIs<AppError.ApiException.NetworkException>(either.leftValueOrThrow)
 
-      verify(repoItemApi)
-        .coroutine { searchRepoItems(term, page) }
+      coVerify { repoItemApi.searchRepoItems(term, page) }
         .wasInvoked(exactly = once)
-      verify(githubLanguageColorApi)
-        .coroutine { getColors() }
+      coVerify { githubLanguageColorApi.getColors() }
         .wasInvoked(exactly = once)
-      verify(errorMapper)
-        .invocation { invoke(error) }
+      verify { errorMapper(error) }
         .wasInvoked(exactly = once)
     }
 

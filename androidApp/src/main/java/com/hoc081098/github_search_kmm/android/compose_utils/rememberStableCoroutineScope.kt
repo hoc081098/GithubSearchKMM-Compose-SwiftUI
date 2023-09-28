@@ -1,6 +1,6 @@
 // Copyright (C) 2023 Slack Technologies, LLC
 // SPDX-License-Identifier: Apache-2.0
-package com.hoc081098.github_search_kmm.android
+package com.hoc081098.github_search_kmm.android.compose_utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable

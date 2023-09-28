@@ -4,7 +4,7 @@ import com.hoc081098.github_search_kmm.data.remote.response.RepoItemsSearchRespo
 import com.hoc081098.github_search_kmm.domain.model.ArgbColor
 import com.hoc081098.github_search_kmm.domain.model.Owner
 import com.hoc081098.github_search_kmm.domain.model.RepoItem
-import com.hoc081098.github_search_kmm.getOrThrow
+import com.hoc081098.github_search_kmm.test_utils.getOrThrow
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.datetime.Instant

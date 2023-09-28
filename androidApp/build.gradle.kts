@@ -46,6 +46,7 @@ android {
   }
 
   kotlinOptions {
+    options.jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
     freeCompilerArgs = freeCompilerArgs + buildComposeMetricsParameters() + listOf(
       "-opt-in=kotlin.RequiresOptIn",
       // Enable experimental coroutines APIs, including Flow
@@ -63,7 +64,7 @@ android {
       all {
         if (it.name == "testDebugUnitTest") {
           it.extensions.configure<kotlinx.kover.api.KoverTaskExtension> {
-            isDisabled.set(false)
+            isDisabled = false
             // excludes.addAll(excludedClasses)
           }
         }

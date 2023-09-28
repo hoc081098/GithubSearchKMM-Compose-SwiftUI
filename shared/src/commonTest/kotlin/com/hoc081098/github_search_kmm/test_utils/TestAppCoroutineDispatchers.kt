@@ -1,5 +1,6 @@
-package com.hoc081098.github_search_kmm
+package com.hoc081098.github_search_kmm.test_utils
 
+import com.hoc081098.github_search_kmm.AppCoroutineDispatchers
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher

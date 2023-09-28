@@ -1,5 +1,6 @@
-package com.hoc081098.github_search_kmm
+package com.hoc081098.github_search_kmm.test_utils
 
+import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSBundle
 import platform.Foundation.NSString
 import platform.Foundation.NSURL
@@ -9,6 +10,7 @@ import platform.Foundation.lastPathComponent
 import platform.Foundation.pathExtension
 import platform.Foundation.stringWithContentsOfFile
 
+@OptIn(ExperimentalForeignApi::class)
 actual fun readTextResource(resourceName: String): String {
   val url = NSURL.fileURLWithPath(resourceName)
 

@@ -1,4 +1,4 @@
-package com.hoc081098.github_search_kmm
+package com.hoc081098.github_search_kmm.test_utils
 
 import com.hoc081098.github_search_kmm.domain.model.ArgbColor
 import com.hoc081098.github_search_kmm.domain.model.Owner

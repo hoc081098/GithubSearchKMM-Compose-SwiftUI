@@ -4,14 +4,17 @@ import arrow.core.left
 import arrow.core.right
 import com.hoc081098.github_search_kmm.domain.model.AppError
 import com.hoc081098.github_search_kmm.domain.repository.RepoItemRepository
-import com.hoc081098.github_search_kmm.genRepoItems
-import com.hoc081098.github_search_kmm.getOrThrow
-import com.hoc081098.github_search_kmm.leftValueOrThrow
+import com.hoc081098.github_search_kmm.test_utils.genRepoItems
+import com.hoc081098.github_search_kmm.test_utils.getOrThrow
+import com.hoc081098.github_search_kmm.test_utils.invokesWithoutArgs
+import com.hoc081098.github_search_kmm.test_utils.leftValueOrThrow
 import io.mockative.Mock
-import io.mockative.given
+import io.mockative.coEvery
+import io.mockative.coVerify
 import io.mockative.mock
 import io.mockative.once
-import io.mockative.verify
+import io.mockative.verifyNoUnmetExpectations
+import io.mockative.verifyNoUnverifiedExpectations
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -31,8 +34,8 @@ class SearchRepoItemsUseCaseTest {
 
   @AfterTest
   fun teardown() {
-    verify(repoItemRepository).hasNoUnverifiedExpectations()
-    verify(repoItemRepository).hasNoUnmetExpectations()
+    verifyNoUnverifiedExpectations(repoItemRepository)
+    verifyNoUnmetExpectations(repoItemRepository)
   }
 
   @Test
@@ -41,9 +44,8 @@ class SearchRepoItemsUseCaseTest {
     val term = "term"
     val page = 1
 
-    given(repoItemRepository)
-      .coroutine { searchRepoItems(term, page) }
-      .then { items.right() }
+    coEvery { repoItemRepository.searchRepoItems(term, page) }
+      .invokesWithoutArgs { items.right() }
 
     val either = searchRepoItemsUseCase(term, page)
 
@@ -51,8 +53,7 @@ class SearchRepoItemsUseCaseTest {
       items,
       either.getOrThrow
     )
-    verify(repoItemRepository)
-      .coroutine { searchRepoItems(term, page) }
+    coVerify { repoItemRepository.searchRepoItems(term, page) }
       .wasInvoked(exactly = once)
   }
 
@@ -62,15 +63,13 @@ class SearchRepoItemsUseCaseTest {
     val term = "term"
     val page = 1
 
-    given(repoItemRepository)
-      .coroutine { searchRepoItems(term, page) }
-      .then { error.left() }
+    coEvery { repoItemRepository.searchRepoItems(term, page) }
+      .invokesWithoutArgs { error.left() }
 
     val either = searchRepoItemsUseCase(term, page)
 
     assertEquals(error, either.leftValueOrThrow)
-    verify(repoItemRepository)
-      .coroutine { searchRepoItems(term, page) }
+    coVerify { repoItemRepository.searchRepoItems(term, page) }
       .wasInvoked(exactly = once)
   }
 }

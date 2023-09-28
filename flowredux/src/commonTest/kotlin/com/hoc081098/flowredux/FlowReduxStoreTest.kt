@@ -70,7 +70,7 @@ fun <Action : Any, State> CoroutineScope.createTestFlowReduxStore(
 @ExperimentalCoroutinesApi
 class FlowReduxStoreTest {
   @Test
-  fun `initial state is emitted even without actions as input`() = runTest {
+  fun initialStateIsEmittedEvenWithoutActionsAsInput() = runTest {
     val scope = createScope()
 
     var reducerInvocations = 0
@@ -97,7 +97,7 @@ class FlowReduxStoreTest {
   }
 
   @Test
-  fun `store without side effects just runs reducer`() = runTest {
+  fun storeWithoutSideEffectsJustRunsReducer() = runTest {
     val scope = createScope()
 
     val (store, actionFlow) = scope.createTestFlowReduxStore<String, String>(
@@ -135,7 +135,7 @@ class FlowReduxStoreTest {
   }
 
   @Test
-  fun `store with empty side effect that emits nothing`() = runTest {
+  fun storeWithEmptySideEffectThatEmitsNothing() = runTest {
     val scope = createScope()
     val sideEffect1Actions = mutableListOf<String>()
 
@@ -185,7 +185,7 @@ class FlowReduxStoreTest {
   }
 
   @Test
-  fun `store with 2 side effects and they emit nothing`() = runTest {
+  fun storeWith2SideEffectsAndTheyEmitNothing() = runTest {
     val scope = createScope()
     val sideEffect1Actions = mutableListOf<String>()
     val sideEffect2Actions = mutableListOf<String>()
@@ -246,7 +246,7 @@ class FlowReduxStoreTest {
   }
 
   @Test
-  fun `store with 2 simple side effects`() = runTest {
+  fun storeWith2SimpleSideEffects() = runTest {
     val scope = createScope()
     val sideEffect1Actions = mutableListOf<Int>()
     val sideEffect2Actions = mutableListOf<Int>()
@@ -328,7 +328,7 @@ class FlowReduxStoreTest {
   }
 
   @Test
-  fun `store with 2 simple side effects no delay`() = runTest {
+  fun storeWith2SimpleSideEffectsNoDelay() = runTest {
     val scope = createScope()
     val sideEffect1Actions = mutableListOf<Int>()
     val sideEffect2Actions = mutableListOf<Int>()
@@ -421,7 +421,7 @@ class FlowReduxStoreTest {
   }
 
   @Test
-  fun `canceling the flow of input actions also cancels all side effects`() = runTest {
+  fun cancelingTheFlowOfInputActionsAlsoCancelsAllSideEffects() = runTest {
     val scope = createScope()
 
     var sideEffect1Started = false
@@ -486,7 +486,7 @@ class FlowReduxStoreTest {
   }
 
   @Test
-  fun `close and isClosed`() = runTest {
+  fun closeAndIsClosed() = runTest {
     val scope = createScope()
     val cancelled = CompletableDeferred<Unit>()
 
@@ -515,7 +515,7 @@ class FlowReduxStoreTest {
 
   @OptIn(ExperimentalStdlibApi::class)
   @Test
-  fun `use and isClosed`() = runTest {
+  fun useAndIsClosed() = runTest {
     val cancelled = CompletableDeferred<Unit>()
 
     val store = FlowReduxStore(
@@ -542,7 +542,7 @@ class FlowReduxStoreTest {
   }
 
   @Test
-  fun `isClosed when using createFlowReduxStore`() = runTest {
+  fun isClosedWhenUsingCreateFlowReduxStore() = runTest {
     val scope = createScope()
 
     val (store) = scope.createTestFlowReduxStore<Int, String>(
@@ -557,7 +557,7 @@ class FlowReduxStoreTest {
   }
 
   @Test
-  fun `empty logger`() = runTest {
+  fun emptyLogger() = runTest {
     val l1: FlowReduxLogger<Int, String> = FlowReduxLogger.empty()
     val l2: FlowReduxLogger<String, Int> = FlowReduxLogger.empty()
     val l3: FlowReduxLogger<Int, Int> = FlowReduxLogger.empty()
