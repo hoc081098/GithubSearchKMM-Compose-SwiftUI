@@ -7,7 +7,6 @@ plugins {
   kotlinMultiplatform
   kotlinNativeCocoapods
   androidLib
-  kotlinKapt
   kotlinxSerialization
   daggerHiltAndroid
   mokoKSwift
@@ -211,7 +210,9 @@ tasks.withType<KotlinNativeLink>()
         .dir("${binary.baseName}Swift")
         .asFile
 
-      val kSwiftPodSourceDir = buildDir
+      val kSwiftPodSourceDir = layout.buildDirectory
+        .asFile
+        .get()
         .resolve("cocoapods")
         .resolve("framework")
         .resolve("${binary.baseName}Swift")
