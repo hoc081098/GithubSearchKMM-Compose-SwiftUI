@@ -239,7 +239,6 @@ class GithubSearchViewModelTest {
   fun `emits loading state and items state WHEN SearchRepoItemsUseCase returns an empty items`() =
     runTest {
       turbineScope {
-
         val eventsTurbine = vm.eventFlow.testIn(this)
 
         val term = "term"

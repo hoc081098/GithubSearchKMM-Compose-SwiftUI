@@ -1,5 +1,4 @@
 
-import org.gradle.api.JavaVersion.VERSION_11
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTargetWithTests
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
@@ -31,14 +30,18 @@ kotlin {
       }
     }
     browser {
-      testTask(Action {
-        useMocha()
-      })
+      testTask(
+        Action {
+          useMocha()
+        }
+      )
     }
     nodejs {
-      testTask(Action {
-        useMocha()
-      })
+      testTask(
+        Action {
+          useMocha()
+        }
+      )
     }
   }
 
