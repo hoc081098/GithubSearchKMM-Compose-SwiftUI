@@ -31,3 +31,7 @@ fun copyToBuildSrc(sourcePath: String) {
   )
   println("[DONE] copied $sourcePath")
 }
+
+plugins {
+  id("org.gradle.toolchains.foojay-resolver-convention") version "0.7.0"
+}

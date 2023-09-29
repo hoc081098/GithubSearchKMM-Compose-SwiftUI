@@ -190,6 +190,12 @@ android {
   buildFeatures {
     buildConfig = true
   }
+
+  dependencies {
+    coreLibraryDesugaring(deps.desugarJdkLibs)
+    add("kspCommonMainMetadata", deps.dagger.hiltAndroidCompiler)
+    add("kspAndroid", deps.dagger.hiltAndroidCompiler)
+  }
 }
 
 hilt {
@@ -221,12 +227,6 @@ tasks.withType<KotlinNativeLink>()
       println("[COPIED] $kSwiftGeneratedDir -> $kSwiftPodSourceDir")
     }
   }
-
-dependencies {
-  coreLibraryDesugaring(deps.desugarJdkLibs)
-  add("kspCommonMainMetadata", deps.dagger.hiltAndroidCompiler)
-  add("kspAndroid", deps.dagger.hiltAndroidCompiler)
-}
 
 dependencies {
   configurations

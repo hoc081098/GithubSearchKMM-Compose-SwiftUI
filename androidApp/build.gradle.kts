@@ -10,6 +10,13 @@ hilt {
   enableAggregatingTask = true
 }
 
+kotlin {
+  jvmToolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+    vendor = JvmVendorSpec.AZUL
+  }
+}
+
 android {
   namespace = "com.hoc081098.github_search_kmm.android"
   compileSdk = appConfig.compileSdkVersion

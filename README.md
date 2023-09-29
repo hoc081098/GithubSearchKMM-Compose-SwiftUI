@@ -243,8 +243,8 @@ class IOSGithubSearchViewModel: ObservableObject {
 
 # Building & Develop
 
-- `Android Studio Chipmunk | 2021.2.1` (note: **Java 11 is now the minimum version required**).
-- `XCode 13.2` or later (due to use of new Swift 5.5 concurrency APIs).
+- `Android Studio Giraffe | 2022.3.1` (note: **Java 17 is now the minimum version required**).
+- `Xcode 13.2` or later (due to use of new Swift 5.5 concurrency APIs).
 - Clone project: `git clone https://github.com/hoc081098/GithubSearchKMM.git`
 - Android: open project by `Android Studio` and run as usual.
 - iOS
@@ -281,7 +281,7 @@ class IOSGithubSearchViewModel: ObservableObject {
 --------------------------------------------------------------------------------
  Language             Files        Lines        Blank      Comment         Code
 --------------------------------------------------------------------------------
- Kotlin                 105         7647          936          439         6272
+ Kotlin                 106         7789          963          417         6409
  JSON                     7         3938            0            0         3938
  Swift                   16          903          118          102          683
  Markdown                 1          294           54            0          240
@@ -289,6 +289,6 @@ class IOSGithubSearchViewModel: ObservableObject {
  Batch                    1           92           21            0           71
  XML                      6           69            6            0           63
 --------------------------------------------------------------------------------
- Total                  138        13193         1163          657        11373
+ Total                  139        13335         1190          635        11510
 --------------------------------------------------------------------------------
 ```
