@@ -108,8 +108,6 @@ kotlin {
     }
 
     val androidMain by getting {
-      dependsOn(commonMain)
-
       dependencies {
         implementation(deps.ktor.okHttp)
         implementation(deps.dagger.hiltAndroid)
@@ -118,8 +116,6 @@ kotlin {
       }
     }
     val androidUnitTest by getting {
-      dependsOn(commonTest)
-
       dependencies {
         implementation(kotlin("test"))
         implementation(kotlin("test-junit"))

@@ -2,7 +2,6 @@ package com.hoc081098.github_search_kmm.presentation
 
 import app.cash.turbine.ReceiveTurbine
 import app.cash.turbine.test
-import app.cash.turbine.testIn
 import app.cash.turbine.turbineScope
 import arrow.core.Either
 import arrow.core.left
