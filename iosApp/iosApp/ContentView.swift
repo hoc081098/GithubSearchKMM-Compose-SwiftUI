@@ -4,7 +4,7 @@ import Combine
 import sharedSwift
 
 struct ContentView: View {
-  @ObservedObject var vm = IOSGithubSearchViewModel(vm: DIContainer.shared.get())
+  @StateObject var vm: IOSGithubSearchViewModel
 
   @State private var showingAlert = false
   @State private var event: GithubSearchSingleEventKs?
@@ -81,9 +81,9 @@ struct ContentView: View {
     }
       .navigationViewStyle(.stack)
       .onReceive(self.vm.eventPublisher) { event in
-        self.event = event
-        self.showingAlert = true
-      }
+      self.event = event
+      self.showingAlert = true
+    }
       .alert(isPresented: $showingAlert, content: eventAlert)
   }
 
@@ -115,8 +115,35 @@ struct ContentView: View {
 
 extension RepoItem: Identifiable { }
 
+class FakeRepoItemRepository: RepoItemRepository {
+  func searchRepoItems(term: String, page: Int32) async throws -> Arrow_coreEither<AppError, NSArray> {
+    let items: [RepoItem] = [
+        .init(
+        id: 0,
+        fullName: "Fullname 0",
+        language: "Kotlin",
+        starCount: 0,
+        name: "Name 0",
+        repoDescription: "Description 0",
+        languageColor: ArgbColor.Companion.shared.parse(hex: "#000000").getOrNull(),
+        htmlUrl: "html.com",
+        owner: .init(id: 1, username: "username", avatar: "avatar"),
+        updatedAt: Kotlinx_datetimeInstant.Companion.shared.fromEpochMilliseconds(epochMilliseconds: 0)
+      )
+    ]
+
+    return EitherExt.shared.right(value: items) as! Arrow_coreEither<AppError, NSArray>
+  }
+}
+
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
-    ContentView()
+    let vm = IOSGithubSearchViewModel.init(
+      vm: .init(
+        searchRepoItemsUseCase: .init(repoItemRepository: FakeRepoItemRepository()),
+        savedStateHandle: .init()
+      )
+    )
+    ContentView(vm: vm)
   }
 }

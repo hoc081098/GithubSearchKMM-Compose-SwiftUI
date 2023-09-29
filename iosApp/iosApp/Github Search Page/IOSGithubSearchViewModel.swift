@@ -47,7 +47,7 @@ class IOSGithubSearchViewModel: ObservableObject {
   }
 
   deinit {
-    Napier.d("\(self)::deinit")
     vm.clear()
+    Napier.d("\(self)::deinit isCleared=\(vm.isCleared())")
   }
 }
