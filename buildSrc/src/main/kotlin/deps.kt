@@ -12,7 +12,7 @@ object versions {
   const val ktlint = "0.45.2"
   const val kotlin = "1.9.10"
   const val agp = "8.1.1"
-  const val gradleVersions = "0.42.0"
+  const val gradleVersions = "0.49.0"
   const val mokoKSwift = "0.6.1"
   const val googleKsp = "1.9.10-1.0.13"
   const val buildKonfig = "0.13.3"
