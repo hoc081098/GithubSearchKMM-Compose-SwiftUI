@@ -255,5 +255,5 @@ tasks.findByName("iosX64Test")!!.dependsOn("copyiOSTestResources")
 tasks
   .withType<org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile>()
   .configureEach {
-    compilerOptions.languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
+    compilerOptions.languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9_20
   }
