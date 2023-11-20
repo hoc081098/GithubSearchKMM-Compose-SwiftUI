@@ -78,7 +78,8 @@ internal fun GithubRepoItemsList(
   ) {
     items(
       items = items,
-      key = { it.id }
+      key = { it.id },
+      contentType = { "GithubRepoItemRow" },
     ) { item ->
       GithubRepoItemRow(
         modifier = Modifier
@@ -89,13 +90,13 @@ internal fun GithubRepoItemsList(
     }
 
     if (isLoading) {
-      item {
+      item(contentType = "LoadingIndicator") {
         LoadingIndicator(
           modifier = Modifier.height(128.dp)
         )
       }
     } else if (error !== null) {
-      item {
+      item(contentType = "RetryButton") {
         RetryButton(
           modifier = Modifier.height(128.dp),
           errorMessage = error.getReadableMessage(),
@@ -103,7 +104,7 @@ internal fun GithubRepoItemsList(
         )
       }
     } else if (!hasReachedMax) {
-      item {
+      item(contentType = "Spacer") {
         Spacer(modifier = Modifier.height(128.dp))
       }
     }
