@@ -130,7 +130,7 @@ object deps {
   const val coilCompose = "io.coil-kt:coil-compose:2.5.0"
   const val flowExt = "io.github.hoc081098:FlowExt:0.7.4"
 
-  const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.22.0"
+  const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.23.1"
   const val immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.6"
 
   object arrow {
