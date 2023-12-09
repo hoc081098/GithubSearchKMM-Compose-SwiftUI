@@ -10,7 +10,7 @@ import org.gradle.plugin.use.PluginDependencySpec
 object versions {
   const val spotless = "6.7.2"
   const val ktlint = "0.45.2"
-  const val kotlin = "1.9.20"
+  const val kotlin = "1.9.21"
   const val agp = "8.1.1"
   const val gradleVersions = "0.49.0"
   const val mokoKSwift = "0.6.1"
@@ -43,7 +43,7 @@ object deps {
   }
 
   object lifecycle {
-    private const val version = "2.6.1"
+    private const val version = "2.6.2"
 
     const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version" // viewModelScope
     const val runtimeKtx = "androidx.lifecycle:lifecycle-runtime-ktx:$version" // lifecycleScope
@@ -87,7 +87,7 @@ object deps {
   }
 
   object compose {
-    const val androidxComposeCompilerVersion = "1.5.4"
+    const val androidxComposeCompilerVersion = "1.5.6"
     const val bom = "androidx.compose:compose-bom:2023.10.01"
 
     const val foundation = "androidx.compose.foundation:foundation"
@@ -119,7 +119,7 @@ object deps {
   }
 
   object kmpViewModel {
-    private const val version = "0.5.0"
+    private const val version = "0.6.0"
     const val core = "io.github.hoc081098:kmp-viewmodel:$version"
     const val savedState = "io.github.hoc081098:kmp-viewmodel-savedstate:$version"
   }
@@ -128,7 +128,7 @@ object deps {
   const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.1"
 
   const val coilCompose = "io.coil-kt:coil-compose:2.4.0"
-  const val flowExt = "io.github.hoc081098:FlowExt:0.7.1"
+  const val flowExt = "io.github.hoc081098:FlowExt:0.7.4"
 
   const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.22.0"
   const val immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
