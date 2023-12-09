@@ -12,7 +12,7 @@ object versions {
   const val ktlint = "0.45.2"
   const val kotlin = "1.9.21"
   const val agp = "8.1.1"
-  const val gradleVersions = "0.49.0"
+  const val gradleVersions = "0.50.0"
   const val mokoKSwift = "0.6.1"
   const val googleKsp = "1.9.10-1.0.13"
   const val buildKonfig = "0.13.3"
@@ -39,7 +39,7 @@ object deps {
     const val coreKtx = "androidx.core:core-ktx:1.9.0"
     const val material = "com.google.android.material:material:1.10.0"
     const val activityCompose = "androidx.activity:activity-compose:1.8.1"
-    const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:1.0.0"
+    const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:1.1.0"
   }
 
   object lifecycle {
@@ -68,13 +68,13 @@ object deps {
   }
 
   object serialization {
-    private const val version = "1.6.0"
+    private const val version = "1.6.1"
     const val json = "org.jetbrains.kotlinx:kotlinx-serialization-json:$version"
     const val core = "org.jetbrains.kotlinx:kotlinx-serialization-core:$version"
   }
 
   object ktor {
-    private const val version = "2.3.4"
+    private const val version = "2.3.6"
     const val core = "io.ktor:ktor-client-core:$version"
     const val clientJson = "io.ktor:ktor-client-json:$version"
     const val logging = "io.ktor:ktor-client-logging:$version"
@@ -127,11 +127,11 @@ object deps {
   const val mokoKSwiftRuntime = "dev.icerock.moko:kswift-runtime:${versions.mokoKSwift}"
   const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.1"
 
-  const val coilCompose = "io.coil-kt:coil-compose:2.4.0"
+  const val coilCompose = "io.coil-kt:coil-compose:2.5.0"
   const val flowExt = "io.github.hoc081098:FlowExt:0.7.4"
 
   const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.22.0"
-  const val immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
+  const val immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.6"
 
   object arrow {
     private const val version = "1.2.1"
