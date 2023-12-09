@@ -19,6 +19,11 @@ kotlin {
   }
 
   explicitApi()
+  sourceSets.configureEach {
+    languageSettings.apply {
+      languageVersion = "1.9"
+    }
+  }
 
   jvm()
   js(IR) {
