@@ -22,7 +22,7 @@ open class GithubSearchViewModel(
     initialState = GithubSearchState.initial(),
     sideEffects = effectsContainer.sideEffects,
     reducer = Reducer(flip(GithubSearchAction::reduce))
-      .withLogger(githubSearchFlowReduxLogger())
+      .withLogger(githubSearchFlowReduxLogger()),
   )
 
   val termStateFlow: NonNullStateFlowWrapper<String> = savedStateHandle.getStateFlow(TERM_KEY, "").wrap()

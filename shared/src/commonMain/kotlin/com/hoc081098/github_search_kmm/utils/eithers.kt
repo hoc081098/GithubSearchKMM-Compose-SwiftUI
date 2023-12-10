@@ -16,6 +16,6 @@ suspend inline fun <A, B, L, R> parZipEither(
     ctx = ctx,
     fa = { fa().bind() },
     fb = { fb().bind() },
-    f = { a, b -> combiner(a, b) }
+    f = { a, b -> combiner(a, b) },
   )
 }

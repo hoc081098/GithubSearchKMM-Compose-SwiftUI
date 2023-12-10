@@ -51,7 +51,7 @@ class SearchRepoItemsUseCaseTest {
 
     assertEquals(
       items,
-      either.getOrThrow
+      either.getOrThrow,
     )
     coVerify { repoItemRepository.searchRepoItems(term, page) }
       .wasInvoked(exactly = once)

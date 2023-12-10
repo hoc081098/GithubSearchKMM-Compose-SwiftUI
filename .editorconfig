@@ -1,12 +1,26 @@
-root = true
+root=true
 [*]
 indent_size=2
 end_of_line=lf
 charset=utf-8
 trim_trailing_whitespace=true
 insert_final_newline=true
-[*.{kt, kts}]
+[*.{kt,kts}]
 ij_kotlin_imports_layout=*
-disabled_rules=filename
+ij_continuation_indent_size=4
+ij_kotlin_allow_trailing_comma_on_call_site=true
+ij_kotlin_allow_trailing_comma=true
+ktlint_standard_filename=disabled
+ktlint_standard_package-name=disabled
+ktlint_standard_property-naming=disabled
+ktlint_standard_function-naming=disabled
+filename=disabled
+ktlint_experimental=enabled
+ktlint_code_style=android_studio
+max_line_length=120
+[*.kts]
+max_line_length=300
+ktlint_standard_multiline-expression-wrapping=disabled
+ktlint_standard_function-signature=disabled
 [*.xml]
 indent_size=4

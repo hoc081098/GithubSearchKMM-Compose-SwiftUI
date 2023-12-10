@@ -22,11 +22,11 @@ import kotlinx.coroutines.launch
 fun <T> rememberFlowWithLifecycle(
   flow: Flow<T>,
   lifecycle: Lifecycle = LocalLifecycleOwner.current.lifecycle,
-  minActiveState: Lifecycle.State = Lifecycle.State.STARTED
+  minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
 ): Flow<T> = remember(flow, lifecycle, minActiveState) {
   flow.flowWithLifecycle(
     lifecycle = lifecycle,
-    minActiveState = minActiveState
+    minActiveState = minActiveState,
   )
 }
 
@@ -54,16 +54,11 @@ fun <T> Flow<T>.CollectWithLifecycleEffect(
 @Composable
 @NonRestartableComposable
 @Suppress("ArrayReturn")
-private fun LaunchedEffectInImmediateMain(
-  vararg keys: Any?,
-  block: suspend CoroutineScope.() -> Unit,
-) {
+private fun LaunchedEffectInImmediateMain(vararg keys: Any?, block: suspend CoroutineScope.() -> Unit) {
   remember(*keys) { LaunchedEffectImpl(block) }
 }
 
-private class LaunchedEffectImpl(
-  private val task: suspend CoroutineScope.() -> Unit,
-) : RememberObserver {
+private class LaunchedEffectImpl(private val task: suspend CoroutineScope.() -> Unit) : RememberObserver {
   private val scope = CoroutineScope(Dispatchers.Main.immediate)
   private var job: Job? = null
 

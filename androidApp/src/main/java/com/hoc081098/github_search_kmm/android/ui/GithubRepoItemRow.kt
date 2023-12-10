@@ -37,17 +37,13 @@ import com.hoc081098.github_search_kmm.domain.model.RepoItem
 import java.text.DecimalFormat
 
 @Composable
-fun GithubRepoItemRow(
-  item: RepoItem,
-  decimalFormat: StableWrapper<DecimalFormat>,
-  modifier: Modifier = Modifier,
-) {
+fun GithubRepoItemRow(item: RepoItem, decimalFormat: StableWrapper<DecimalFormat>, modifier: Modifier = Modifier) {
   Card(
     modifier = modifier,
     elevation = CardDefaults.elevatedCardElevation(
-      defaultElevation = 3.dp
+      defaultElevation = 3.dp,
     ),
-    shape = RoundedCornerShape(size = 20.dp)
+    shape = RoundedCornerShape(size = 20.dp),
   ) {
     Row(
       modifier = Modifier.padding(8.dp),
@@ -64,7 +60,7 @@ fun GithubRepoItemRow(
         modifier = Modifier
           .size(92.dp)
           .clip(RoundedCornerShape(size = 20.dp))
-          .background(Color.White)
+          .background(Color.White),
       )
 
       Spacer(modifier = Modifier.width(8.dp))
@@ -92,7 +88,7 @@ fun GithubRepoItemRow(
         Spacer(modifier = Modifier.height(8.dp))
 
         Row(
-          verticalAlignment = Alignment.CenterVertically
+          verticalAlignment = Alignment.CenterVertically,
         ) {
           val languageColor = item.languageColor?.let(Color::fromArgbColor)
 
@@ -104,7 +100,7 @@ fun GithubRepoItemRow(
                 drawCircle(
                   color = color,
                 )
-              }
+              },
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -113,7 +109,7 @@ fun GithubRepoItemRow(
           Text(
             text = item.language ?: "Unknown language",
             style = MaterialTheme.typography.bodyMedium.copy(
-              color = languageColor ?: MaterialTheme.typography.bodyMedium.color
+              color = languageColor ?: MaterialTheme.typography.bodyMedium.color,
             ),
           )
 
@@ -122,12 +118,12 @@ fun GithubRepoItemRow(
           Icon(
             imageVector = Icons.Filled.Star,
             contentDescription = "Star count",
-            tint = Color(0xffEAC54E)
+            tint = Color(0xffEAC54E),
           )
 
           Text(
             text = decimalFormat.value.format(item.starCount),
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
           )
         }
       }

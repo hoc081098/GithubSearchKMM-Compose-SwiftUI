@@ -10,6 +10,6 @@ fun Color.Companion.fromArgbColor(argbColor: ArgbColor): Color {
     red = red,
     green = green,
     blue = blue,
-    alpha = alpha
+    alpha = alpha,
   )
 }

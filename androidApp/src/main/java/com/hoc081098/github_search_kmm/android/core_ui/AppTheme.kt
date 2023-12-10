@@ -39,7 +39,7 @@ val LightDefaultColorScheme = lightColorScheme(
   onSurface = DarkPurpleGray10,
   surfaceVariant = PurpleGray90,
   onSurfaceVariant = PurpleGray30,
-  outline = PurpleGray50
+  outline = PurpleGray50,
 )
 
 /**
@@ -68,7 +68,7 @@ val DarkDefaultColorScheme = darkColorScheme(
   onSurface = DarkPurpleGray90,
   surfaceVariant = PurpleGray30,
   onSurfaceVariant = PurpleGray80,
-  outline = PurpleGray60
+  outline = PurpleGray60,
 )
 
 /**
@@ -97,7 +97,7 @@ val LightAndroidColorScheme = lightColorScheme(
   onSurface = DarkGreenGray10,
   surfaceVariant = GreenGray90,
   onSurfaceVariant = GreenGray30,
-  outline = GreenGray50
+  outline = GreenGray50,
 )
 
 /**
@@ -126,7 +126,7 @@ val DarkAndroidColorScheme = darkColorScheme(
   onSurface = DarkGreenGray90,
   surfaceVariant = GreenGray30,
   onSurfaceVariant = GreenGray80,
-  outline = GreenGray60
+  outline = GreenGray60,
 )
 
 /**
@@ -172,7 +172,7 @@ fun AppTheme(
 
   val defaultBackgroundTheme = BackgroundTheme(
     color = colorScheme.surface,
-    tonalElevation = 2.dp
+    tonalElevation = 2.dp,
   )
   val backgroundTheme = when {
     dynamicColor -> defaultBackgroundTheme
@@ -181,12 +181,12 @@ fun AppTheme(
   }
 
   CompositionLocalProvider(
-    LocalBackgroundTheme provides backgroundTheme
+    LocalBackgroundTheme provides backgroundTheme,
   ) {
     MaterialTheme(
       colorScheme = colorScheme,
       typography = Typography,
-      content = content
+      content = content,
     )
   }
 }

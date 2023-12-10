@@ -9,9 +9,9 @@ import javax.inject.Inject
 internal class DaggerKtorRepoItemApi @Inject constructor(
   httpClient: HttpClient,
   @RepoItemApiBaseUrl baseUrl: Url,
-  appCoroutineDispatchers: AppCoroutineDispatchers
+  appCoroutineDispatchers: AppCoroutineDispatchers,
 ) : KtorRepoItemApi(
   httpClient = httpClient,
   baseUrl = baseUrl,
-  appCoroutineDispatchers = appCoroutineDispatchers
+  appCoroutineDispatchers = appCoroutineDispatchers,
 )

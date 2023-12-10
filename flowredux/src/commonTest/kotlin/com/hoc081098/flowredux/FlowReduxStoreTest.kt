@@ -46,8 +46,8 @@ object L {
 @ExperimentalCoroutinesApi
 private fun TestScope.createScope() = CoroutineScope(
   UnconfinedTestDispatcher(
-    testScheduler
-  )
+    testScheduler,
+  ),
 )
 
 fun <Action : Any, State> CoroutineScope.createTestFlowReduxStore(
@@ -60,7 +60,7 @@ fun <Action : Any, State> CoroutineScope.createTestFlowReduxStore(
   val store = createFlowReduxStore(
     initialState = initialState,
     sideEffects = sideEffects + effect,
-    reducer = reducer
+    reducer = reducer,
   )
 
   return store to channel.receiveAsFlow()
@@ -80,7 +80,7 @@ class FlowReduxStoreTest {
       reducer = { state, _ ->
         reducerInvocations++
         state + 1
-      }
+      },
     )
       .first
       .stateFlow
@@ -105,7 +105,7 @@ class FlowReduxStoreTest {
       sideEffects = L(),
       reducer = { state, action ->
         state + action
-      }
+      },
     )
     val allActions = mutableListOf<String>()
     scope.launch(start = CoroutineStart.UNDISPATCHED) {
@@ -129,7 +129,7 @@ class FlowReduxStoreTest {
 
     assertContentEquals(
       L["1", "2"],
-      allActions
+      allActions,
     )
     scope.cancel()
   }
@@ -147,11 +147,11 @@ class FlowReduxStoreTest {
             sideEffect1Actions += it
             emptyFlow()
           }
-        }
+        },
       ],
       reducer = { state, action ->
         state + action
-      }
+      },
     )
     val allActions = mutableListOf<String>()
     scope.launch(start = CoroutineStart.UNDISPATCHED) {
@@ -175,11 +175,11 @@ class FlowReduxStoreTest {
 
     assertContentEquals(
       L["1", "2"],
-      allActions
+      allActions,
     )
     assertContentEquals(
       sideEffect1Actions,
-      allActions
+      allActions,
     )
     scope.cancel()
   }
@@ -204,11 +204,11 @@ class FlowReduxStoreTest {
             sideEffect2Actions += it
             emptyFlow()
           }
-        }
+        },
       ],
       reducer = { state, action ->
         state + action
-      }
+      },
     )
     val allActions = mutableListOf<String>()
     scope.launch(start = CoroutineStart.UNDISPATCHED) {
@@ -232,15 +232,15 @@ class FlowReduxStoreTest {
 
     assertContentEquals(
       L["1", "2"],
-      allActions
+      allActions,
     )
     assertContentEquals(
       sideEffect1Actions,
-      allActions
+      allActions,
     )
     assertContentEquals(
       sideEffect2Actions,
-      allActions
+      allActions,
     )
     scope.cancel()
   }
@@ -275,11 +275,11 @@ class FlowReduxStoreTest {
               emptyFlow()
             }
           }
-        }
+        },
       ],
       reducer = { state, action ->
         state + action
-      }
+      },
     )
     val allActions = mutableListOf<Int>()
     scope.launch(start = CoroutineStart.UNDISPATCHED) {
@@ -314,15 +314,15 @@ class FlowReduxStoreTest {
 
     assertContentEquals(
       L[1, 6, 7, 2, 6, 7],
-      allActions
+      allActions,
     )
     assertContentEquals(
       L[1, 6, 7, 2, 6, 7],
-      sideEffect1Actions
+      sideEffect1Actions,
     )
     assertContentEquals(
       L[1, 6, 7, 2, 6, 7],
-      sideEffect2Actions
+      sideEffect2Actions,
     )
     scope.cancel()
   }
@@ -361,11 +361,11 @@ class FlowReduxStoreTest {
                 emptyFlow()
               }
             }
-        }
+        },
       ],
       reducer = { state, action ->
         state + action
-      }
+      },
     )
     val allActions = mutableListOf<Int>()
     scope.launch(start = CoroutineStart.UNDISPATCHED) {
@@ -407,15 +407,15 @@ class FlowReduxStoreTest {
 
     assertContentEquals(
       L[1, 2, 6, 7, 6, 7],
-      allActions
+      allActions,
     )
     assertContentEquals(
       L[1, 2, 6, 7, 6, 7],
-      sideEffect1Actions
+      sideEffect1Actions,
     )
     assertContentEquals(
       L[1, 2, 6, 7, 6, 7],
-      sideEffect2Actions
+      sideEffect2Actions,
     )
     scope.cancel()
   }
@@ -456,11 +456,11 @@ class FlowReduxStoreTest {
 
               error("Should not reach here!")
             }
-        }
+        },
       ],
       reducer = { state, action ->
         state + action
-      }
+      },
     )
 
     launch {
@@ -497,9 +497,9 @@ class FlowReduxStoreTest {
         SideEffect<Int, Int> { _, _, coroutineScope ->
           coroutineScope.coroutineContext.job.invokeOnCompletion { cancelled.complete(Unit) }
           emptyFlow()
-        }
+        },
       ],
-      reducer = { state, _ -> state + 1 }
+      reducer = { state, _ -> state + 1 },
     )
 
     assertTrue { store.dispatch(1) }
@@ -525,9 +525,9 @@ class FlowReduxStoreTest {
         SideEffect<Int, Int> { _, _, coroutineScope ->
           coroutineScope.coroutineContext.job.invokeOnCompletion { cancelled.complete(Unit) }
           emptyFlow()
-        }
+        },
       ],
-      reducer = { state, _ -> state + 1 }
+      reducer = { state, _ -> state + 1 },
     )
 
     store.use {
@@ -548,7 +548,7 @@ class FlowReduxStoreTest {
     val (store) = scope.createTestFlowReduxStore<Int, String>(
       initialState = "",
       sideEffects = L(),
-      reducer = { state, action -> state + action }
+      reducer = { state, action -> state + action },
     )
 
     assertFalse { store.isClosed() }
@@ -568,9 +568,7 @@ class FlowReduxStoreTest {
 }
 
 @ExperimentalCoroutinesApi
-suspend fun <T> Flow<T>.testWithTestCoroutineScheduler(
-  validate: suspend ReceiveTurbine<T>.() -> Unit,
-) {
+suspend fun <T> Flow<T>.testWithTestCoroutineScheduler(validate: suspend ReceiveTurbine<T>.() -> Unit) {
   val testScheduler = currentCoroutineContext()[TestCoroutineScheduler]
 
   if (testScheduler == null) {

@@ -23,13 +23,13 @@ class RepoItemMapperTest {
           owner = RepoItemsSearchResponse.Item.Owner(
             login = "owner1",
             id = 0,
-            avatarUrl = "owner1/avatar"
+            avatarUrl = "owner1/avatar",
           ),
           htmlUrl = "url/1",
           description = "description 1",
           updatedAt = Instant.fromEpochMilliseconds(1),
           stargazersCount = 10,
-          language = "Kotlin"
+          language = "Kotlin",
         ),
         RepoItemsSearchResponse.Item(
           id = 2,
@@ -38,15 +38,15 @@ class RepoItemMapperTest {
           owner = RepoItemsSearchResponse.Item.Owner(
             login = "owner2",
             id = 2,
-            avatarUrl = "owner2/avatar"
+            avatarUrl = "owner2/avatar",
           ),
           htmlUrl = "url/2",
           description = "description 2",
           updatedAt = Instant.fromEpochMilliseconds(2),
           stargazersCount = 20,
-          language = "Scala"
-        )
-      )
+          language = "Scala",
+        ),
+      ),
     )
 
     val colors = mapOf(
@@ -64,14 +64,14 @@ class RepoItemMapperTest {
           owner = Owner(
             id = 0,
             username = "owner1",
-            avatar = "owner1/avatar"
+            avatar = "owner1/avatar",
           ),
           htmlUrl = "url/1",
           repoDescription = "description 1",
           updatedAt = Instant.fromEpochMilliseconds(1),
           starCount = 10,
           language = "Kotlin",
-          languageColor = colors["Kotlin"]!!
+          languageColor = colors["Kotlin"]!!,
         ),
         RepoItem(
           id = 2,
@@ -80,17 +80,17 @@ class RepoItemMapperTest {
           owner = Owner(
             id = 2,
             username = "owner2",
-            avatar = "owner2/avatar"
+            avatar = "owner2/avatar",
           ),
           htmlUrl = "url/2",
           repoDescription = "description 2",
           updatedAt = Instant.fromEpochMilliseconds(2),
           starCount = 20,
           language = "Scala",
-          languageColor = null
-        )
+          languageColor = null,
+        ),
       ),
-      actual = items
+      actual = items,
     )
   }
 }

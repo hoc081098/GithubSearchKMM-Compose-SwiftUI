@@ -21,13 +21,13 @@ fun includeProject(name: String, filePath: String) {
 fun copyToBuildSrc(sourcePath: String) {
   rootDir.resolve(sourcePath).copyRecursively(
     target = rootDir.resolve("buildSrc").resolve(sourcePath),
-    overwrite = true
+    overwrite = true,
   )
   rootDir.resolve(sourcePath).copyRecursively(
     target = rootDir.resolve("buildSrc")
       .resolve("buildSrc")
       .resolve(sourcePath),
-    overwrite = true
+    overwrite = true,
   )
   println("[DONE] copied $sourcePath")
 }

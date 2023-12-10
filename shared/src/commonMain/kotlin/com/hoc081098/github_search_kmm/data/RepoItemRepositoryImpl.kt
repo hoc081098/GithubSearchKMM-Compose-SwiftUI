@@ -13,10 +13,7 @@ internal open class RepoItemRepositoryImpl(
   private val errorMapper: AppErrorMapper,
   private val appCoroutineDispatchers: AppCoroutineDispatchers,
 ) : RepoItemRepository {
-  override suspend fun searchRepoItems(
-    term: String,
-    page: Int
-  ) = parZipEither(
+  override suspend fun searchRepoItems(term: String, page: Int) = parZipEither(
     ctx = appCoroutineDispatchers.io,
     fa = {
       githubLanguageColorApi
@@ -26,7 +23,7 @@ internal open class RepoItemRepositoryImpl(
           Napier.e(
             message = "githubLanguageColorApi.getColors()",
             throwable = it,
-            tag = "RepoItemRepositoryImpl"
+            tag = "RepoItemRepositoryImpl",
           )
         }
     },
@@ -34,17 +31,17 @@ internal open class RepoItemRepositoryImpl(
       repoItemApi
         .searchRepoItems(
           term = term,
-          page = page
+          page = page,
         )
         .mapLeft(errorMapper)
         .onLeft {
           Napier.e(
             message = "repoItemApi.searchRepoItems(term=$term, page=$page)",
             throwable = it,
-            tag = "RepoItemRepositoryImpl"
+            tag = "RepoItemRepositoryImpl",
           )
         }
-    }
+    },
   ) { colors, repoItemsSearchResponse ->
     repoItemsSearchResponse.toRepoItemsList(colors)
   }

@@ -53,7 +53,7 @@ fun <T : HttpClientEngineConfig> createHttpClient(
     json(json)
     register(
       ContentType.Text.Plain,
-      KotlinxSerializationConverter(json)
+      KotlinxSerializationConverter(json),
     )
   }
 
@@ -70,7 +70,7 @@ fun <T : HttpClientEngineConfig> createHttpClient(
 internal object InstantSerializer : KSerializer<Instant> {
   override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(
     "InstantSerializer",
-    PrimitiveKind.STRING
+    PrimitiveKind.STRING,
   )
 
   override fun serialize(encoder: Encoder, value: Instant) = encoder.encodeString(value.toString())

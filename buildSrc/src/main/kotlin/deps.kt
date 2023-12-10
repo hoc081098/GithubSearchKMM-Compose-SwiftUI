@@ -8,13 +8,13 @@ import org.gradle.plugin.use.PluginDependenciesSpec
 import org.gradle.plugin.use.PluginDependencySpec
 
 object versions {
-  const val spotless = "6.7.2"
-  const val ktlint = "0.45.2"
+  const val spotless = "6.23.3"
+  const val ktlint = "1.0.0"
   const val kotlin = "1.9.21"
-  const val agp = "8.1.1"
+  const val agp = "8.2.0"
   const val gradleVersions = "0.50.0"
   const val mokoKSwift = "0.6.1"
-  const val googleKsp = "1.9.10-1.0.13"
+  const val googleKsp = "1.9.21-1.0.15"
   const val buildKonfig = "0.13.3"
 }
 
@@ -125,12 +125,12 @@ object deps {
   }
 
   const val mokoKSwiftRuntime = "dev.icerock.moko:kswift-runtime:${versions.mokoKSwift}"
-  const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.1"
+  const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.5.0"
 
   const val coilCompose = "io.coil-kt:coil-compose:2.5.0"
   const val flowExt = "io.github.hoc081098:FlowExt:0.7.4"
 
-  const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.22.0"
+  const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.23.1"
   const val immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.6"
 
   object arrow {
@@ -190,7 +190,7 @@ val Project.isCiBuild: Boolean
 
 val excludedClasses = listOf(
   "hilt_aggregated_deps.*",
-  "io.mockative.*"
+  "io.mockative.*",
 )
 
 @Suppress("NOTHING_TO_INLINE")

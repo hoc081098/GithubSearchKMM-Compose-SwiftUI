@@ -27,7 +27,7 @@ fun Throwable.asNSError(): NSError {
   return NSError.errorWithDomain(
     domain = "KotlinException",
     code = 0.convert(),
-    userInfo = userInfo
+    userInfo = userInfo,
   )
 }
 
@@ -50,17 +50,15 @@ val NSError.isKotlinThrowable: Boolean
  *
  * @see asNSError
  */
-fun NSError.asThrowable(): Throwable {
-  return if (isKotlinThrowable) {
-    Napier.d(message = "isKotlinThrowable this=$this $userInfo", tag = "NSError.asThrowable")
+fun NSError.asThrowable(): Throwable = if (isKotlinThrowable) {
+  Napier.d(message = "isKotlinThrowable this=$this $userInfo", tag = "NSError.asThrowable")
 
-    userInfo["KotlinException"] as Throwable
-  } else {
-    Napier.d(message = "ObjCErrorException this=$this", tag = "NSError.asThrowable")
+  userInfo["KotlinException"] as Throwable
+} else {
+  Napier.d(message = "ObjCErrorException this=$this", tag = "NSError.asThrowable")
 
-    ObjCErrorException(
-      message = localizedDescription,
-      error = this
-    )
-  }
+  ObjCErrorException(
+    message = localizedDescription,
+    error = this,
+  )
 }

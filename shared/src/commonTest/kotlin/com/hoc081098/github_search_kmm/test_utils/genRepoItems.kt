@@ -21,8 +21,8 @@ fun genRepoItems(ids: IntRange): PersistentList<RepoItem> = ids.map { id ->
     owner = Owner(
       id = id,
       username = "username $id",
-      avatar = "avatar/$id"
+      avatar = "avatar/$id",
     ),
-    updatedAt = Clock.System.now()
+    updatedAt = Clock.System.now(),
   )
 }.toPersistentList()

@@ -46,7 +46,7 @@ class KtorRepoItemApiTest {
     ktorRepoItemApi = KtorRepoItemApi(
       httpClient = httpClient,
       baseUrl = baseUrl,
-      appCoroutineDispatchers = testAppCoroutineDispatchers
+      appCoroutineDispatchers = testAppCoroutineDispatchers,
     )
   }
 
@@ -74,8 +74,8 @@ class KtorRepoItemApiTest {
               status = HttpStatusCode.OK,
               headers = headersOf(
                 HttpHeaders.ContentType,
-                ContentType.Application.Json.toString()
-              )
+                ContentType.Application.Json.toString(),
+              ),
             )
           }
           else -> error("Unhandled request ${request.url}")
@@ -84,12 +84,12 @@ class KtorRepoItemApiTest {
 
       val either = ktorRepoItemApi.searchRepoItems(
         term = "kmm",
-        page = 1
+        page = 1,
       )
 
       assertEquals(
         json.decodeFromString(responseString),
-        either.getOrThrow
+        either.getOrThrow,
       )
     }
 
@@ -108,8 +108,8 @@ class KtorRepoItemApiTest {
               status = HttpStatusCode.InternalServerError,
               headers = headersOf(
                 HttpHeaders.ContentType,
-                ContentType.Application.Json.toString()
-              )
+                ContentType.Application.Json.toString(),
+              ),
             )
           }
           else -> error("Unhandled request ${request.url}")
@@ -118,7 +118,7 @@ class KtorRepoItemApiTest {
 
       val either = ktorRepoItemApi.searchRepoItems(
         term = "kmm",
-        page = 1
+        page = 1,
       )
 
       either.leftValueOrThrow

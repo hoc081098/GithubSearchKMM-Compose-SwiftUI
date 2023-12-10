@@ -48,7 +48,7 @@ class KtorGithubLanguageColorApiTest {
     ktorGithubLanguageColorApi = KtorGithubLanguageColorApi(
       httpClient = httpClient,
       url = url,
-      appCoroutineDispatchers = testAppCoroutineDispatchers
+      appCoroutineDispatchers = testAppCoroutineDispatchers,
     )
   }
 
@@ -88,8 +88,8 @@ class KtorGithubLanguageColorApiTest {
               status = HttpStatusCode.OK,
               headers = headersOf(
                 HttpHeaders.ContentType,
-                ContentType.Application.Json.toString()
-              )
+                ContentType.Application.Json.toString(),
+              ),
             )
           }
           else -> error("Unhandled request ${request.url}")
@@ -137,8 +137,8 @@ class KtorGithubLanguageColorApiTest {
               status = HttpStatusCode.OK,
               headers = headersOf(
                 HttpHeaders.ContentType,
-                ContentType.Application.Json.toString()
-              )
+                ContentType.Application.Json.toString(),
+              ),
             )
           }
           else -> error("Unhandled request ${request.url}")

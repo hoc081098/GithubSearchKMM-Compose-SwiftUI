@@ -9,9 +9,9 @@ import javax.inject.Inject
 internal class DaggerKtorGithubLanguageColorApi @Inject constructor(
   @GithubLanguageColorApiUrl url: Url,
   httpClient: HttpClient,
-  appCoroutineDispatchers: AppCoroutineDispatchers
+  appCoroutineDispatchers: AppCoroutineDispatchers,
 ) : KtorGithubLanguageColorApi(
   url = url,
   httpClient = httpClient,
-  appCoroutineDispatchers = appCoroutineDispatchers
+  appCoroutineDispatchers = appCoroutineDispatchers,
 )

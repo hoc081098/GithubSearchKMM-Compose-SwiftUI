@@ -47,22 +47,24 @@ internal fun GithubRepoItemsList(
     snapshotFlow { lazyListState.layoutInfo }
       .throttleTime(
         duration = 300.milliseconds,
-        ThrottleConfiguration.LEADING_AND_TRAILING
+        ThrottleConfiguration.LEADING_AND_TRAILING,
       )
       .filter {
         val index = it.visibleItemsInfo.lastOrNull()?.index
         val totalItemsCount = it.totalItemsCount
 
         Napier.d(
-          message = "lazyListState: currentHasReachedMax=$currentHasReachedMax - lastVisible=$index - totalItemsCount=$totalItemsCount",
-          tag = "GithubRepoItemsList"
+          message = "lazyListState: currentHasReachedMax=$currentHasReachedMax " +
+            "- lastVisible=$index" +
+            " - totalItemsCount=$totalItemsCount",
+          tag = "GithubRepoItemsList",
         )
         !currentHasReachedMax && index != null && index + 2 >= totalItemsCount
       }
       .collect {
         Napier.d(
           message = "load next page",
-          tag = "GithubRepoItemsList"
+          tag = "GithubRepoItemsList",
         )
         currentOnLoadNextPage()
       }
@@ -74,7 +76,7 @@ internal fun GithubRepoItemsList(
     modifier = modifier
       .padding(horizontal = 16.dp),
     verticalArrangement = Arrangement.spacedBy(16.dp),
-    state = lazyListState
+    state = lazyListState,
   ) {
     items(
       items = items,
@@ -92,7 +94,7 @@ internal fun GithubRepoItemsList(
     if (isLoading) {
       item(contentType = "LoadingIndicator") {
         LoadingIndicator(
-          modifier = Modifier.height(128.dp)
+          modifier = Modifier.height(128.dp),
         )
       }
     } else if (error !== null) {
@@ -100,7 +102,7 @@ internal fun GithubRepoItemsList(
         RetryButton(
           modifier = Modifier.height(128.dp),
           errorMessage = error.getReadableMessage(),
-          onRetry = onRetry
+          onRetry = onRetry,
         )
       }
     } else if (!hasReachedMax) {

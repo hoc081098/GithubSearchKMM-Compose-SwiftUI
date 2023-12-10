@@ -55,10 +55,7 @@ import kotlinx.datetime.Clock
   ExperimentalLayoutApi::class,
 )
 @Composable
-fun GithubRepoItemsSearchScreen(
-  modifier: Modifier = Modifier,
-  vm: DaggerGithubSearchViewModel = hiltViewModel(),
-) {
+fun GithubRepoItemsSearchScreen(modifier: Modifier = Modifier, vm: DaggerGithubSearchViewModel = hiltViewModel()) {
   val snackbarHostState = remember { SnackbarHostState() }
 
   val context = LocalContext.current
@@ -71,14 +68,14 @@ fun GithubRepoItemsSearchScreen(
           snackbarHostState.showSnackbar(
             event
               .appError
-              .getReadableMessage(context)
+              .getReadableMessage(context),
           )
         }
       }
       GithubSearchSingleEvent.ReachedMaxItems -> {
         scope.launch {
           snackbarHostState.showSnackbar(
-            context.getString(R.string.loaded_all_items)
+            context.getString(R.string.loaded_all_items),
           )
         }
       }
@@ -96,7 +93,7 @@ fun GithubRepoItemsSearchScreen(
       CenterAlignedTopAppBar(
         title = {
           Text(text = stringResource(id = R.string.app_name))
-        }
+        },
       )
     },
     snackbarHost = {
@@ -105,14 +102,14 @@ fun GithubRepoItemsSearchScreen(
         modifier = Modifier
           .systemBarsPadding()
           .fillMaxWidth()
-          .wrapContentHeight(Alignment.Bottom)
+          .wrapContentHeight(Alignment.Bottom),
       )
-    }
+    },
   ) { innerPadding ->
     BoxWithConstraints(
       modifier = Modifier
         .padding(innerPadding)
-        .consumeWindowInsets(innerPadding)
+        .consumeWindowInsets(innerPadding),
     ) {
       Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -130,10 +127,10 @@ fun GithubRepoItemsSearchScreen(
               .padding(
                 start = 16.dp,
                 bottom = 16.dp,
-                end = 16.dp
+                end = 16.dp,
               ),
             text = "Search results for '${state.term}'",
-            style = MaterialTheme.typography.bodySmall
+            style = MaterialTheme.typography.bodySmall,
           )
         }
 
@@ -141,7 +138,7 @@ fun GithubRepoItemsSearchScreen(
           modifier = Modifier.weight(1f),
           state = state,
           onRetry = { dispatch(GithubSearchAction.Retry) },
-          onLoadNextPage = { dispatch(GithubSearchAction.LoadNextPage) }
+          onLoadNextPage = { dispatch(GithubSearchAction.LoadNextPage) },
         )
       }
     }
@@ -165,7 +162,7 @@ internal fun GithubRepoItemsSearchContent(
     if (state.isFirstPage && error != null) {
       return RetryButton(
         errorMessage = error.getReadableMessage(),
-        onRetry = onRetry
+        onRetry = onRetry,
       )
     }
 
@@ -181,7 +178,7 @@ internal fun GithubRepoItemsSearchContent(
           } else {
             "Search github repositories..."
           },
-          style = MaterialTheme.typography.titleLarge
+          style = MaterialTheme.typography.titleLarge,
         )
       }
     }
@@ -192,7 +189,7 @@ internal fun GithubRepoItemsSearchContent(
       error = state.error,
       hasReachedMax = state.hasReachedMax,
       onRetry = onRetry,
-      onLoadNextPage = onLoadNextPage
+      onLoadNextPage = onLoadNextPage,
     )
   }
 }
@@ -221,15 +218,15 @@ private fun SearchScreenContentPreview() {
                   owner = Owner(
                     id = 0,
                     username = "",
-                    avatar = ""
+                    avatar = "",
                   ),
-                  updatedAt = Clock.System.now()
+                  updatedAt = Clock.System.now(),
                 )
-              }
+              },
             ),
           isLoading = false,
           error = null,
-          hasReachedMax = false
+          hasReachedMax = false,
         ),
         onRetry = {},
         onLoadNextPage = {},

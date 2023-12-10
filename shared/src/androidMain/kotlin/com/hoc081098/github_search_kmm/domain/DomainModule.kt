@@ -12,8 +12,7 @@ import dagger.hilt.components.SingletonComponent
 internal interface DomainModule {
   companion object {
     @Provides
-    internal fun searchRepoItemsUseCase(
-      repoItemRepository: RepoItemRepository,
-    ): SearchRepoItemsUseCase = SearchRepoItemsUseCase(repoItemRepository)
+    internal fun searchRepoItemsUseCase(repoItemRepository: RepoItemRepository): SearchRepoItemsUseCase =
+      SearchRepoItemsUseCase(repoItemRepository)
   }
 }

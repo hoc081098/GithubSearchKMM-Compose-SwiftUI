@@ -28,8 +28,8 @@ internal open class KtorGithubLanguageColorApi(
       .flatMap { it.toColors() }
   }
 
-  private fun ColorsResponseType.toColors(): Either<IllegalStateException, Map<String, ArgbColor>> {
-    return mapNotNull { (k, v) ->
+  private fun ColorsResponseType.toColors(): Either<IllegalStateException, Map<String, ArgbColor>> =
+    mapNotNull { (k, v) ->
       v["color"]?.let {
         k to it
       }
@@ -46,5 +46,4 @@ internal open class KtorGithubLanguageColorApi(
         }
       }
       .map { it.toMap() }
-  }
 }

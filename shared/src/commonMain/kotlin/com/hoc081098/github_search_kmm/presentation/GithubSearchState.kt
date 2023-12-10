@@ -12,7 +12,7 @@ data class GithubSearchState(
   val items: PersistentList<RepoItem>,
   val isLoading: Boolean,
   val error: AppError?,
-  val hasReachedMax: Boolean
+  val hasReachedMax: Boolean,
 ) {
   inline val isFirstPage: Boolean get() = page == FIRST_PAGE
 
