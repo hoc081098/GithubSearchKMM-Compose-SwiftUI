@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -38,8 +39,9 @@ internal fun GithubRepoItemsList(
   onRetry: () -> Unit,
   onLoadNextPage: () -> Unit,
   modifier: Modifier = Modifier,
+  lazyListState: LazyListState = rememberLazyListState(),
+  decimalFormat: StableWrapper<DecimalFormat> = remember { StableWrapper(DecimalFormat("#,###")) },
 ) {
-  val lazyListState = rememberLazyListState()
   val currentOnLoadNextPage by rememberUpdatedState(onLoadNextPage)
   val currentHasReachedMax by rememberUpdatedState(hasReachedMax)
 
@@ -47,7 +49,7 @@ internal fun GithubRepoItemsList(
     snapshotFlow { lazyListState.layoutInfo }
       .throttleTime(
         duration = 300.milliseconds,
-        ThrottleConfiguration.LEADING_AND_TRAILING,
+        throttleConfiguration = ThrottleConfiguration.LEADING_AND_TRAILING,
       )
       .filter {
         val index = it.visibleItemsInfo.lastOrNull()?.index
@@ -69,8 +71,6 @@ internal fun GithubRepoItemsList(
         currentOnLoadNextPage()
       }
   }
-
-  val decimalFormat = remember { StableWrapper(DecimalFormat("#,###")) }
 
   LazyColumn(
     modifier = modifier
