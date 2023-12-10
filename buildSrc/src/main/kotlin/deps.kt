@@ -74,7 +74,7 @@ object deps {
   }
 
   object ktor {
-    private const val version = "2.3.6"
+    private const val version = "2.3.7"
     const val core = "io.ktor:ktor-client-core:$version"
     const val clientJson = "io.ktor:ktor-client-json:$version"
     const val logging = "io.ktor:ktor-client-logging:$version"
@@ -113,13 +113,13 @@ object deps {
   }
 
   object dagger {
-    const val version = "2.48.1"
+    const val version = "2.49"
     const val hiltAndroid = "com.google.dagger:hilt-android:$version"
     const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:$version"
   }
 
   object kmpViewModel {
-    private const val version = "0.6.0"
+    private const val version = "0.6.1"
     const val core = "io.github.hoc081098:kmp-viewmodel:$version"
     const val savedState = "io.github.hoc081098:kmp-viewmodel-savedstate:$version"
   }
