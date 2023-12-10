@@ -68,7 +68,9 @@ jobs:
             ${{ runner.os }}-konan-
 
       - name: Gen pod
-        run: ./gradlew :shared:podGenIOS --parallel
+        run: |
+          ./gradlew :shared:podGenIOS --parallel
+          ./gradlew :shared:generateDummyFramework
 
       - name: Gen KSwift
         run: ./gradlew kSwiftsharedPodspec
