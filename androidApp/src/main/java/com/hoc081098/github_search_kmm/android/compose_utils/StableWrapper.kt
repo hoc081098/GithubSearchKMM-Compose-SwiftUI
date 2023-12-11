@@ -15,4 +15,4 @@ inline operator fun <T> StableWrapper<T>.getValue(thisRef: Any?, property: KProp
 
 @Suppress("NOTHING_TO_INLINE")
 @Composable
-inline fun <T> rememberStableWrapperOf(value: T) = remember(value) { StableWrapper(value) }
+inline fun <T> rememberStableWrapperOf(value: T): StableWrapper<T> = remember(value) { StableWrapper(value) }
