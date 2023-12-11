@@ -19,14 +19,17 @@ class IOSGithubSearchViewModel: ObservableObject {
   @Published private(set) var term: String = ""
   let eventPublisher: AnyPublisher<GithubSearchSingleEventKs, Never>
 
-  init(vm: GithubSearchViewModel) {
+  init(
+    vm: GithubSearchViewModel = DIContainer.shared.get(),
+    immediateMainDispatcher: CoroutineDispatcher = DIContainer.shared
+      .get(for: AppCoroutineDispatchers.self)
+      .immediateMain
+  ) {
     self.vm = vm
 
     self.eventPublisher = vm.eventFlow.asNonNullPublisher(
         GithubSearchSingleEvent.self,
-        dispatcher: DIContainer.shared
-          .get(for: AppCoroutineDispatchers.self)
-          .immediateMain
+        dispatcher: immediateMainDispatcher
       )
       .assertNoFailure()
       .map(GithubSearchSingleEventKs.init)
@@ -42,9 +45,7 @@ class IOSGithubSearchViewModel: ObservableObject {
       .termStateFlow
       .asNonNullPublisher(
         NSString.self,
-        dispatcher: DIContainer.shared
-          .get(for: AppCoroutineDispatchers.self)
-          .immediateMain
+        dispatcher: immediateMainDispatcher
       )
       .assertNoFailure()
       .map { $0 as String }

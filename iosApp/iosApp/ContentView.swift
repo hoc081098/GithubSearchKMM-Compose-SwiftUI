@@ -143,7 +143,8 @@ struct ContentView_Previews: PreviewProvider {
         .create(
           searchRepoItemsUseCase: .init(repoItemRepository: FakeRepoItemRepository()
         )
-      )
+      ),
+      immediateMainDispatcher: Dispatchers.shared.Main.immediate
     )
     ContentView(vm: vm)
   }
