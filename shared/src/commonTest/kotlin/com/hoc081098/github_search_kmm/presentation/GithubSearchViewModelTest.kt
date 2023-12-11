@@ -13,6 +13,7 @@ import com.hoc081098.github_search_kmm.domain.model.RepoItem
 import com.hoc081098.github_search_kmm.domain.repository.RepoItemRepository
 import com.hoc081098.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
 import com.hoc081098.github_search_kmm.presentation.GithubSearchState.Companion.FIRST_PAGE
+import com.hoc081098.github_search_kmm.presentation.common.SingleEventChannel
 import com.hoc081098.github_search_kmm.test_utils.TestAntilog
 import com.hoc081098.github_search_kmm.test_utils.TestAppCoroutineDispatchers
 import com.hoc081098.github_search_kmm.test_utils.genRepoItems
@@ -65,6 +66,7 @@ class GithubSearchViewModelTest {
     vm = GithubSearchViewModel(
       searchRepoItemsUseCase = searchRepoItemsUseCase,
       savedStateHandle = SavedStateHandle(),
+      singleEventChannel = SingleEventChannel(),
     )
   }
 

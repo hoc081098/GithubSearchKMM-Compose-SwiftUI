@@ -15,7 +15,7 @@ import com.hoc081098.kmp.viewmodel.wrapper.wrap
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 
-open class GithubSearchViewModel constructor(
+open class GithubSearchViewModel(
   searchRepoItemsUseCase: SearchRepoItemsUseCase,
   private val savedStateHandle: SavedStateHandle,
   private val singleEventChannel: SingleEventChannel<GithubSearchSingleEvent>,

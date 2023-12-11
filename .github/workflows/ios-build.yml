@@ -72,8 +72,12 @@ jobs:
           ./gradlew :shared:podGenIOS --parallel
           ./gradlew :shared:generateDummyFramework
 
+      - name: Install Pod
+        run: pod install
+        working-directory: iosApp
+
       - name: Gen KSwift
-        run: ./gradlew kSwiftsharedPodspec
+        run: ./gradlew kSwiftsharedPodspec --no-build-cache
 
       - name: Install Pod
         run: pod install
