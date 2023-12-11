@@ -95,23 +95,27 @@ internal fun GithubRepoItemsList(
       )
     }
 
-    if (isLoading) {
-      item(contentType = "LoadingIndicator") {
-        LoadingIndicator(
-          modifier = Modifier.height(128.dp),
-        )
+    when {
+      isLoading -> {
+        item(contentType = "LoadingIndicator") {
+          LoadingIndicator(
+            modifier = Modifier.height(128.dp),
+          )
+        }
       }
-    } else if (error !== null) {
-      item(contentType = "RetryButton") {
-        RetryButton(
-          modifier = Modifier.height(128.dp),
-          errorMessage = error.getReadableMessage(),
-          onRetry = onRetry,
-        )
+      error !== null -> {
+        item(contentType = "RetryButton") {
+          RetryButton(
+            modifier = Modifier.height(128.dp),
+            errorMessage = error.getReadableMessage(),
+            onRetry = onRetry,
+          )
+        }
       }
-    } else if (!hasReachedMax) {
-      item(contentType = "Spacer") {
-        Spacer(modifier = Modifier.height(128.dp))
+      !hasReachedMax -> {
+        item(contentType = "Spacer") {
+          Spacer(modifier = Modifier.height(128.dp))
+        }
       }
     }
   }
