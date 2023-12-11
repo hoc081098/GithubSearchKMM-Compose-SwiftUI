@@ -30,6 +30,8 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.flow.filter
 
+private const val GithubRepoItemsListLogTag = "GithubRepoItemsList"
+
 @Composable
 internal fun GithubRepoItemsList(
   items: PersistentList<RepoItem>,
@@ -59,14 +61,16 @@ internal fun GithubRepoItemsList(
           message = "lazyListState: currentHasReachedMax=$currentHasReachedMax " +
             "- lastVisible=$index" +
             " - totalItemsCount=$totalItemsCount",
-          tag = "GithubRepoItemsList",
+          tag = GithubRepoItemsListLogTag,
         )
-        !currentHasReachedMax && index != null && index + 2 >= totalItemsCount
+
+        !currentHasReachedMax && index != null &&
+          index + 2 >= totalItemsCount
       }
       .collect {
         Napier.d(
           message = "load next page",
-          tag = "GithubRepoItemsList",
+          tag = GithubRepoItemsListLogTag,
         )
         currentOnLoadNextPage()
       }
