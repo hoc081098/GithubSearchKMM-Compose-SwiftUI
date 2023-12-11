@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.take
 
@@ -32,7 +31,7 @@ internal class GithubSearchSideEffectsContainer(private val searchRepoItemsUseCa
     GithubSearchSingleEvent,
     > { it.toGithubSearchSingleEventOrNull() }
 
-  internal val eventFlow get() = sendSingleEventSideEffect.second.receiveAsFlow()
+  internal val eventChannel get() = sendSingleEventSideEffect.second
 
   /**
    * @return A list of [SideEffect]s contained in this class.

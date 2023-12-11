@@ -12,8 +12,8 @@ import com.hoc081098.kmp.viewmodel.ViewModel
 import com.hoc081098.kmp.viewmodel.wrapper.NonNullFlowWrapper
 import com.hoc081098.kmp.viewmodel.wrapper.NonNullStateFlowWrapper
 import com.hoc081098.kmp.viewmodel.wrapper.wrap
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.launch
 
 open class GithubSearchViewModel constructor(
   searchRepoItemsUseCase: SearchRepoItemsUseCase,
@@ -30,16 +30,16 @@ open class GithubSearchViewModel constructor(
   )
 
   val termStateFlow: NonNullStateFlowWrapper<String> = savedStateHandle.getStateFlow(TERM_KEY, "").wrap()
-
   val stateFlow: NonNullStateFlowWrapper<GithubSearchState> = store.stateFlow.wrap()
-
   val eventFlow: NonNullFlowWrapper<GithubSearchSingleEvent> = singleEventChannel.singleEventFlow.wrap()
 
   init {
-    // Forward all events from `effectsContainer.eventFlow` to `singleEventChannel`
-    effectsContainer.eventFlow
-      .onEach(singleEventChannel::sendEvent)
-      .launchIn(viewModelScope)
+    // Forward all events from `effectsContainer.eventChannel` to `singleEventChannel`
+    viewModelScope.launch {
+      effectsContainer
+        .eventChannel
+        .consumeEach { singleEventChannel.sendEvent(it) }
+    }
 
     store.dispatch(InitialSearchAction(termStateFlow.value))
   }
