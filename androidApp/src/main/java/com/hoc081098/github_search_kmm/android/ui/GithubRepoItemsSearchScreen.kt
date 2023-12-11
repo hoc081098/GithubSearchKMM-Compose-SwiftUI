@@ -32,7 +32,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hoc081098.github_search_kmm.android.R
 import com.hoc081098.github_search_kmm.android.compose_utils.CollectWithLifecycleEffect
+import com.hoc081098.github_search_kmm.android.compose_utils.getValue
 import com.hoc081098.github_search_kmm.android.compose_utils.rememberStableCoroutineScope
+import com.hoc081098.github_search_kmm.android.compose_utils.rememberStableWrapperOf
 import com.hoc081098.github_search_kmm.android.core_ui.AppBackground
 import com.hoc081098.github_search_kmm.android.core_ui.AppTheme
 import com.hoc081098.github_search_kmm.android.core_ui.LoadingIndicator
@@ -60,7 +62,7 @@ internal fun GithubRepoItemsSearchScreen(
   vm: DaggerGithubSearchViewModel = hiltViewModel(),
   snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
-  val context = LocalContext.current
+  val context by rememberStableWrapperOf(value = LocalContext.current)
   val scope = rememberStableCoroutineScope()
 
   vm.eventFlow.CollectWithLifecycleEffect { event ->
