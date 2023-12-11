@@ -22,7 +22,12 @@ class IOSGithubSearchViewModel: ObservableObject {
   init(vm: GithubSearchViewModel) {
     self.vm = vm
 
-    self.eventPublisher = vm.eventFlow.asNonNullPublisher()
+    self.eventPublisher = vm.eventFlow.asNonNullPublisher(
+        GithubSearchSingleEvent.self,
+        dispatcher: DIContainer.shared
+          .get(for: AppCoroutineDispatchers.self)
+          .immediateMain
+      )
       .assertNoFailure()
       .map(GithubSearchSingleEventKs.init)
       .eraseToAnyPublisher()
@@ -35,7 +40,12 @@ class IOSGithubSearchViewModel: ObservableObject {
 
     self.vm
       .termStateFlow
-      .asNonNullPublisher(NSString.self)
+      .asNonNullPublisher(
+        NSString.self,
+        dispatcher: DIContainer.shared
+          .get(for: AppCoroutineDispatchers.self)
+          .immediateMain
+      )
       .assertNoFailure()
       .map { $0 as String }
       .assign(to: &$term)

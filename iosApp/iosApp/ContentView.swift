@@ -139,9 +139,10 @@ class FakeRepoItemRepository: RepoItemRepository {
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
     let vm = IOSGithubSearchViewModel.init(
-      vm: .init(
-        searchRepoItemsUseCase: .init(repoItemRepository: FakeRepoItemRepository()),
-        savedStateHandle: .init()
+      vm: GithubSearchViewModel.Companion.shared
+        .create(
+          searchRepoItemsUseCase: .init(repoItemRepository: FakeRepoItemRepository()
+        )
       )
     )
     ContentView(vm: vm)
