@@ -55,9 +55,11 @@ import kotlinx.datetime.Clock
   ExperimentalLayoutApi::class,
 )
 @Composable
-fun GithubRepoItemsSearchScreen(modifier: Modifier = Modifier, vm: DaggerGithubSearchViewModel = hiltViewModel()) {
-  val snackbarHostState = remember { SnackbarHostState() }
-
+internal fun GithubRepoItemsSearchScreen(
+  modifier: Modifier = Modifier,
+  vm: DaggerGithubSearchViewModel = hiltViewModel(),
+  snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+) {
   val context = LocalContext.current
   val scope = rememberStableCoroutineScope()
 

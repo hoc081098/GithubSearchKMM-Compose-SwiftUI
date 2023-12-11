@@ -1,6 +1,6 @@
 package com.hoc081098.github_search_kmm.domain.model
 
-import com.hoc081098.github_search_kmm.presentation.Immutable
+import com.hoc081098.github_search_kmm.presentation.common.Immutable
 import kotlinx.datetime.Instant
 
 @Immutable

@@ -6,7 +6,7 @@ import com.hoc081098.github_search_kmm.android.core_ui.AppBackground
 import com.hoc081098.github_search_kmm.android.core_ui.AppTheme
 
 @Composable
-fun GithubSearchKmmApp() {
+internal fun GithubSearchKmmApp() {
   AppTheme {
     AppBackground {
       GithubRepoItemsSearchScreen()

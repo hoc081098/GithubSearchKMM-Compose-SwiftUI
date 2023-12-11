@@ -2,6 +2,7 @@ package com.hoc081098.github_search_kmm.presentation
 
 import com.hoc081098.github_search_kmm.domain.model.AppError
 import com.hoc081098.github_search_kmm.domain.model.RepoItem
+import com.hoc081098.github_search_kmm.presentation.common.Immutable
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 

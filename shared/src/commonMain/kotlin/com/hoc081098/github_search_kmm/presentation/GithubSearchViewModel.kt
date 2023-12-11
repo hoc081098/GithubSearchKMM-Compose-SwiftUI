@@ -4,6 +4,7 @@ import com.hoc081098.flowredux.Reducer
 import com.hoc081098.flowredux.createFlowReduxStore
 import com.hoc081098.flowredux.withLogger
 import com.hoc081098.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
+import com.hoc081098.github_search_kmm.presentation.common.SingleEventChannel
 import com.hoc081098.github_search_kmm.utils.flip
 import com.hoc081098.kmp.viewmodel.MainThread
 import com.hoc081098.kmp.viewmodel.SavedStateHandle
@@ -11,11 +12,14 @@ import com.hoc081098.kmp.viewmodel.ViewModel
 import com.hoc081098.kmp.viewmodel.wrapper.NonNullFlowWrapper
 import com.hoc081098.kmp.viewmodel.wrapper.NonNullStateFlowWrapper
 import com.hoc081098.kmp.viewmodel.wrapper.wrap
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
-open class GithubSearchViewModel(
+open class GithubSearchViewModel constructor(
   searchRepoItemsUseCase: SearchRepoItemsUseCase,
   private val savedStateHandle: SavedStateHandle,
-) : ViewModel() {
+  private val singleEventChannel: SingleEventChannel<GithubSearchSingleEvent>,
+) : ViewModel(singleEventChannel) {
   private val effectsContainer = GithubSearchSideEffectsContainer(searchRepoItemsUseCase)
 
   private val store = viewModelScope.createFlowReduxStore(
@@ -29,9 +33,13 @@ open class GithubSearchViewModel(
 
   val stateFlow: NonNullStateFlowWrapper<GithubSearchState> = store.stateFlow.wrap()
 
-  val eventFlow: NonNullFlowWrapper<GithubSearchSingleEvent> = effectsContainer.eventFlow.wrap()
+  val eventFlow: NonNullFlowWrapper<GithubSearchSingleEvent> = singleEventChannel.singleEventFlow.wrap()
 
   init {
+    effectsContainer.eventFlow
+      .onEach(singleEventChannel::sendEvent)
+      .launchIn(viewModelScope)
+
     store.dispatch(InitialSearchAction(termStateFlow.value))
   }
 
@@ -49,7 +57,10 @@ open class GithubSearchViewModel(
     /**
      * Used by non-Android platforms.
      */
-    fun create(searchRepoItemsUseCase: SearchRepoItemsUseCase): GithubSearchViewModel =
-      GithubSearchViewModel(searchRepoItemsUseCase, SavedStateHandle())
+    fun create(searchRepoItemsUseCase: SearchRepoItemsUseCase): GithubSearchViewModel = GithubSearchViewModel(
+      searchRepoItemsUseCase = searchRepoItemsUseCase,
+      savedStateHandle = SavedStateHandle(),
+      singleEventChannel = SingleEventChannel(),
+    )
   }
 }

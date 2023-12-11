@@ -15,26 +15,31 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hoc081098.flowext.ThrottleConfiguration
 import com.hoc081098.flowext.throttleTime
 import com.hoc081098.github_search_kmm.android.compose_utils.StableWrapper
+import com.hoc081098.github_search_kmm.android.core_ui.AppTheme
 import com.hoc081098.github_search_kmm.android.core_ui.LoadingIndicator
 import com.hoc081098.github_search_kmm.android.core_ui.RetryButton
 import com.hoc081098.github_search_kmm.android.core_ui.getReadableMessage
 import com.hoc081098.github_search_kmm.domain.model.AppError
+import com.hoc081098.github_search_kmm.domain.model.Owner
 import com.hoc081098.github_search_kmm.domain.model.RepoItem
 import io.github.aakira.napier.Napier
 import java.text.DecimalFormat
 import kotlin.time.Duration.Companion.milliseconds
-import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.filter
+import kotlinx.datetime.Clock
 
 private const val GithubRepoItemsListLogTag = "GithubRepoItemsList"
 
 @Composable
 internal fun GithubRepoItemsList(
-  items: PersistentList<RepoItem>,
+  items: ImmutableList<RepoItem>,
   isLoading: Boolean,
   error: AppError?,
   hasReachedMax: Boolean,
@@ -103,6 +108,7 @@ internal fun GithubRepoItemsList(
           )
         }
       }
+
       error !== null -> {
         item(contentType = "RetryButton") {
           RetryButton(
@@ -112,11 +118,44 @@ internal fun GithubRepoItemsList(
           )
         }
       }
+
       !hasReachedMax -> {
         item(contentType = "Spacer") {
           Spacer(modifier = Modifier.height(128.dp))
         }
       }
     }
+  }
+}
+
+@Preview
+@Composable
+private fun GithubRepoItemsListPreview() {
+  AppTheme {
+    GithubRepoItemsList(
+      items = List(10) {
+        RepoItem(
+          id = it,
+          fullName = "Jane Gregory $it",
+          language = null,
+          starCount = 1525,
+          name = "Stephanie Higgins $it",
+          repoDescription = null,
+          languageColor = null,
+          htmlUrl = "https://duckduckgo.com/?q=elitr",
+          owner = Owner(
+            id = 9565,
+            username = "Arnold Morris $it",
+            avatar = "primis $it",
+          ),
+          updatedAt = Clock.System.now(),
+        )
+      }.toImmutableList(),
+      isLoading = false,
+      error = null,
+      hasReachedMax = false,
+      onRetry = {},
+      onLoadNextPage = {},
+    )
   }
 }
