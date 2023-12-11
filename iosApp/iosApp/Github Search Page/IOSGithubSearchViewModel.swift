@@ -12,7 +12,7 @@ import shared
 import sharedSwift
 
 @MainActor
-class IOSGithubSearchViewModel: ObservableObject {
+class IosGithubSearchViewModel: ObservableObject {
   private let vm: GithubSearchViewModel
 
   @Published private(set) var state: GithubSearchState

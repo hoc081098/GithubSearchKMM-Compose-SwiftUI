@@ -10,7 +10,7 @@ struct iOSApp: App {
   var body: some Scene {
     WindowGroup {
       ContentView(
-        vm: IOSGithubSearchViewModel()
+        vm: IosGithubSearchViewModel()
       )
     }
   }

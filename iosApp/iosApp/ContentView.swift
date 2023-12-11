@@ -4,7 +4,7 @@ import Combine
 import sharedSwift
 
 struct ContentView: View {
-  @StateObject var vm: IOSGithubSearchViewModel
+  @StateObject var vm: IosGithubSearchViewModel
 
   @State private var showingAlert = false
   @State private var event: GithubSearchSingleEventKs?
@@ -138,7 +138,7 @@ class FakeRepoItemRepository: RepoItemRepository {
 
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
-    let vm = IOSGithubSearchViewModel.init(
+    let vm = IosGithubSearchViewModel.init(
       vm: GithubSearchViewModel.Companion.shared
         .create(
           searchRepoItemsUseCase: .init(repoItemRepository: FakeRepoItemRepository()
