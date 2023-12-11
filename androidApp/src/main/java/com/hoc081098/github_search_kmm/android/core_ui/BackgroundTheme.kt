@@ -1,5 +1,6 @@
 package com.hoc081098.github_search_kmm.android.core_ui
 
+import android.annotation.SuppressLint
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
@@ -14,4 +15,5 @@ data class BackgroundTheme(val color: Color = Color.Unspecified, val tonalElevat
 /**
  * A composition local for [BackgroundTheme].
  */
+@SuppressLint("ComposeCompositionLocalUsage")
 val LocalBackgroundTheme = staticCompositionLocalOf { BackgroundTheme() }
