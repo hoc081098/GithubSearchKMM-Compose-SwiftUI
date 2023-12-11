@@ -36,6 +36,7 @@ open class GithubSearchViewModel constructor(
   val eventFlow: NonNullFlowWrapper<GithubSearchSingleEvent> = singleEventChannel.singleEventFlow.wrap()
 
   init {
+    // Forward all events from `effectsContainer.eventFlow` to `singleEventChannel`
     effectsContainer.eventFlow
       .onEach(singleEventChannel::sendEvent)
       .launchIn(viewModelScope)
