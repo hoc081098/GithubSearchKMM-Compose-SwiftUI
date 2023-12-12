@@ -5,8 +5,6 @@ import co.touchlab.skie.configuration.SealedInterop
 import co.touchlab.skie.configuration.SuspendInterop
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import org.gradle.api.JavaVersion.VERSION_11
-import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
-import org.jetbrains.kotlin.gradle.tasks.KotlinNativeLink
 
 plugins {
   kotlinMultiplatform
