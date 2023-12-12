@@ -68,16 +68,7 @@ jobs:
             ${{ runner.os }}-konan-
 
       - name: Gen pod
-        run: |
-          ./gradlew :shared:podGenIOS --parallel
-          ./gradlew :shared:generateDummyFramework
-
-      - name: Install Pod
-        run: pod install
-        working-directory: iosApp
-
-      - name: Gen KSwift
-        run: ./gradlew kSwiftsharedPodspec --no-build-cache
+        run: ./gradlew :shared:podGenIOS :shared:generateDummyFramework --parallel --stacktrace
 
       - name: Install Pod
         run: pod install
