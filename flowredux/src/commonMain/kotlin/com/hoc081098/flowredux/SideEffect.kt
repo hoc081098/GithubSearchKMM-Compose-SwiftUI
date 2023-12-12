@@ -59,3 +59,19 @@ public fun <Action, State, Output : Any> allActionsToOutputChannelSideEffect(
 
   return sideEffect to actionChannel
 }
+
+/**
+ * Create a [SideEffect] that consumes all actions.
+ * The [SideEffect] will be cancelled when the [SideEffect] is cancelled (when calling [FlowReduxStore.close]).
+ *
+ * @param consumer A function that consumes an [Action].
+ */
+public fun <Action, State> allActionsConsumerSideEffect(
+  consumer: suspend (Action) -> Unit,
+): SideEffect<Action, State> = SideEffect { actionFlow, _, coroutineScope ->
+  actionFlow
+    .onEach(consumer)
+    .launchIn(coroutineScope)
+
+  emptyFlow()
+}

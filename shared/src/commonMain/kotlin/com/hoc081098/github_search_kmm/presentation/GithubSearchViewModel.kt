@@ -12,19 +12,18 @@ import com.hoc081098.kmp.viewmodel.ViewModel
 import com.hoc081098.kmp.viewmodel.wrapper.NonNullFlowWrapper
 import com.hoc081098.kmp.viewmodel.wrapper.NonNullStateFlowWrapper
 import com.hoc081098.kmp.viewmodel.wrapper.wrap
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.launch
 
 open class GithubSearchViewModel(
   searchRepoItemsUseCase: SearchRepoItemsUseCase,
   private val savedStateHandle: SavedStateHandle,
   private val singleEventChannel: SingleEventChannel<GithubSearchSingleEvent>,
 ) : ViewModel(singleEventChannel) {
-  private val effectsContainer = GithubSearchSideEffectsContainer(searchRepoItemsUseCase)
-
   private val store = viewModelScope.createFlowReduxStore(
     initialState = GithubSearchState.initial(),
-    sideEffects = effectsContainer.sideEffects,
+    sideEffects = GithubSearchSideEffectsContainer(
+      searchRepoItemsUseCase = searchRepoItemsUseCase,
+      singleEventChannel = singleEventChannel,
+    ).sideEffects,
     reducer = Reducer(flip(GithubSearchAction::reduce))
       .withLogger(githubSearchFlowReduxLogger()),
   )
@@ -34,13 +33,6 @@ open class GithubSearchViewModel(
   val eventFlow: NonNullFlowWrapper<GithubSearchSingleEvent> = singleEventChannel.singleEventFlow.wrap()
 
   init {
-    // Forward all events from `effectsContainer.eventChannel` to `singleEventChannel`
-    viewModelScope.launch {
-      effectsContainer
-        .eventChannel
-        .consumeEach { singleEventChannel.sendEvent(it) }
-    }
-
     store.dispatch(InitialSearchAction(termStateFlow.value))
   }
 

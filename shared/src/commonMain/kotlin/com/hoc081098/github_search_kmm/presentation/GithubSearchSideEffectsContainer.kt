@@ -4,9 +4,10 @@ import com.hoc081098.flowext.flatMapFirst
 import com.hoc081098.flowext.flowFromSuspend
 import com.hoc081098.flowext.takeUntil
 import com.hoc081098.flowredux.SideEffect
-import com.hoc081098.flowredux.allActionsToOutputChannelSideEffect
+import com.hoc081098.flowredux.allActionsConsumerSideEffect
 import com.hoc081098.github_search_kmm.domain.usecase.SearchRepoItemsUseCase
 import com.hoc081098.github_search_kmm.presentation.GithubSearchState.Companion.FIRST_PAGE
+import com.hoc081098.github_search_kmm.presentation.common.SingleEventChannel
 import com.hoc081098.github_search_kmm.utils.eitherLceFlow
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -24,14 +25,10 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.take
 
 @Suppress("NOTHING_TO_INLINE")
-internal class GithubSearchSideEffectsContainer(private val searchRepoItemsUseCase: SearchRepoItemsUseCase) {
-  private val sendSingleEventSideEffect = allActionsToOutputChannelSideEffect<
-    GithubSearchAction,
-    GithubSearchState,
-    GithubSearchSingleEvent,
-    > { it.toGithubSearchSingleEventOrNull() }
-
-  internal val eventChannel get() = sendSingleEventSideEffect.second
+internal class GithubSearchSideEffectsContainer(
+  private val searchRepoItemsUseCase: SearchRepoItemsUseCase,
+  private val singleEventChannel: SingleEventChannel<GithubSearchSingleEvent>,
+) {
 
   /**
    * @return A list of [SideEffect]s contained in this class.
@@ -49,8 +46,14 @@ internal class GithubSearchSideEffectsContainer(private val searchRepoItemsUseCa
       // [Retry] -> [SearchLCE]s
       retry(),
       // Send single event
-      sendSingleEventSideEffect.first,
+      sendSingleEvent(),
     )
+
+  private inline fun sendSingleEvent() = allActionsConsumerSideEffect<GithubSearchAction, GithubSearchState> { action ->
+    action
+      .toGithubSearchSingleEventOrNull()
+      ?.let { singleEventChannel.sendEvent(it) }
+  }
 
   /**
    * [GithubSearchAction.Search]s to [SideEffectAction.TextChanged]s
