@@ -1,17 +1,14 @@
 package com.hoc081098.github_search_kmm.domain.model
 
 import com.hoc081098.github_search_kmm.presentation.common.Immutable
-import dev.icerock.moko.kswift.KSwiftInclude
 
 @Immutable
-@KSwiftInclude
 sealed class AppError : RuntimeException {
   constructor() : super()
   constructor(message: String?) : super(message)
   constructor(message: String?, cause: Throwable?) : super(message, cause)
   constructor(cause: Throwable?) : super(cause)
 
-  @KSwiftInclude
   sealed class ApiException(cause: Throwable?) : AppError(cause) {
     class NetworkException(cause: Throwable?) : ApiException(cause)
 
@@ -22,7 +19,6 @@ sealed class AppError : RuntimeException {
     class UnknownException(cause: Throwable?) : ApiException(cause)
   }
 
-  @KSwiftInclude
   sealed class LocalStorageException(cause: Throwable?) : AppError(cause) {
     class FileException(cause: Throwable?) : LocalStorageException(cause)
 

@@ -5,10 +5,8 @@ import com.hoc081098.github_search_kmm.domain.model.RepoItem
 import com.hoc081098.github_search_kmm.presentation.GithubSearchState.Companion.FIRST_PAGE
 import com.hoc081098.github_search_kmm.presentation.common.Immutable
 import com.hoc081098.github_search_kmm.utils.EitherLCE
-import dev.icerock.moko.kswift.KSwiftInclude
 import kotlinx.collections.immutable.persistentListOf
 
-@KSwiftInclude
 @Immutable
 sealed interface GithubSearchAction {
   fun reduce(state: GithubSearchState): GithubSearchState

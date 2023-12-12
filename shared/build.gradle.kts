@@ -1,3 +1,8 @@
+import co.touchlab.skie.configuration.DefaultArgumentInterop
+import co.touchlab.skie.configuration.EnumInterop
+import co.touchlab.skie.configuration.FlowInterop
+import co.touchlab.skie.configuration.SealedInterop
+import co.touchlab.skie.configuration.SuspendInterop
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import org.gradle.api.JavaVersion.VERSION_11
 import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
@@ -9,9 +14,31 @@ plugins {
   androidLib
   kotlinxSerialization
   daggerHiltAndroid
-  mokoKSwift
   googleKsp
   buildKonfig
+  id("co.touchlab.skie") version "0.5.6"
+}
+
+skie {
+  features {
+    coroutinesInterop = false
+
+    group {
+      FlowInterop.Enabled(false)
+      SuspendInterop.Enabled(false)
+      SealedInterop.Enabled(false)
+      EnumInterop.Enabled(false)
+      DefaultArgumentInterop.Enabled(false)
+    }
+    group("com.hoc081098.github_search_kmm.presentation") {
+      SealedInterop.Enabled(true)
+      EnumInterop.Enabled(true)
+    }
+    group("com.hoc081098.github_search_kmm.domain.model") {
+      SealedInterop.Enabled(true)
+      EnumInterop.Enabled(true)
+    }
+  }
 }
 
 version = appConfig.versionName
@@ -91,8 +118,6 @@ kotlin {
         api(deps.dateTime)
         api(deps.atomicfu)
         api(deps.immutableCollections)
-
-        implementation(deps.mokoKSwiftRuntime)
       }
     }
     val commonTest by getting {
@@ -150,6 +175,19 @@ kotlin {
   }
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {
+  kotlinOptions {
+    // 'expect'/'actual' classes (including interfaces, objects, annotations, enums,
+    // and 'actual' typealiases) are in Beta.
+    // You can use -Xexpect-actual-classes flag to suppress this warning.
+    // Also see: https://youtrack.jetbrains.com/issue/KT-61573
+    freeCompilerArgs +=
+      listOf(
+        "-Xexpect-actual-classes",
+      )
+  }
+}
+
 android {
   namespace = "com.hoc081098.github_search_kmm"
   compileSdk = appConfig.compileSdkVersion
@@ -197,32 +235,6 @@ android {
 hilt {
   enableAggregatingTask = true
 }
-
-kswift {
-  install(dev.icerock.moko.kswift.plugin.feature.SealedToSwiftEnumFeature) {
-    filter = dev.icerock.moko.kswift.plugin.feature.Filter.Include(emptySet())
-  }
-}
-
-tasks.withType<KotlinNativeLink>()
-  .matching { it.binary is Framework }
-  .configureEach {
-    doLast {
-      val kSwiftGeneratedDir = destinationDirectory.get()
-        .dir("${binary.baseName}Swift")
-        .asFile
-
-      val kSwiftPodSourceDir = layout.buildDirectory
-        .asFile
-        .get()
-        .resolve("cocoapods")
-        .resolve("framework")
-        .resolve("${binary.baseName}Swift")
-
-      kSwiftGeneratedDir.copyRecursively(kSwiftPodSourceDir, overwrite = true)
-      println("[COPIED] $kSwiftGeneratedDir -> $kSwiftPodSourceDir")
-    }
-  }
 
 dependencies {
   configurations

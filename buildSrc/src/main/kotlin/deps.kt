@@ -13,7 +13,6 @@ object versions {
   const val kotlin = "1.9.21"
   const val agp = "8.2.0"
   const val gradleVersions = "0.50.0"
-  const val mokoKSwift = "0.6.1"
   const val googleKsp = "1.9.21-1.0.15"
   const val buildKonfig = "0.13.3"
 }
@@ -124,7 +123,6 @@ object deps {
     const val savedState = "io.github.hoc081098:kmp-viewmodel-savedstate:$version"
   }
 
-  const val mokoKSwiftRuntime = "dev.icerock.moko:kswift-runtime:${versions.mokoKSwift}"
   const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.5.0"
 
   const val coilCompose = "io.coil-kt:coil-compose:2.5.0"
@@ -177,7 +175,6 @@ inline val PDsS.kotlinxSerialization: PDS get() = id("kotlinx-serialization")
 inline val PDsS.kotlinMultiplatform: PDS get() = kotlin("multiplatform")
 inline val PDsS.kotlinNativeCocoapods: PDS get() = kotlin("native.cocoapods")
 inline val PDsS.daggerHiltAndroid: PDS get() = id("com.google.dagger.hilt.android")
-inline val PDsS.mokoKSwift: PDS get() = id("dev.icerock.moko.kswift")
 inline val PDsS.googleKsp: PDS get() = id("com.google.devtools.ksp")
 inline val PDsS.buildKonfig: PDS get() = id("com.codingfeline.buildkonfig")
 
