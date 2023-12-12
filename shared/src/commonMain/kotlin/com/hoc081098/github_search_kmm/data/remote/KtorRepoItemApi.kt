@@ -16,10 +16,7 @@ internal open class KtorRepoItemApi(
   private val baseUrl: Url,
   private val appCoroutineDispatchers: AppCoroutineDispatchers,
 ) : RepoItemApi {
-  override suspend fun searchRepoItems(
-    term: String,
-    page: Int
-  ) = withContext(appCoroutineDispatchers.io) {
+  override suspend fun searchRepoItems(term: String, page: Int) = withContext(appCoroutineDispatchers.io) {
     Either.catch {
       httpClient.get(
         URLBuilder(baseUrl)
@@ -28,7 +25,7 @@ internal open class KtorRepoItemApi(
             parameters.append("q", term)
             parameters.append("page", page.toString())
           }
-          .build()
+          .build(),
       ).body<RepoItemsSearchResponse>()
     }
   }

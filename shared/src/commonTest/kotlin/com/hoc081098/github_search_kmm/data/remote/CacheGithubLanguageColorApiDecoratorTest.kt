@@ -37,7 +37,7 @@ class CacheGithubLanguageColorApiDecoratorTest {
 
     decoratee = mock(GithubLanguageColorApi::class)
     cacheGithubLanguageColorApiDecorator = CacheGithubLanguageColorApiDecorator(
-      decoratee = decoratee
+      decoratee = decoratee,
     )
   }
 
@@ -118,7 +118,7 @@ class CacheGithubLanguageColorApiDecoratorTest {
 
     assertEquals(
       listOf(left) + (1..21).map { right },
-      eithers
+      eithers,
     )
 
     coVerify { decoratee.getColors() }

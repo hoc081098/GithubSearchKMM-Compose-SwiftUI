@@ -8,12 +8,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 class TestAntilog : Antilog() {
-  override fun performLog(
-    priority: LogLevel,
-    tag: String?,
-    throwable: Throwable?,
-    message: String?
-  ) {
+  override fun performLog(priority: LogLevel, tag: String?, throwable: Throwable?, message: String?) {
     if (BuildKonfig.IS_CI_BUILD) {
       return
     }

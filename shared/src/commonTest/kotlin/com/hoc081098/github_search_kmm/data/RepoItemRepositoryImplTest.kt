@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:max-line-length")
+
 package com.hoc081098.github_search_kmm.data
 
 import arrow.core.left
@@ -62,7 +64,7 @@ class RepoItemRepositoryImplTest {
       repoItemApi = repoItemApi,
       githubLanguageColorApi = githubLanguageColorApi,
       errorMapper = errorMapper,
-      appCoroutineDispatchers = appCoroutineDispatchers
+      appCoroutineDispatchers = appCoroutineDispatchers,
     )
   }
 
@@ -91,7 +93,7 @@ class RepoItemRepositoryImplTest {
       val either = repoItemRepositoryImpl.searchRepoItems(term, page)
       assertEquals(
         FAKE_REPO_ITEMS,
-        either.getOrThrow
+        either.getOrThrow,
       )
 
       coVerify { repoItemApi.searchRepoItems(term, page) }
@@ -178,11 +180,11 @@ class RepoItemRepositoryImplTest {
           owner = RepoItemsSearchResponse.Item.Owner(
             id = id,
             login = "username $id",
-            avatarUrl = "avatar/$id"
+            avatarUrl = "avatar/$id",
           ),
-          updatedAt = Clock.System.now()
+          updatedAt = Clock.System.now(),
         )
-      }
+      },
     )
 
     val FAKE_REPO_ITEMS =

@@ -22,17 +22,15 @@ import org.koin.dsl.KoinAppDeclaration
 object DIContainer : KoinComponent {
   fun init(appDeclaration: KoinAppDeclaration = {}) {
     Napier.base(
-      if (isDebug()) DebugAntilog()
-      else object : Antilog() {
-        override fun performLog(
-          priority: LogLevel,
-          tag: String?,
-          throwable: Throwable?,
-          message: String?
-        ) {
-          // TODO: Crashlytics
+      if (isDebug()) {
+        DebugAntilog()
+      } else {
+        object : Antilog() {
+          override fun performLog(priority: LogLevel, tag: String?, throwable: Throwable?, message: String?) {
+            // TODO: Crashlytics
+          }
         }
-      }
+      },
     )
 
     startKoin {
@@ -54,17 +52,14 @@ object DIContainer : KoinComponent {
   }
 
   @OptIn(BetaInteropApi::class)
-  fun get(
-    type: ObjCObject,
-    qualifier: Qualifier? = null,
-    parameters: ParametersDefinition? = null
-  ): Any? = getKoin().get(
-    clazz = when (type) {
-      is ObjCProtocol -> getOriginalKotlinClass(type)!!
-      is ObjCClass -> getOriginalKotlinClass(type)!!
-      else -> error("Cannot convert $type to KClass<*>")
-    },
-    qualifier = qualifier,
-    parameters = parameters,
-  )
+  fun get(type: ObjCObject, qualifier: Qualifier? = null, parameters: ParametersDefinition? = null): Any? =
+    getKoin().get(
+      clazz = when (type) {
+        is ObjCProtocol -> getOriginalKotlinClass(type)!!
+        is ObjCClass -> getOriginalKotlinClass(type)!!
+        else -> error("Cannot convert $type to KClass<*>")
+      },
+      qualifier = qualifier,
+      parameters = parameters,
+    )
 }

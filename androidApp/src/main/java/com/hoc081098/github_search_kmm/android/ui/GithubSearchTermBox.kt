@@ -28,11 +28,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun GithubSearchTermBox(
-  term: String,
-  onTermChanged: (String) -> Unit,
-  modifier: Modifier = Modifier,
-) {
+internal fun GithubSearchTermBox(term: String, onTermChanged: (String) -> Unit, modifier: Modifier = Modifier) {
   val localFocusManager = LocalFocusManager.current
 
   TextField(
@@ -47,21 +43,21 @@ internal fun GithubSearchTermBox(
     leadingIcon = {
       Icon(
         imageVector = Icons.Outlined.Search,
-        contentDescription = "Search"
+        contentDescription = "Search",
       )
     },
     trailingIcon = {
       AnimatedVisibility(
         visible = term.isNotEmpty(),
         enter = fadeIn(),
-        exit = fadeOut()
+        exit = fadeOut(),
       ) {
         IconButton(
-          onClick = { onTermChanged("") }
+          onClick = { onTermChanged("") },
         ) {
           Icon(
             imageVector = Icons.Outlined.Clear,
-            contentDescription = "Clear"
+            contentDescription = "Clear",
           )
         }
       }
@@ -70,13 +66,13 @@ internal fun GithubSearchTermBox(
     singleLine = true,
     keyboardOptions = KeyboardOptions(
       keyboardType = KeyboardType.Text,
-      imeAction = ImeAction.Done
+      imeAction = ImeAction.Done,
     ),
     keyboardActions = KeyboardActions(
       onDone = {
         localFocusManager.clearFocus()
-      }
-    )
+      },
+    ),
   )
 }
 

@@ -23,7 +23,6 @@ buildscript {
     classpath("com.diffplug.spotless:spotless-plugin-gradle:${versions.spotless}")
     classpath("com.github.ben-manes:gradle-versions-plugin:${versions.gradleVersions}")
     classpath("com.squareup:javapoet:1.13.0")
-    classpath("dev.icerock.moko:kswift-gradle-plugin:${versions.mokoKSwift}")
   }
 }
 
@@ -36,7 +35,9 @@ allprojects {
   tasks.withType<KotlinCompile> {
     kotlinOptions {
       jvmTarget = JavaVersion.VERSION_11.toString()
-      languageVersion = "1.8"
+    }
+    compilerOptions {
+      languageVersion = org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_1_9
     }
   }
 
@@ -65,8 +66,10 @@ allprojects {
     enable()
   }
   configure<kotlinx.kover.api.KoverProjectConfig> {
-    filters { // common filters for all default Kover tasks
-      classes { // common class filter for all default Kover tasks in this project
+    filters {
+      // common filters for all default Kover tasks
+      classes {
+        // common class filter for all default Kover tasks in this project
         excludes += excludedClasses
       }
     }
@@ -74,37 +77,12 @@ allprojects {
 
   apply<SpotlessPlugin>()
   configure<SpotlessExtension> {
-    val editorConfigKeys: Set<String> = hashSetOf(
-      "ij_kotlin_imports_layout",
-      "indent_size",
-      "end_of_line",
-      "charset",
-      "continuation_indent_size"
-    )
-
     kotlin {
       target("**/*.kt")
-
-      // TODO this should all come from editorconfig https://github.com/diffplug/spotless/issues/142
-      val data = M[
-        "indent_size" to "2",
-        "ij_kotlin_imports_layout" to "*",
-        "end_of_line" to "lf",
-        "charset" to "utf-8",
-        "continuation_indent_size" to "4",
-        "disabled_rules" to L[
-          "experimental:package-name",
-          "experimental:trailing-comma",
-          "experimental:type-parameter-list-spacing",
-          "filename",
-          "annotation"
-        ].joinToString(separator = ",")
-      ]
+      targetExclude("**/build/**/*.kt", "**/.gradle/**/*.kt")
 
       ktlint(versions.ktlint)
-        .setUseExperimental(true)
-        .userData(data.filterKeys { it !in editorConfigKeys })
-        .editorConfigOverride(data.filterKeys { it in editorConfigKeys })
+        .setEditorConfigPath(rootProject.file(".editorconfig"))
 
       trimTrailingWhitespace()
       indentWithSpaces()
@@ -113,26 +91,20 @@ allprojects {
 
     format("xml") {
       target("**/res/**/*.xml")
+      targetExclude("**/build/**/*.xml", "**/.idea/**/*.xml", "**/.gradle/**/*.xml")
 
       trimTrailingWhitespace()
       indentWithSpaces()
       endWithNewline()
+      lineEndings = com.diffplug.spotless.LineEnding.UNIX
     }
 
     kotlinGradle {
       target("**/*.gradle.kts", "*.gradle.kts")
+      targetExclude("**/build/**/*.kts", "**/.gradle/**/*.kts")
 
-      val data = M[
-        "indent_size" to "2",
-        "ij_kotlin_imports_layout" to "*",
-        "end_of_line" to "lf",
-        "charset" to "utf-8",
-        "continuation_indent_size" to "4"
-      ]
       ktlint(versions.ktlint)
-        .setUseExperimental(true)
-        .userData(data.filterKeys { it !in editorConfigKeys })
-        .editorConfigOverride(data.filterKeys { it in editorConfigKeys })
+        .setEditorConfigPath(rootProject.file(".editorconfig"))
 
       trimTrailingWhitespace()
       indentWithSpaces()
@@ -176,7 +148,7 @@ subprojects {
           TestLogEvent.FAILED,
           TestLogEvent.SKIPPED,
           TestLogEvent.STANDARD_OUT,
-          TestLogEvent.STANDARD_ERROR
+          TestLogEvent.STANDARD_ERROR,
         )
         exceptionFormat = TestExceptionFormat.FULL
       }

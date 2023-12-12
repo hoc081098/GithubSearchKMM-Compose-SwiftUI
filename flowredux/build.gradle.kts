@@ -33,20 +33,19 @@ kotlin {
       testTask(
         Action {
           useMocha()
-        }
+        },
       )
     }
     nodejs {
       testTask(
         Action {
           useMocha()
-        }
+        },
       )
     }
   }
 
   iosArm64()
-  iosArm32()
   iosX64()
   iosSimulatorArm64()
 
@@ -62,17 +61,16 @@ kotlin {
   watchosArm32()
   watchosArm64()
   watchosX64()
-  watchosX86()
   watchosSimulatorArm64()
 
   sourceSets {
-    val commonMain by getting {
+    commonMain {
       dependencies {
         api(deps.coroutines.core)
         implementation(deps.flowExt)
       }
     }
-    val commonTest by getting {
+    commonTest {
       dependencies {
         implementation(kotlin("test-common"))
         implementation(kotlin("test-annotations-common"))
@@ -80,55 +78,16 @@ kotlin {
         implementation(deps.test.turbine)
       }
     }
-    val jvmMain by getting {
-      dependsOn(commonMain)
-    }
-    val jvmTest by getting {
-      dependsOn(commonTest)
 
+    jvmTest {
       dependencies {
         implementation(kotlin("test-junit"))
       }
     }
-    val jsMain by getting {
-      dependsOn(commonMain)
-    }
-    val jsTest by getting {
+
+    jsTest {
       dependencies {
         implementation(kotlin("test-js"))
-      }
-    }
-
-    val nativeMain by creating {
-      dependsOn(commonMain)
-    }
-    val nativeTest by creating {
-      dependsOn(commonTest)
-    }
-
-    val appleTargets = listOf(
-      "iosX64",
-      "iosSimulatorArm64",
-      "iosArm64",
-      "iosArm32",
-      "macosX64",
-      "macosArm64",
-      "tvosArm64",
-      "tvosX64",
-      "tvosSimulatorArm64",
-      "watchosArm32",
-      "watchosArm64",
-      "watchosX86",
-      "watchosSimulatorArm64",
-      "watchosX64"
-    )
-
-    (appleTargets + listOf("mingwX64", "linuxX64")).forEach {
-      getByName("${it}Main") {
-        dependsOn(nativeMain)
-      }
-      getByName("${it}Test") {
-        dependsOn(nativeTest)
       }
     }
   }

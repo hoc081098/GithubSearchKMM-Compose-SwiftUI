@@ -20,11 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.hoc081098.github_search_kmm.android.R
 
 @Composable
-fun RetryButton(
-  errorMessage: String,
-  onRetry: () -> Unit,
-  modifier: Modifier = Modifier,
-) {
+fun RetryButton(errorMessage: String, onRetry: () -> Unit, modifier: Modifier = Modifier) {
   Column(
     modifier = modifier
       .fillMaxSize()

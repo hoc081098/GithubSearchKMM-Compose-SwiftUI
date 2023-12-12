@@ -20,14 +20,14 @@ class ArgbColorTest {
       a = "12".hexToFloat,
       r = "34".hexToFloat,
       g = "56".hexToFloat,
-      b = "78".hexToFloat
+      b = "78".hexToFloat,
     )
     assertArgbColor(
       hex = "#123",
       a = 1f,
       r = "11".hexToFloat,
       g = "22".hexToFloat,
-      b = "33".hexToFloat
+      b = "33".hexToFloat,
     )
 
     // without # prefix
@@ -39,14 +39,14 @@ class ArgbColorTest {
       a = "12".hexToFloat,
       r = "34".hexToFloat,
       g = "56".hexToFloat,
-      b = "78".hexToFloat
+      b = "78".hexToFloat,
     )
     assertArgbColor(
       hex = "123",
       a = 1f,
       r = "11".hexToFloat,
       g = "22".hexToFloat,
-      b = "33".hexToFloat
+      b = "33".hexToFloat,
     )
   }
 
@@ -61,23 +61,23 @@ class ArgbColorTest {
   fun `ArgbColor ==`() {
     assertEquals(
       ArgbColor.parse("#000000").getOrThrow,
-      ArgbColor.parse("#000000").getOrThrow
+      ArgbColor.parse("#000000").getOrThrow,
     )
     assertEquals(
       ArgbColor.parse("#112233").getOrThrow,
-      ArgbColor.parse("#123").getOrThrow
+      ArgbColor.parse("#123").getOrThrow,
     )
     assertEquals(
       ArgbColor.parse("#FF112233").getOrThrow,
-      ArgbColor.parse("#123").getOrThrow
+      ArgbColor.parse("#123").getOrThrow,
     )
     assertEquals(
       ArgbColor.parse("#ff112233").getOrThrow,
-      ArgbColor.parse("#123").getOrThrow
+      ArgbColor.parse("#123").getOrThrow,
     )
     assertNotEquals(
       ArgbColor.parse("#FF112233").getOrThrow,
-      ArgbColor.parse("#12112233").getOrThrow
+      ArgbColor.parse("#12112233").getOrThrow,
     )
   }
 
@@ -85,23 +85,23 @@ class ArgbColorTest {
   fun `ArgbColor hashCode`() {
     assertEquals(
       ArgbColor.parse("#000000").getOrThrow.hashCode(),
-      ArgbColor.parse("#000000").getOrThrow.hashCode()
+      ArgbColor.parse("#000000").getOrThrow.hashCode(),
     )
     assertEquals(
       ArgbColor.parse("#112233").getOrThrow.hashCode(),
-      ArgbColor.parse("#123").getOrThrow.hashCode()
+      ArgbColor.parse("#123").getOrThrow.hashCode(),
     )
     assertEquals(
       ArgbColor.parse("#FF112233").getOrThrow.hashCode(),
-      ArgbColor.parse("#123").getOrThrow.hashCode()
+      ArgbColor.parse("#123").getOrThrow.hashCode(),
     )
     assertEquals(
       ArgbColor.parse("#ff112233").getOrThrow.hashCode(),
-      ArgbColor.parse("#123").getOrThrow.hashCode()
+      ArgbColor.parse("#123").getOrThrow.hashCode(),
     )
     assertNotEquals(
       ArgbColor.parse("#FF112233").getOrThrow.hashCode(),
-      ArgbColor.parse("#12112233").getOrThrow.hashCode()
+      ArgbColor.parse("#12112233").getOrThrow.hashCode(),
     )
   }
 
@@ -134,25 +134,25 @@ class ArgbColorTest {
           expected = r,
           actual = red,
           absoluteTolerance = ABSOLUTE_TOLERANCE,
-          message = "red"
+          message = "red",
         )
         assertEquals(
           expected = g,
           actual = green,
           absoluteTolerance = ABSOLUTE_TOLERANCE,
-          message = "green"
+          message = "green",
         )
         assertEquals(
           expected = b,
           actual = blue,
           absoluteTolerance = ABSOLUTE_TOLERANCE,
-          message = "blue"
+          message = "blue",
         )
         assertEquals(
           expected = a,
           actual = alpha,
           absoluteTolerance = ABSOLUTE_TOLERANCE,
-          message = "alpha"
+          message = "alpha",
         )
       }
   }

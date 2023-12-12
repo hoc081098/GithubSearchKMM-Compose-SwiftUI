@@ -9,22 +9,29 @@
 import Foundation
 import Combine
 import shared
-import sharedSwift
 
 @MainActor
-class IOSGithubSearchViewModel: ObservableObject {
+class IosGithubSearchViewModel: ObservableObject {
   private let vm: GithubSearchViewModel
 
   @Published private(set) var state: GithubSearchState
   @Published private(set) var term: String = ""
-  let eventPublisher: AnyPublisher<GithubSearchSingleEventKs, Never>
+  let eventPublisher: AnyPublisher<Skie.GithubSearchKMM__shared.GithubSearchSingleEvent.__Sealed, Never>
 
-  init(vm: GithubSearchViewModel) {
+  init(
+    vm: GithubSearchViewModel = DIContainer.shared.get(),
+    immediateMainDispatcher: CoroutineDispatcher = DIContainer.shared
+      .get(for: AppCoroutineDispatchers.self)
+      .immediateMain
+  ) {
     self.vm = vm
-
-    self.eventPublisher = vm.eventFlow.asNonNullPublisher()
+    
+    self.eventPublisher = vm.eventFlow.asNonNullPublisher(
+        GithubSearchSingleEvent.self,
+        dispatcher: immediateMainDispatcher
+      )
       .assertNoFailure()
-      .map(GithubSearchSingleEventKs.init)
+      .map(onEnum(of:))
       .eraseToAnyPublisher()
 
     self.state = vm.stateFlow.value
@@ -35,7 +42,10 @@ class IOSGithubSearchViewModel: ObservableObject {
 
     self.vm
       .termStateFlow
-      .asNonNullPublisher(NSString.self)
+      .asNonNullPublisher(
+        NSString.self,
+        dispatcher: immediateMainDispatcher
+      )
       .assertNoFailure()
       .map { $0 as String }
       .assign(to: &$term)

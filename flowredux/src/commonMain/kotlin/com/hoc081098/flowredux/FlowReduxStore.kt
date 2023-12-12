@@ -54,7 +54,7 @@ public fun <Action, State> CoroutineScope.createFlowReduxStore(
     coroutineContext = coroutineContext,
     initialState = initialState,
     sideEffects = sideEffects,
-    reducer = reducer
+    reducer = reducer,
   )
   coroutineContext.job.invokeOnCompletion {
     store.close()
@@ -72,5 +72,5 @@ public fun <Action, State> FlowReduxStore(
   coroutineContext = coroutineContext,
   initialState = initialState,
   sideEffects = sideEffects,
-  reducer = reducer
+  reducer = reducer,
 )

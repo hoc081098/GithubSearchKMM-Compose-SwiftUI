@@ -9,10 +9,10 @@ internal class DaggerRepoItemRepositoryImpl @Inject constructor(
   repoItemApi: RepoItemApi,
   githubLanguageColorApi: GithubLanguageColorApi,
   errorMapper: AppErrorMapper,
-  appCoroutineDispatchers: AppCoroutineDispatchers
+  appCoroutineDispatchers: AppCoroutineDispatchers,
 ) : RepoItemRepositoryImpl(
   repoItemApi = repoItemApi,
   githubLanguageColorApi = githubLanguageColorApi,
   errorMapper = errorMapper,
-  appCoroutineDispatchers = appCoroutineDispatchers
+  appCoroutineDispatchers = appCoroutineDispatchers,
 )

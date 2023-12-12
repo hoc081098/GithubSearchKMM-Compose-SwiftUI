@@ -3,11 +3,11 @@ package com.hoc081098.github_search_kmm.presentation
 import com.hoc081098.github_search_kmm.domain.model.AppError
 import com.hoc081098.github_search_kmm.domain.model.RepoItem
 import com.hoc081098.github_search_kmm.presentation.GithubSearchState.Companion.FIRST_PAGE
+import com.hoc081098.github_search_kmm.presentation.common.Immutable
 import com.hoc081098.github_search_kmm.utils.EitherLCE
-import dev.icerock.moko.kswift.KSwiftInclude
 import kotlinx.collections.immutable.persistentListOf
 
-@KSwiftInclude
+@Immutable
 sealed interface GithubSearchAction {
   fun reduce(state: GithubSearchState): GithubSearchState
 
@@ -33,11 +33,8 @@ internal sealed interface SideEffectAction : GithubSearchAction {
     override fun reduce(state: GithubSearchState) = state
   }
 
-  data class SearchLCE(
-    val lce: EitherLCE<AppError, List<RepoItem>>,
-    val term: String,
-    val nextPage: UInt,
-  ) : SideEffectAction {
+  data class SearchLCE(val lce: EitherLCE<AppError, List<RepoItem>>, val term: String, val nextPage: UInt) :
+    SideEffectAction {
     override fun reduce(state: GithubSearchState) = when (lce) {
       is EitherLCE.ContentOrError -> {
         lce.either.fold(
@@ -64,7 +61,7 @@ internal sealed interface SideEffectAction : GithubSearchAction {
               items = state.items.addAll(filtered),
               hasReachedMax = filtered.isEmpty(),
             )
-          }
+          },
         )
       }
       EitherLCE.Loading -> {
@@ -81,7 +78,7 @@ internal sealed interface SideEffectAction : GithubSearchAction {
           state.copy(
             term = term,
             isLoading = true,
-            error = null
+            error = null,
           )
         }
       }
@@ -89,26 +86,25 @@ internal sealed interface SideEffectAction : GithubSearchAction {
   }
 }
 
-internal fun GithubSearchAction.toGithubSearchSingleEventOrNull(): GithubSearchSingleEvent? =
-  when (this) {
-    GithubSearchAction.LoadNextPage -> null
-    GithubSearchAction.Retry -> null
-    is InitialSearchAction -> null
-    is GithubSearchAction.Search -> null
-    is SideEffectAction.TextChanged -> null
-    is SideEffectAction.SearchLCE -> {
-      when (lce) {
-        is EitherLCE.ContentOrError -> {
-          lce.either.fold(
-            ifRight = { items ->
-              items
-                .takeIf { it.isEmpty() }
-                ?.let { GithubSearchSingleEvent.ReachedMaxItems }
-            },
-            ifLeft = GithubSearchSingleEvent::SearchFailure
-          )
-        }
-        EitherLCE.Loading -> null
+internal fun GithubSearchAction.toGithubSearchSingleEventOrNull(): GithubSearchSingleEvent? = when (this) {
+  GithubSearchAction.LoadNextPage -> null
+  GithubSearchAction.Retry -> null
+  is InitialSearchAction -> null
+  is GithubSearchAction.Search -> null
+  is SideEffectAction.TextChanged -> null
+  is SideEffectAction.SearchLCE -> {
+    when (lce) {
+      is EitherLCE.ContentOrError -> {
+        lce.either.fold(
+          ifRight = { items ->
+            items
+              .takeIf { it.isEmpty() }
+              ?.let { GithubSearchSingleEvent.ReachedMaxItems }
+          },
+          ifLeft = GithubSearchSingleEvent::SearchFailure,
+        )
       }
+      EitherLCE.Loading -> null
     }
   }
+}

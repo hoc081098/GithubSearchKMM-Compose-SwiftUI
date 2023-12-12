@@ -13,7 +13,8 @@ private val GithubSearchAction.debugString: String
     GithubSearchAction.Retry,
     is GithubSearchAction.Search,
     is SideEffectAction.TextChanged,
-    is InitialSearchAction -> toString()
+    is InitialSearchAction,
+    -> toString()
 
     is SideEffectAction.SearchLCE -> arrayOf(
       "term" to term,
@@ -53,26 +54,25 @@ private inline val GithubSearchState.debugString: String
  * In debug mode, log every action and state change.
  * In release mode, do nothing.
  */
-internal fun githubSearchFlowReduxLogger(): FlowReduxLogger<GithubSearchAction, GithubSearchState> =
-  if (isDebug()) {
-    FlowReduxLogger { action, prevState, nextState ->
-      val diffString by lazy(NONE) {
-        prevState.debugMap
-          .diff(nextState.debugMap)
-          .joinToString(separator = ", ", prefix = "{ ", postfix = " }") { (k, v1, v2) -> "$k: ($v1 -> $v2)" }
-      }
+internal fun githubSearchFlowReduxLogger(): FlowReduxLogger<GithubSearchAction, GithubSearchState> = if (isDebug()) {
+  FlowReduxLogger { action, prevState, nextState ->
+    val diffString by lazy(NONE) {
+      prevState.debugMap
+        .diff(nextState.debugMap)
+        .joinToString(separator = ", ", prefix = "{ ", postfix = " }") { (k, v1, v2) -> "$k: ($v1 -> $v2)" }
+    }
 
-      Napier.d(
-        """onReduced {
+    Napier.d(
+      """onReduced {
         |   Action    : ${action.debugString}
         |   Prev state: ${prevState.debugString}
         |   Next state: ${nextState.debugString}
         |   Diff      : ${if (prevState == nextState) "{ }" else diffString}
         |}
-        """.trimMargin(),
-        tag = "GithubSearchViewModel"
-      )
-    }
-  } else {
-    FlowReduxLogger.empty()
+      """.trimMargin(),
+      tag = "GithubSearchViewModel",
+    )
   }
+} else {
+  FlowReduxLogger.empty()
+}

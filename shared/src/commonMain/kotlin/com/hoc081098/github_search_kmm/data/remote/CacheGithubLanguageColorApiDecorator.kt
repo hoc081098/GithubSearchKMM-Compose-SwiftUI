@@ -8,9 +8,8 @@ import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-internal open class CacheGithubLanguageColorApiDecorator(
-  private val decoratee: GithubLanguageColorApi,
-) : GithubLanguageColorApi {
+internal open class CacheGithubLanguageColorApiDecorator(private val decoratee: GithubLanguageColorApi) :
+  GithubLanguageColorApi {
   private val mutex = Mutex()
   private val cache = atomic<Map<String, ArgbColor>?>(null)
 

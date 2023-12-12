@@ -24,7 +24,7 @@ internal class DefaultFlowReduxStore<Action, State>(
   coroutineContext: CoroutineContext,
   initialState: State,
   sideEffects: List<SideEffect<Action, State>>,
-  reducer: Reducer<Action, State>
+  reducer: Reducer<Action, State>,
 ) : FlowReduxStore<Action, State> {
   private val coroutineScope = CoroutineScope(coroutineContext + Job())
 
@@ -43,7 +43,7 @@ internal class DefaultFlowReduxStore<Action, State>(
             loopbacks[index].consumeAsFlow(),
             stateFlow,
             coroutineScope,
-          ).concatWith(neverFlow())
+          ).concatWith(neverFlow()),
         )
       }
       add(_actionChannel.consumeAsFlow())

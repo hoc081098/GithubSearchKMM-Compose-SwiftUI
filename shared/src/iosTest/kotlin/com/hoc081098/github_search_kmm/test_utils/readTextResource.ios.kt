@@ -16,7 +16,7 @@ actual fun readTextResource(resourceName: String): String {
 
   val path = NSBundle.mainBundle.pathForResource(
     name = "resources/" + url.URLByDeletingPathExtension()?.lastPathComponent,
-    ofType = url.pathExtension
+    ofType = url.pathExtension,
   )!!
 
   return NSString.stringWithContentsOfFile(path, NSUTF8StringEncoding, null) as String

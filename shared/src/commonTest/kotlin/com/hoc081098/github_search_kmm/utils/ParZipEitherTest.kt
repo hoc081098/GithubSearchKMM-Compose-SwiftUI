@@ -20,7 +20,7 @@ class ParZipEitherTest {
         delay1Ms()
         2.right()
       },
-      combiner = { a, b -> a + b }
+      combiner = { a, b -> a + b },
     )
 
     assertEquals(3, either.getOrThrow)
@@ -37,7 +37,7 @@ class ParZipEitherTest {
         delay1Ms()
         "2".left()
       },
-      combiner = { a, b -> a + b }
+      combiner = { a, b -> a + b },
     )
     assertEquals("2".left(), either)
   }
@@ -53,7 +53,7 @@ class ParZipEitherTest {
         delay1Ms()
         2.right()
       },
-      combiner = { a, b -> a + b }
+      combiner = { a, b -> a + b },
     )
     assertEquals("1".left(), either)
   }
@@ -69,7 +69,7 @@ class ParZipEitherTest {
         delay1Ms()
         "2".left()
       },
-      combiner = { a, b -> a + b }
+      combiner = { a, b -> a + b },
     )
     assertEquals("1".left(), either)
   }

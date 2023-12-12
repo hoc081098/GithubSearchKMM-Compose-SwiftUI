@@ -7,7 +7,7 @@ Github Repos Search - Kotlin Multiplatform Mobile using Jetpack Compose, SwiftUI
 [![iOS Build CI](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/ios-build.yml/badge.svg)](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/ios-build.yml)
 [![Validate Gradle Wrapper](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/gradle-wrapper-validation.yml/badge.svg)](https://github.com/hoc081098/GithubSearchKMM/actions/workflows/gradle-wrapper-validation.yml)
 [![API](https://img.shields.io/badge/API-23%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=23)
-[![Kotlin](https://img.shields.io/badge/kotlin-1.9.10-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.9.21-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fhoc081098%2FGithubSearchKMM&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](https://opensource.org/licenses/MIT)
 [![codecov](https://codecov.io/gh/hoc081098/GithubSearchKMM/branch/master/graph/badge.svg?token=qzSAFkj09P)](https://codecov.io/gh/hoc081098/GithubSearchKMM)
@@ -35,7 +35,7 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
 ## Tech Stacks
  - Functional & Reactive programming with **Kotlin Coroutines with Flow**
  - **Clean Architecture** with **MVI** (Uni-directional data flow)
- - [**Multiplatform ViewModel and SavedStateHandle**](https://github.com/hoc081098/kmp-viewmodel) (save and restore states across process death), by @hoc081098
+ - [**Multiplatform ViewModel and SavedStateHandle**](https://github.com/hoc081098/kmp-viewmodel) (save and restore states across process death), by [@hoc081098](https://github.com/hoc081098)
  - **Multiplatform FlowRedux** State Management
  - [**Λrrow** - Functional companion to Kotlin's Standard Library](https://arrow-kt.io/)
    - [Either](https://arrow-kt.io/docs/apidocs/arrow-core/arrow.core/-either/)
@@ -51,8 +51,8 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
  - [Ktor client library](https://ktor.io/docs/getting-started-ktor-client-multiplatform-mobile.html) for networking
  - [Kotlinx Serialization](https://github.com/Kotlin/kotlinx.serialization) for JSON serialization/deserialization.
  - [Napier](https://github.com/AAkira/Napier) for Multiplatform Logging.
- - [FlowExt](https://github.com/hoc081098/FlowExt) provides many kotlinx.coroutines.Flow operators, by @hoc081098.
- - [MOKO KSwift](https://github.com/icerockdev/moko-kswift) is a gradle plugin for generation Swift-friendly API for Kotlin/Native framework.
+ - [FlowExt](https://github.com/hoc081098/FlowExt) provides many kotlinx.coroutines.Flow operators, by [@hoc081098](https://github.com/hoc081098)
+ - [Touchlab SKIE](https://skie.touchlab.co/) a Swift-friendly API Generator for Kotlin Multiplatform.
  - [kotlinx.collections.immutable](https://github.com/Kotlin/kotlinx.collections.immutable): immutable collection interfaces and implementation prototypes for Kotlin..
  - Testing
    - [Kotlin Test](https://kotlinlang.org/docs/multiplatform-run-tests.html) for running tests with Kotlin Multiplatform.
@@ -193,7 +193,6 @@ Conform to `ObservableObject` and use `@Published` property wrapper.
 import Foundation
 import Combine
 import shared
-import sharedSwift
 
 @MainActor
 class IOSGithubSearchViewModel: ObservableObject {
@@ -243,8 +242,8 @@ class IOSGithubSearchViewModel: ObservableObject {
 
 # Building & Develop
 
-- `Android Studio Giraffe | 2022.3.1` (note: **Java 17 is now the minimum version required**).
-- `Xcode 13.2` or later (due to use of new Swift 5.5 concurrency APIs).
+- `Android Studio Hedgehog | 2023.1.1` (note: **Java 17 is now the minimum version required**).
+- `Xcode 13.2.1` or later (due to use of new Swift 5.5 concurrency APIs).
 - Clone project: `git clone https://github.com/hoc081098/GithubSearchKMM.git`
 - Android: open project by `Android Studio` and run as usual.
 - iOS
@@ -261,19 +260,7 @@ class IOSGithubSearchViewModel: ObservableObject {
   <br>
   <kbd>Cmd</kbd> + <kbd>R</kbd> to run.
 
-  When you see any error like this:
-  ```
-  ./GithubSearchKMM/iosApp/iosApp/ContentView.swift:4:8: No such module 'sharedSwift'
-  ```
-  You can run the following commands (must select `Read from disk` inside Xcode):
-  ```shell
-  # go to iosApp directory
-  cd iosApp
-
-  # install pods
-  pod install
-  ```
-  Then, you can build and run inside Xcode as usual.
+  You can also build and run iOS app from Xcode as usual.
 
 # LOC
 
@@ -281,14 +268,14 @@ class IOSGithubSearchViewModel: ObservableObject {
 --------------------------------------------------------------------------------
  Language             Files        Lines        Blank      Comment         Code
 --------------------------------------------------------------------------------
- Kotlin                 106         7789          963          417         6409
+ Kotlin                 116         7942          996          453         6493
  JSON                     7         3938            0            0         3938
- Swift                   16          903          118          102          683
- Markdown                 1          294           54            0          240
- Bourne Shell             2          250           28          116          106
+ Swift                   16          960          124          102          734
+ Markdown                 1          281           53            0          228
+ Bourne Shell             2          249           28          116          105
  Batch                    1           92           21            0           71
  XML                      6           69            6            0           63
 --------------------------------------------------------------------------------
- Total                  139        13335         1190          635        11510
+ Total                  149        13531         1228          671        11632
 --------------------------------------------------------------------------------
 ```

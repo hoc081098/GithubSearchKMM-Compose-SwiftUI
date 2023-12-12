@@ -29,7 +29,7 @@ val DataModule = module {
     KtorRepoItemApi(
       httpClient = get(),
       baseUrl = get(RepoItemApiBaseUrl),
-      appCoroutineDispatchers = get()
+      appCoroutineDispatchers = get(),
     )
   }
 
@@ -41,13 +41,13 @@ val DataModule = module {
     KtorGithubLanguageColorApi(
       url = get(GithubLanguageColorApiUrl),
       httpClient = get(),
-      appCoroutineDispatchers = get()
+      appCoroutineDispatchers = get(),
     )
   }
 
   single<GithubLanguageColorApi> {
     CacheGithubLanguageColorApiDecorator(
-      decoratee = get<KtorGithubLanguageColorApi>()
+      decoratee = get<KtorGithubLanguageColorApi>(),
     )
   }
 
@@ -66,7 +66,7 @@ val DataModule = module {
   single {
     createHttpClient(
       engineFactory = Darwin,
-      json = get()
+      json = get(),
     ) {}
   }
 }

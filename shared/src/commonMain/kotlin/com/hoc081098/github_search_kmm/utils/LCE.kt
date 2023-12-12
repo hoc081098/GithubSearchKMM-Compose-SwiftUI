@@ -14,10 +14,9 @@ sealed interface EitherLCE<out L, out R> {
   value class ContentOrError<out L, out R>(val either: Either<L, R>) : EitherLCE<L, R>
 }
 
-fun <L, R> eitherLceFlow(function: suspend () -> Either<L, R>): Flow<EitherLCE<L, R>> =
-  flowFromSuspend(function)
-    .map<_, EitherLCE<L, R>> { EitherLCE.ContentOrError(it) }
-    .onStart { emit(EitherLCE.Loading) }
+fun <L, R> eitherLceFlow(function: suspend () -> Either<L, R>): Flow<EitherLCE<L, R>> = flowFromSuspend(function)
+  .map<_, EitherLCE<L, R>> { EitherLCE.ContentOrError(it) }
+  .onStart { emit(EitherLCE.Loading) }
 
 sealed class LCE<out T> {
   data object Loading : LCE<Nothing>()
@@ -30,12 +29,11 @@ sealed class LCE<out T> {
     Loading -> Loading
   }
 
-  inline fun <R> bimap(f: (T) -> R, fe: (Throwable) -> Throwable): LCE<R> =
-    when (this) {
-      is Content -> Content(f(content))
-      is Error -> Error(fe(error))
-      Loading -> Loading
-    }
+  inline fun <R> bimap(f: (T) -> R, fe: (Throwable) -> Throwable): LCE<R> = when (this) {
+    is Content -> Content(f(content))
+    is Error -> Error(fe(error))
+    Loading -> Loading
+  }
 
   inline val isLoading: Boolean get() = this == Loading
 

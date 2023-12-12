@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:discouraged-comment-location")
+
 package com.hoc081098.github_search_kmm.data.remote.response
 
 import kotlinx.datetime.Instant
@@ -8,7 +10,7 @@ import kotlinx.serialization.Serializable
 data class RepoItemsSearchResponse(
   @SerialName("total_count") val totalCount: Int, // 4692
   @SerialName("incomplete_results") val incompleteResults: Boolean, // false
-  @SerialName("items") val items: List<Item>? = null
+  @SerialName("items") val items: List<Item>? = null,
 ) {
   @Serializable
   data class Item(

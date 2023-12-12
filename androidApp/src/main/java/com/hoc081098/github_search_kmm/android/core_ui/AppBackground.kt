@@ -18,10 +18,7 @@ import androidx.compose.ui.unit.dp
  * @param content The background content.
  */
 @Composable
-fun AppBackground(
-  modifier: Modifier = Modifier,
-  content: @Composable () -> Unit
-) {
+fun AppBackground(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
   val backgroundTheme = LocalBackgroundTheme.current
   val color = backgroundTheme.color
   val tonalElevation = backgroundTheme.tonalElevation

@@ -8,13 +8,12 @@
 
 import Foundation
 import shared
-import sharedSwift
 
 extension AppError {
   var readableMessage: String {
-    switch AppErrorKs(self) {
+    switch onEnum(of: self) {
     case .apiException(let e):
-      switch AppErrorApiExceptionKs(e) {
+      switch onEnum(of: e) {
       case .networkException(_):
         return "A network error has occurred. Please try again."
       case .serverException(_):
@@ -25,7 +24,7 @@ extension AppError {
         return "An unknown error has occurred. Please try again."
       }
     case .localStorageException(let e):
-      switch AppErrorLocalStorageExceptionKs(e) {
+      switch onEnum(of: e) {
       case .fileException(_):
         return "A file system error has occurred. Please try again."
       case .databaseException(_):

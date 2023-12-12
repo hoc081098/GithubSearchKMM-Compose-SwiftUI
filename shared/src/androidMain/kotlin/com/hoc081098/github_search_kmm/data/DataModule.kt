@@ -50,8 +50,7 @@ internal interface DataModule {
   companion object {
     @Provides
     @GithubLanguageColorApiUrl
-    internal fun githubLanguageColorApiUrl(): Url =
-      Url("https://github.com/ozh/github-colors/raw/master/colors.json")
+    internal fun githubLanguageColorApiUrl(): Url = Url("https://github.com/ozh/github-colors/raw/master/colors.json")
 
     @Provides
     @RepoItemApiBaseUrl
@@ -65,7 +64,7 @@ internal interface DataModule {
     @Singleton
     internal fun httpClient(json: Json): HttpClient = createHttpClient(
       engineFactory = OkHttp,
-      json = json
+      json = json,
     ) {}
   }
 }

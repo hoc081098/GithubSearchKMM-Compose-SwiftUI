@@ -1,13 +1,12 @@
 import SwiftUI
 import shared
 import Combine
-import sharedSwift
 
 struct ContentView: View {
-  @StateObject var vm: IOSGithubSearchViewModel
+  @StateObject var vm: IosGithubSearchViewModel
 
   @State private var showingAlert = false
-  @State private var event: GithubSearchSingleEventKs?
+  @State private var event: Skie.GithubSearchKMM__shared.GithubSearchSingleEvent.__Sealed?
 
   var body: some View {
     let state = self.vm.state
@@ -138,11 +137,13 @@ class FakeRepoItemRepository: RepoItemRepository {
 
 struct ContentView_Previews: PreviewProvider {
   static var previews: some View {
-    let vm = IOSGithubSearchViewModel.init(
-      vm: .init(
-        searchRepoItemsUseCase: .init(repoItemRepository: FakeRepoItemRepository()),
-        savedStateHandle: .init()
-      )
+    let vm = IosGithubSearchViewModel.init(
+      vm: GithubSearchViewModel.Companion.shared
+        .create(
+          searchRepoItemsUseCase: .init(repoItemRepository: FakeRepoItemRepository()
+        )
+      ),
+      immediateMainDispatcher: Dispatchers.shared.Main.immediate
     )
     ContentView(vm: vm)
   }

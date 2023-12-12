@@ -2,16 +2,8 @@ package com.hoc081098.github_search_kmm.domain.model
 
 import arrow.core.Either
 
-class ArgbColor private constructor(
-  val hexStringWithoutPrefix: String,
-  val argb: Argb
-) {
-  data class Argb(
-    val alpha: Float,
-    val red: Float,
-    val green: Float,
-    val blue: Float,
-  )
+class ArgbColor private constructor(val hexStringWithoutPrefix: String, val argb: Argb) {
+  data class Argb(val alpha: Float, val red: Float, val green: Float, val blue: Float)
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
@@ -30,24 +22,22 @@ class ArgbColor private constructor(
      *
      * @return a [arrow.core.Either.Left] if the provided [hex] is not in a valid Hex Color format.
      */
-    fun parse(hex: String): Either<String, ArgbColor> {
-      return Either.catch {
-        var formattedHexString = hex.trim()
-          .removePrefix("#")
-          .lowercase()
+    fun parse(hex: String): Either<String, ArgbColor> = Either.catch {
+      var formattedHexString = hex.trim()
+        .removePrefix("#")
+        .lowercase()
 
-        if (formattedHexString.length == 3) {
-          // Shorthand hex value was used so expand it
-          val chars = formattedHexString.toCharArray()
-          formattedHexString = "${chars[0]}${chars[0]}${chars[1]}${chars[1]}${chars[2]}${chars[2]}"
-        }
+      if (formattedHexString.length == 3) {
+        // Shorthand hex value was used so expand it
+        val chars = formattedHexString.toCharArray()
+        formattedHexString = "${chars[0]}${chars[0]}${chars[1]}${chars[1]}${chars[2]}${chars[2]}"
+      }
 
-        ArgbColor(
-          hexStringWithoutPrefix = formattedHexString,
-          argb = argb(formattedHexString)!!
-        )
-      }.mapLeft { "Cannot convert $hex to Color" }
-    }
+      ArgbColor(
+        hexStringWithoutPrefix = formattedHexString,
+        argb = argb(formattedHexString)!!,
+      )
+    }.mapLeft { "Cannot convert $hex to Color" }
 
     private fun argb(hexStringWithoutPrefix: String): Argb? {
       val int = hexStringWithoutPrefix.toULong(radix = 16)
@@ -86,7 +76,7 @@ class ArgbColor private constructor(
         red = r.toFloat() / 255f,
         green = g.toFloat() / 255f,
         blue = b.toFloat() / 255f,
-        alpha = a.toFloat() / 255f
+        alpha = a.toFloat() / 255f,
       )
     }
   }

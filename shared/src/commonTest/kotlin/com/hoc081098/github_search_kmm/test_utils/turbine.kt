@@ -22,7 +22,7 @@ suspend fun <T> Flow<T>.testWithTestCoroutineScheduler(
   } else {
     flowOn(createTestDispatcher(testScheduler)).test(
       timeout = timeout,
-      validate = validate
+      validate = validate,
     )
   }
 }

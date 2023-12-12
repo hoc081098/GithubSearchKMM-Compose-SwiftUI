@@ -17,7 +17,7 @@ class LCETest {
   fun `map LCE_Loading`() {
     assertSame(
       LCE.Loading,
-      LCE.loading<Int>().map { it.toString() }
+      LCE.loading<Int>().map { it.toString() },
     )
   }
 
@@ -51,7 +51,7 @@ class LCETest {
       fe = {
         assertIs<RuntimeException>(it)
         TestException
-      }
+      },
     )
 
     assertIs<LCE.Error>(lce)
@@ -66,7 +66,7 @@ class LCETest {
         assertEquals(content, it)
         it.toString()
       },
-      fe = { fail() }
+      fe = { fail() },
     )
 
     assertIs<LCE.Content<String>>(lce)

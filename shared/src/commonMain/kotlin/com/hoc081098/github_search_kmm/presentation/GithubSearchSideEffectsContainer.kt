@@ -20,19 +20,18 @@ import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.take
 
 @Suppress("NOTHING_TO_INLINE")
-internal class GithubSearchSideEffectsContainer(
-  private val searchRepoItemsUseCase: SearchRepoItemsUseCase,
-) {
-  private val sendSingleEventSideEffect = allActionsToOutputChannelSideEffect<GithubSearchAction,
+internal class GithubSearchSideEffectsContainer(private val searchRepoItemsUseCase: SearchRepoItemsUseCase) {
+  private val sendSingleEventSideEffect = allActionsToOutputChannelSideEffect<
+    GithubSearchAction,
     GithubSearchState,
-    GithubSearchSingleEvent> { it.toGithubSearchSingleEventOrNull() }
+    GithubSearchSingleEvent,
+    > { it.toGithubSearchSingleEventOrNull() }
 
-  internal val eventFlow get() = sendSingleEventSideEffect.second.receiveAsFlow()
+  internal val eventChannel get() = sendSingleEventSideEffect.second
 
   /**
    * @return A list of [SideEffect]s contained in this class.
@@ -88,17 +87,16 @@ internal class GithubSearchSideEffectsContainer(
    *
    * [SideEffectAction.TextChanged]s to [SideEffectAction.SearchLCE]s
    */
-  private inline fun performSearch() =
-    SideEffect<GithubSearchAction, GithubSearchState> { actionFlow, _, _ ->
-      actionFlow
-        .filterIsInstance<SideEffectAction.TextChanged>()
-        .flatMapLatest { action ->
-          executeSearchRepoItemsUseCase(
-            term = action.term,
-            nextPage = PAGE_1
-          )
-        }
-    }
+  private inline fun performSearch() = SideEffect<GithubSearchAction, GithubSearchState> { actionFlow, _, _ ->
+    actionFlow
+      .filterIsInstance<SideEffectAction.TextChanged>()
+      .flatMapLatest { action ->
+        executeSearchRepoItemsUseCase(
+          term = action.term,
+          nextPage = PAGE_1,
+        )
+      }
+  }
 
   /**
    * Load next page.
@@ -117,12 +115,12 @@ internal class GithubSearchSideEffectsContainer(
             .flatMapConcat {
               executeSearchRepoItemsUseCase(
                 term = it.term,
-                nextPage = it.page + 1u
+                nextPage = it.page + 1u,
               )
             }
             .takeUntil(
               actionSharedFlow
-                .filterIsInstance<SideEffectAction.TextChanged>()
+                .filterIsInstance<SideEffectAction.TextChanged>(),
             )
         }
     }
@@ -149,7 +147,7 @@ internal class GithubSearchSideEffectsContainer(
             }
             .takeUntil(
               actionSharedFlow
-                .filterIsInstance<SideEffectAction.TextChanged>()
+                .filterIsInstance<SideEffectAction.TextChanged>(),
             )
         }
     }
@@ -158,14 +156,11 @@ internal class GithubSearchSideEffectsContainer(
    * Execute [searchRepoItemsUseCase].
    * @return a [Flow] that emits [SideEffectAction.SearchLCE], causing state changes.
    */
-  private fun executeSearchRepoItemsUseCase(
-    term: String,
-    nextPage: UInt
-  ): Flow<SideEffectAction.SearchLCE> =
+  private fun executeSearchRepoItemsUseCase(term: String, nextPage: UInt): Flow<SideEffectAction.SearchLCE> =
     eitherLceFlow {
       searchRepoItemsUseCase(
         term = term,
-        page = nextPage.toInt()
+        page = nextPage.toInt(),
       )
     }.map {
       SideEffectAction.SearchLCE(

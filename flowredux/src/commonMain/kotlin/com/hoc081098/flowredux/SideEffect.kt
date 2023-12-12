@@ -27,7 +27,7 @@ public fun interface SideEffect<Action, State> {
   public operator fun invoke(
     actionFlow: Flow<Action>,
     stateFlow: StateFlow<State>,
-    coroutineScope: CoroutineScope
+    coroutineScope: CoroutineScope,
   ): Flow<Action>
 }
 

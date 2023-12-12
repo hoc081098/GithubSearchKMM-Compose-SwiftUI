@@ -8,13 +8,12 @@ import org.gradle.plugin.use.PluginDependenciesSpec
 import org.gradle.plugin.use.PluginDependencySpec
 
 object versions {
-  const val spotless = "6.7.2"
-  const val ktlint = "0.45.2"
-  const val kotlin = "1.9.10"
-  const val agp = "8.1.1"
+  const val spotless = "6.23.3"
+  const val ktlint = "1.0.0"
+  const val kotlin = "1.9.21"
+  const val agp = "8.2.0"
   const val gradleVersions = "0.50.0"
-  const val mokoKSwift = "0.6.1"
-  const val googleKsp = "1.9.10-1.0.13"
+  const val googleKsp = "1.9.21-1.0.15"
   const val buildKonfig = "0.13.3"
 }
 
@@ -74,7 +73,7 @@ object deps {
   }
 
   object ktor {
-    private const val version = "2.3.6"
+    private const val version = "2.3.7"
     const val core = "io.ktor:ktor-client-core:$version"
     const val clientJson = "io.ktor:ktor-client-json:$version"
     const val logging = "io.ktor:ktor-client-logging:$version"
@@ -87,7 +86,7 @@ object deps {
   }
 
   object compose {
-    const val androidxComposeCompilerVersion = "1.5.3"
+    const val androidxComposeCompilerVersion = "1.5.6"
     const val bom = "androidx.compose:compose-bom:2023.10.01"
 
     const val foundation = "androidx.compose.foundation:foundation"
@@ -113,24 +112,23 @@ object deps {
   }
 
   object dagger {
-    const val version = "2.48.1"
+    const val version = "2.49"
     const val hiltAndroid = "com.google.dagger:hilt-android:$version"
     const val hiltAndroidCompiler = "com.google.dagger:hilt-android-compiler:$version"
   }
 
   object kmpViewModel {
-    private const val version = "0.5.0"
+    private const val version = "0.6.1"
     const val core = "io.github.hoc081098:kmp-viewmodel:$version"
     const val savedState = "io.github.hoc081098:kmp-viewmodel-savedstate:$version"
   }
 
-  const val mokoKSwiftRuntime = "dev.icerock.moko:kswift-runtime:${versions.mokoKSwift}"
-  const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.1"
+  const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.5.0"
 
   const val coilCompose = "io.coil-kt:coil-compose:2.5.0"
   const val flowExt = "io.github.hoc081098:FlowExt:0.7.4"
 
-  const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.22.0"
+  const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.23.1"
   const val immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.6"
 
   object arrow {
@@ -177,7 +175,6 @@ inline val PDsS.kotlinxSerialization: PDS get() = id("kotlinx-serialization")
 inline val PDsS.kotlinMultiplatform: PDS get() = kotlin("multiplatform")
 inline val PDsS.kotlinNativeCocoapods: PDS get() = kotlin("native.cocoapods")
 inline val PDsS.daggerHiltAndroid: PDS get() = id("com.google.dagger.hilt.android")
-inline val PDsS.mokoKSwift: PDS get() = id("dev.icerock.moko.kswift")
 inline val PDsS.googleKsp: PDS get() = id("com.google.devtools.ksp")
 inline val PDsS.buildKonfig: PDS get() = id("com.codingfeline.buildkonfig")
 
@@ -190,7 +187,7 @@ val Project.isCiBuild: Boolean
 
 val excludedClasses = listOf(
   "hilt_aggregated_deps.*",
-  "io.mockative.*"
+  "io.mockative.*",
 )
 
 @Suppress("NOTHING_TO_INLINE")
