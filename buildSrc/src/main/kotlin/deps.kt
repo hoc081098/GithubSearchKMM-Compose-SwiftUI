@@ -37,7 +37,7 @@ object deps {
     const val appCompat = "androidx.appcompat:appcompat:1.6.1"
     const val coreKtx = "androidx.core:core-ktx:1.9.0"
     const val material = "com.google.android.material:material:1.10.0"
-    const val activityCompose = "androidx.activity:activity-compose:1.8.1"
+    const val activityCompose = "androidx.activity:activity-compose:1.8.2"
     const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:1.1.0"
   }
 
