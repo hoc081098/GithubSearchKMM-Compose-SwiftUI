@@ -67,7 +67,7 @@ object deps {
   }
 
   object serialization {
-    private const val version = "1.6.1"
+    private const val version = "1.6.2"
     const val json = "org.jetbrains.kotlinx:kotlinx-serialization-json:$version"
     const val core = "org.jetbrains.kotlinx:kotlinx-serialization-core:$version"
   }
