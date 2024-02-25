@@ -87,7 +87,7 @@ object deps {
 
   object compose {
     const val androidxComposeCompilerVersion = "1.5.6"
-    const val bom = "androidx.compose:compose-bom:2023.10.01"
+    const val bom = "androidx.compose:compose-bom:2024.02.01"
 
     const val foundation = "androidx.compose.foundation:foundation"
     const val foundationLayout = "androidx.compose.foundation:foundation-layout"
