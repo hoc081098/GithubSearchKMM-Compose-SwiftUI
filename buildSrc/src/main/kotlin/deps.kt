@@ -141,7 +141,7 @@ object deps {
   const val napier = "io.github.aakira:napier:2.6.1"
 
   object slack {
-    const val composeLint = "com.slack.lint.compose:compose-lint-checks:1.2.0"
+    const val composeLint = "com.slack.lint.compose:compose-lint-checks:1.3.1"
   }
 
   object test {
