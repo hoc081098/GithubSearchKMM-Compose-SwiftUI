@@ -13,7 +13,7 @@ object versions {
   const val kotlin = "1.9.22"
   const val agp = "8.2.2"
   const val gradleVersions = "0.50.0"
-  const val googleKsp = "1.9.21-1.0.15"
+  const val googleKsp = "1.9.22-1.0.17"
   const val buildKonfig = "0.13.3"
 }
 
