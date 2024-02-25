@@ -138,7 +138,7 @@ object deps {
   }
 
   const val desugarJdkLibs = "com.android.tools:desugar_jdk_libs:2.0.4"
-  const val napier = "io.github.aakira:napier:2.6.1"
+  const val napier = "io.github.aakira:napier:2.7.1"
 
   object slack {
     const val composeLint = "com.slack.lint.compose:compose-lint-checks:1.2.0"
