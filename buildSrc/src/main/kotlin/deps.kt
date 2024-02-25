@@ -118,7 +118,7 @@ object deps {
   }
 
   object kmpViewModel {
-    private const val version = "0.6.1"
+    private const val version = "0.7.0"
     const val core = "io.github.hoc081098:kmp-viewmodel:$version"
     const val savedState = "io.github.hoc081098:kmp-viewmodel-savedstate:$version"
   }
