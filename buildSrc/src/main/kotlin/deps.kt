@@ -125,7 +125,7 @@ object deps {
 
   const val dateTime = "org.jetbrains.kotlinx:kotlinx-datetime:0.5.0"
 
-  const val coilCompose = "io.coil-kt:coil-compose:2.5.0"
+  const val coilCompose = "io.coil-kt:coil-compose:2.6.0"
   const val flowExt = "io.github.hoc081098:FlowExt:0.8.0"
 
   const val atomicfu = "org.jetbrains.kotlinx:atomicfu:0.23.2"
