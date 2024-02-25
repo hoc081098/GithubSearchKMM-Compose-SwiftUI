@@ -60,18 +60,6 @@
         "org.jetbrains.compose.material3",
       ],
       groupName: "Compose"
-    },
-    {
-      matchPackagePatterns: [
-        "*"
-      ],
-      matchUpdateTypes: [
-        "major",
-        "minor",
-        "patch"
-      ],
-      groupName: "all dependencies",
-      groupSlug: "all-deps"
     }
   ]
 }
