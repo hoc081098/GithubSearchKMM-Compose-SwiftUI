@@ -62,7 +62,7 @@ jobs:
         run: ./gradlew assembleDebug --warning-mode all --stacktrace
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: app-debug
           path: androidApp/build/outputs/apk/debug/androidApp-debug.apk
