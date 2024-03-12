@@ -14,7 +14,7 @@ plugins {
   daggerHiltAndroid
   googleKsp
   buildKonfig
-  id("co.touchlab.skie") version "0.5.6"
+  id("co.touchlab.skie") version "0.6.2"
 }
 
 skie {
