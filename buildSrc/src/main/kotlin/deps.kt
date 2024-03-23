@@ -10,10 +10,10 @@ import org.gradle.plugin.use.PluginDependencySpec
 object versions {
   const val spotless = "6.23.3"
   const val ktlint = "1.0.0"
-  const val kotlin = "1.9.22"
+  const val kotlin = "1.9.23"
   const val agp = "8.2.2"
   const val gradleVersions = "0.50.0"
-  const val googleKsp = "1.9.22-1.0.17"
+  const val googleKsp = "1.9.23-1.0.19"
   const val buildKonfig = "0.13.3"
 }
 
@@ -86,7 +86,7 @@ object deps {
   }
 
   object compose {
-    const val androidxComposeCompilerVersion = "1.5.10"
+    const val androidxComposeCompilerVersion = "1.5.11"
     const val bom = "androidx.compose:compose-bom:2023.10.01"
 
     const val foundation = "androidx.compose.foundation:foundation"

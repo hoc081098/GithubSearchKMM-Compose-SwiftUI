@@ -14,7 +14,7 @@ plugins {
   daggerHiltAndroid
   googleKsp
   buildKonfig
-  id("co.touchlab.skie") version "0.6.1"
+  id("co.touchlab.skie") version "0.6.2"
 }
 
 skie {
@@ -116,7 +116,7 @@ kotlin {
         api(deps.dateTime)
         api(deps.atomicfu)
         api(deps.immutableCollections)
-        implementation("co.touchlab:stately-common:2.0.5")
+        implementation("co.touchlab:stately-common:2.0.7")
       }
     }
     val commonTest by getting {
