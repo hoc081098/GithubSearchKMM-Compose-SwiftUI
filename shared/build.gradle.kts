@@ -70,6 +70,7 @@ kotlin {
       export(deps.napier)
       export(deps.kmpViewModel.core)
       export(deps.kmpViewModel.savedState)
+      export(deps.koin.core)
     }
   }
 
@@ -157,7 +158,7 @@ kotlin {
       iosSimulatorArm64Main.dependsOn(this)
 
       dependencies {
-        implementation(deps.koin.core)
+        api(deps.koin.core)
         implementation(deps.ktor.darwin)
         implementation(deps.ktor.core)
       }
