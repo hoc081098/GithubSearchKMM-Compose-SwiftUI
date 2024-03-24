@@ -11,10 +11,10 @@ object versions {
   const val spotless = "6.23.3"
   const val ktlint = "1.0.0"
   const val kotlin = "1.9.23"
-  const val agp = "8.2.2"
+  const val agp = "8.3.1"
   const val gradleVersions = "0.50.0"
   const val googleKsp = "1.9.23-1.0.19"
-  const val buildKonfig = "0.13.3"
+  const val buildKonfig = "0.15.1"
 }
 
 object appConfig {
@@ -42,7 +42,7 @@ object deps {
   }
 
   object lifecycle {
-    private const val version = "2.6.2"
+    private const val version = "2.7.0"
 
     const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version" // viewModelScope
     const val runtimeKtx = "androidx.lifecycle:lifecycle-runtime-ktx:$version" // lifecycleScope
@@ -59,7 +59,7 @@ object deps {
   }
 
   object coroutines {
-    private const val version = "1.7.3"
+    private const val version = "1.8.0"
 
     const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
     const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
@@ -87,7 +87,7 @@ object deps {
 
   object compose {
     const val androidxComposeCompilerVersion = "1.5.11"
-    const val bom = "androidx.compose:compose-bom:2023.10.01"
+    const val bom = "androidx.compose:compose-bom:2024.03.00"
 
     const val foundation = "androidx.compose.foundation:foundation"
     const val foundationLayout = "androidx.compose.foundation:foundation-layout"
@@ -118,7 +118,7 @@ object deps {
   }
 
   object kmpViewModel {
-    private const val version = "0.7.0"
+    private const val version = "0.7.1"
     const val core = "io.github.hoc081098:kmp-viewmodel:$version"
     const val savedState = "io.github.hoc081098:kmp-viewmodel-savedstate:$version"
   }
