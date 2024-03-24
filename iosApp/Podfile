@@ -6,5 +6,5 @@ target 'iosApp' do
 
   pod 'shared', :path => '../shared'
 
-  pod 'Kingfisher', '~> 7.0'
+  pod 'Kingfisher', '~> 7.6.1'
 end
