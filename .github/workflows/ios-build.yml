@@ -86,6 +86,7 @@ jobs:
           build-settings: CODE_SIGNING_REQUIRED=NO
 
       - name: Failures report
+        if: failure()
         uses: actions/upload-artifact@v3
         with:
           name: iosSimulatorArm64_generated
