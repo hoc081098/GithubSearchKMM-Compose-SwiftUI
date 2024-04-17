@@ -84,3 +84,9 @@ jobs:
           destination: platform=iOS Simulator,name=iphone-12-pro
           configuration: Debug
           build-settings: CODE_SIGNING_REQUIRED=NO
+
+      - name: Failures report
+        uses: actions/upload-artifact@v3
+        with:
+          name: iosSimulatorArm64_generated
+          path: shared/build/skie/binaries/podDebugFramework/DEBUG/iosSimulatorArm64/swift/generated/
