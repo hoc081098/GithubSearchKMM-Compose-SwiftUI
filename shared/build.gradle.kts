@@ -27,6 +27,9 @@ skie {
       SealedInterop.Enabled(false)
       EnumInterop.Enabled(false)
       DefaultArgumentInterop.Enabled(false)
+      ExperimentalFeatures.Enabled(false)
+      FunctionInterop.FileScopeConversion.Enabled(false)
+      FunctionInterop.LegacyName(false)
     }
     group("com.hoc081098.github_search_kmm.presentation") {
       SealedInterop.Enabled(true)
