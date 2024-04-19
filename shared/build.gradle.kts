@@ -1,6 +1,8 @@
 import co.touchlab.skie.configuration.DefaultArgumentInterop
 import co.touchlab.skie.configuration.EnumInterop
+import co.touchlab.skie.configuration.ExperimentalFeatures
 import co.touchlab.skie.configuration.FlowInterop
+import co.touchlab.skie.configuration.FunctionInterop
 import co.touchlab.skie.configuration.SealedInterop
 import co.touchlab.skie.configuration.SuspendInterop
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
