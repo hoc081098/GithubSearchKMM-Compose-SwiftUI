@@ -31,7 +31,7 @@ skie {
       DefaultArgumentInterop.Enabled(false)
       ExperimentalFeatures.Enabled(false)
       FunctionInterop.FileScopeConversion.Enabled(false)
-      FunctionInterop.LegacyName(false)
+      FunctionInterop.LegacyName(true)
     }
     group("com.hoc081098.github_search_kmm.presentation") {
       SealedInterop.Enabled(true)
