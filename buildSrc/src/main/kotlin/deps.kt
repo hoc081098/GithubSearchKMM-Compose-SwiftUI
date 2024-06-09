@@ -86,7 +86,7 @@ object deps {
   }
 
   object compose {
-    const val androidxComposeCompilerVersion = "1.5.11"
+    const val androidxComposeCompilerVersion = "1.5.14"
     const val bom = "androidx.compose:compose-bom:2024.03.00"
 
     const val foundation = "androidx.compose.foundation:foundation"
