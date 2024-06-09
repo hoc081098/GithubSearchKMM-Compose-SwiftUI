@@ -10,10 +10,10 @@ import org.gradle.plugin.use.PluginDependencySpec
 object versions {
   const val spotless = "6.23.3"
   const val ktlint = "1.0.0"
-  const val kotlin = "1.9.23"
-  const val agp = "8.3.1"
+  const val kotlin = "2.0.0"
+  const val agp = "8.4.1"
   const val gradleVersions = "0.50.0"
-  const val googleKsp = "1.9.23-1.0.19"
+  const val googleKsp = "2.0.0-1.0.22"
   const val buildKonfig = "0.15.1"
 }
 
@@ -118,7 +118,7 @@ object deps {
   }
 
   object kmpViewModel {
-    private const val version = "0.7.1"
+    private const val version = "0.8.0"
     const val core = "io.github.hoc081098:kmp-viewmodel:$version"
     const val savedState = "io.github.hoc081098:kmp-viewmodel-savedstate:$version"
   }
