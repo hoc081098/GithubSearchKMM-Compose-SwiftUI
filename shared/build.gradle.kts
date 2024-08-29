@@ -122,7 +122,7 @@ kotlin {
         api(deps.dateTime)
         api(deps.atomicfu)
         api(deps.immutableCollections)
-        implementation("co.touchlab:stately-common:2.0.7")
+        implementation("co.touchlab:stately-common:2.1.0")
       }
     }
     val commonTest by getting {
