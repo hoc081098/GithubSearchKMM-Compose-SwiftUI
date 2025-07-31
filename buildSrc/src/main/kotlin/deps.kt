@@ -149,7 +149,7 @@ object deps {
 
     object androidx {
       const val core = "androidx.test:core-ktx:1.4.0"
-      const val junit = "androidx.test.ext:junit-ktx:1.1.3"
+      const val junit = "androidx.test.ext:junit-ktx:1.3.0"
 
       object espresso {
         const val core = "androidx.test.espresso:espresso-core:3.4.0"
