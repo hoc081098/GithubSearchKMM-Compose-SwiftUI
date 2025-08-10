@@ -8,7 +8,7 @@ import org.gradle.plugin.use.PluginDependenciesSpec
 import org.gradle.plugin.use.PluginDependencySpec
 
 object versions {
-  const val spotless = "6.23.3"
+  const val spotless = "6.25.0"
   const val ktlint = "1.0.0"
   const val kotlin = "2.0.0"
   const val agp = "8.4.1"
